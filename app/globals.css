@@ -1,10 +1,19 @@
 @import "tailwindcss";
 :root {
-  --background: #151415;
-  --foreground: #f8f7f5;
-  --red: #ff3317;
-  --muted: #a2a0a2;
-  --line: #ffffff15;
+  /* Shared DevMatch brand palette: landing, authentication, and future UI. */
+  --brand-black: #151415;
+  --brand-red: #ff3317;
+  --brand-brown: #732214;
+  --brand-white: #ffffff;
+  --surface: #1e1c1e;
+  --surface-raised: #292629;
+  --surface-warm: #30201e;
+  --background: var(--brand-black);
+  --foreground: var(--brand-white);
+  --red: var(--brand-red);
+  --muted: #aaa5a7;
+  --line: #ffffff1f;
+  --line-strong: #ffffff38;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   color-scheme: dark;
@@ -1239,7 +1248,7 @@ h2 {
 .auth-story {
   position: relative;
   overflow: hidden;
-  background: #ff3317;
+  background: var(--brand-red);
   padding: 43px 50px 26px;
   display: flex;
   flex-direction: column;
@@ -1478,8 +1487,8 @@ h2 {
   border: 1px solid #ffffff25;
   border-radius: 4px;
   padding: 12px 14px;
-  background: #1d1a1d;
-  color: #f8f7f5;
+  background: var(--surface);
+  color: var(--foreground);
   font-size: 12px;
   transition: border-color 0.2s;
 }

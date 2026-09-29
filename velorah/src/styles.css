@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+:root {
+  --font-display: 'Instrument Serif', serif;
+  --font-body: 'Inter', sans-serif;
+  --background: 201 100% 13%;
+  --foreground: 0 0% 100%;
+  --muted-foreground: 240 4% 66%;
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 4%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 10%;
+  --accent: 0 0% 10%;
+  --accent-foreground: 0 0% 100%;
+  --border: 0 0% 18%;
+  --input: 0 0% 18%;
+  --ring: 0 0% 100%;
+  --radius: 0.75rem;
+  color-scheme: dark;
+}
+@theme inline {
+  --font-sans: var(--font-body);
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+button, a { cursor: pointer; }
+:focus-visible { outline: 2px solid white; outline-offset: 5px; }
+::selection { background: #ffffff33; color: white; }
+.cinema { min-height: 100svh; }
+.hero { padding-top: clamp(90px, 10.5vh, 132px); padding-bottom: 160px; }
+.hero-title { font-size: clamp(48px, 7.25vw, 104px); }
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+@keyframes fade-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-rise { animation: fade-rise 0.8s ease-out both; }
+.animate-fade-rise-delay { animation: fade-rise 0.8s ease-out 0.2s both; }
+.animate-fade-rise-delay-2 { animation: fade-rise 0.8s ease-out 0.4s both; }
+.skip-link { position: fixed; top: -100px; left: 16px; z-index: 100; padding: 12px 18px; background: hsl(var(--background)); border-radius: 8px; }
+.skip-link:focus { top: 12px; }
+.motion-control { position: absolute; opacity: .45; transition: opacity .2s; }
+.motion-control:hover, .motion-control:focus-visible { opacity: 1; }
+.velorah-dialog { background: hsl(var(--background) / .96); color: hsl(var(--foreground)); border: 1px solid #ffffff26; border-radius: 24px; padding: 36px; }
+.velorah-dialog [data-slot="dialog-title"] { font-size: 38px; font-weight: 400; line-height: 1.1; }
+.velorah-dialog [data-slot="dialog-description"] { color: hsl(var(--muted-foreground)); line-height: 1.7; margin-top: 12px; }
+@media (min-width: 768px) and (max-width: 1100px) {
+  header { padding: 12px 6.5% !important; }
+  .wordmark { font-size: 20px; }
+  .wordmark sup { font-size: 8px; }
+  header nav { gap: 25px; }
+  header nav a, header nav button, .header-cta { font-size: 9px; }
+  .header-cta { padding: 8px 16px; }
+  .hero { padding-top: 68px; }
+  .hero-description { font-size: 10.5px; max-width: 400px; margin-top: 17px; }
+  .hero-action { margin-top: 25px; }
+  .hero-cta { font-size: 10px; padding: 10.5px 28px; }
+}
+@media (max-width: 767px) {
+  header { padding: 22px 24px !important; }
+  .wordmark { font-size: 28px; }
+  .header-cta { padding: 10px 16px; font-size: 11px; }
+  .hero { padding-top: clamp(58px, 9svh, 100px); padding-bottom: 200px; }
+  .hero-title { max-width: 590px; font-size: clamp(48px, 9.6vw, 72px); letter-spacing: -1.6px; line-height: 1.02; }
+  .hero-description { max-width: 430px; font-size: 14px; margin-top: 24px; }
+  .hero-action { margin-top: 30px; }
+  .hero-cta { padding: 16px 36px; font-size: 14px; }
+  .velorah-dialog { padding: 28px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

@@ -6,9 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "dev:velorah": "npm --prefix velorah run dev -- --port 4173",
+    "build:velorah": "npm --prefix velorah run build"
   },
   "dependencies": {
+    "framer-motion": "^13.4.4",
+    "lucide-react": "^1.48.0",
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8"

@@ -8,7 +8,7 @@ const geistMono = Geist_Mono({
 });
 export const metadata: Metadata = {
   title: {
-    default: "DevMatch — Great work. Right people.",
+    default: "DevMatch — Good work. Great company.",
     template: "%s | DevMatch",
   },
   description:

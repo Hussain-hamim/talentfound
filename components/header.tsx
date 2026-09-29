@@ -9,16 +9,15 @@ export function Header() {
       <div className="header-inner frame">
         <Brand />
         <nav className="desktop-nav" aria-label="Main navigation">
-          <a href="#for-developers">For developers</a>
-          <a href="#for-founders">For founders</a>
-          <a href="#how-it-works">How it works</a>
+          <a href="#for-developers">The people</a>
+          <a href="#for-founders">Find your match</a>
         </nav>
         <div className="header-actions">
           <Link href="/login" className="login-link">
             Log in
           </Link>
           <Link href="/signup" className="button button-red button-small">
-            Get started <Arrow diagonal />
+            Join the network <Arrow diagonal />
           </Link>
         </div>
         <button
@@ -46,9 +45,8 @@ export function Header() {
           aria-label="Mobile navigation"
           onClick={() => setOpen(false)}
         >
-          <a href="#for-developers">For developers</a>
-          <a href="#for-founders">For founders</a>
-          <a href="#how-it-works">How it works</a>
+          <a href="#for-developers">The people</a>
+          <a href="#for-founders">Find your match</a>
           <Link href="/login">Log in</Link>
           <Link href="/signup">
             Create your profile <Arrow />

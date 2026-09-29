@@ -1,0 +1,1289 @@
+/* Additional editorial chapters, using the established DevMatch identity. */
+.profile-chapter {
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.chapter-inner {
+  max-width: 1440px;
+  margin: auto;
+  padding: 94px 64px;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  align-items: center;
+  gap: 80px;
+}
+.chapter-copy h2 {
+  font-size: 65px;
+  font-weight: 450;
+  line-height: 1.07;
+  letter-spacing: -3.4px;
+  margin: 25px 0;
+}
+.chapter-copy h2 > span {
+  color: var(--muted);
+}
+.chapter-copy > p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 315px;
+}
+.chapter-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 27px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 9px;
+  margin-top: 30px;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.chapter-text-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.chapter-text-link > svg {
+  width: 15px;
+  height: 15px;
+}
+.profile-side-caption {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 60px;
+}
+.chapter-doodle {
+  font:
+    49px/1 Arial,
+    sans-serif;
+  color: var(--accent);
+  rotate: -12deg;
+}
+.profile-side-caption > span:last-child {
+  font: 8px/1.9 var(--font-geist-mono);
+  letter-spacing: 0.8px;
+  color: var(--muted);
+}
+.passport-stage {
+  position: relative;
+  padding: 28px 20px 27px 0;
+  max-width: 510px;
+  width: 100%;
+  justify-self: end;
+}
+.passport-margin-note {
+  display: block;
+  font: 7px var(--font-geist-mono);
+  letter-spacing: 1px;
+  text-align: right;
+  margin: 0 6px 19px 0;
+  color: var(--muted);
+}
+.profile-passport {
+  background: var(--surface-raised);
+  padding: 27px;
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    0 9px 0 -4px var(--surface),
+    0 10px 0 -4px #ffffff38,
+    0 23px 55px #00000040;
+  transform: rotate(-2deg);
+}
+.passport-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font: 7px var(--font-geist-mono);
+  color: var(--muted);
+  letter-spacing: 0.6px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.passport-identity {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  padding: 24px 0;
+}
+.passport-avatar {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  background: var(--brand-brown);
+  color: var(--brand-white);
+  border-radius: 50%;
+  font-size: 22px;
+  letter-spacing: -1.4px;
+  position: relative;
+}
+.passport-avatar > span {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  bottom: -3px;
+  right: -5px;
+  width: 23px;
+  height: 23px;
+  background: var(--accent);
+  color: #fff;
+  border: 3px solid var(--surface-raised);
+  border-radius: 50%;
+  font:
+    13px Arial,
+    sans-serif;
+}
+.passport-identity h3 {
+  font-size: 25px;
+  font-weight: 550;
+  letter-spacing: -1px;
+}
+.passport-identity h3 > span {
+  color: var(--accent);
+}
+.passport-identity p {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.passport-tabs {
+  display: flex;
+  gap: 25px;
+  border-bottom: 1px solid var(--line);
+}
+.passport-tabs > button {
+  position: relative;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 10px;
+  padding: 0 0 12px;
+  transition: color 0.2s;
+}
+.passport-tabs > button[aria-selected="true"] {
+  color: var(--ink);
+}
+.passport-tabs > button[aria-selected="true"]:after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  background: var(--accent);
+  bottom: -1px;
+  left: 0;
+  right: 0;
+}
+.passport-panel {
+  min-height: 234px;
+  padding: 18px 0 0;
+}
+.passport-work .project-cover {
+  aspect-ratio: 2.15;
+  padding: 18px;
+}
+.passport-work .cover-topline > span:first-child {
+  font-size: 9px;
+}
+.passport-work .cover-topline > span:last-child {
+  font-size: 5px;
+}
+.passport-work .offscript-title {
+  font-size: 29px;
+  margin-top: 19px;
+  letter-spacing: -1.5px;
+}
+.passport-work .paper-flower {
+  scale: 0.57;
+  transform-origin: bottom right;
+  bottom: 11px;
+  right: 16px;
+}
+.passport-work .cover-bottomline {
+  font-size: 4px;
+  left: 18px;
+  right: 18px;
+  bottom: 12px;
+}
+.passport-project-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 13px 0 17px;
+  font-size: 11px;
+}
+.passport-project-caption small {
+  display: block;
+  font-size: 9px;
+  margin-top: 4px;
+  color: var(--muted);
+}
+.passport-project-caption > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font: 8px var(--font-geist-mono);
+  color: var(--muted);
+}
+.passport-project-caption svg {
+  width: 13px;
+  height: 13px;
+}
+.passport-status {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 8px;
+  color: var(--muted);
+}
+.passport-status > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.passport-status i {
+  width: 5px;
+  height: 5px;
+  background: #76904e;
+  border-radius: 50%;
+}
+.passport-status > a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+.passport-status svg {
+  width: 12px;
+  height: 12px;
+}
+.passport-sticker {
+  position: absolute;
+  right: -15px;
+  bottom: 1px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  width: 88px;
+  height: 88px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 1.1;
+  rotate: 13deg;
+  border: 1px solid #ff9477;
+  box-shadow: 0 3px 8px #6e2d1210;
+  letter-spacing: -0.6px;
+  pointer-events: none;
+}
+.passport-sticker > b {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -1.5px;
+}
+.passport-panel-label {
+  font: 8px var(--font-geist-mono);
+  letter-spacing: 0.7px;
+  color: var(--muted);
+}
+.passport-toolkit {
+  padding: 7px 0 15px;
+}
+.passport-toolkit > div {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+.passport-toolkit > div > span {
+  font-size: 12px;
+  padding: 9px 11px;
+  background: var(--surface);
+  color: var(--ink);
+}
+.passport-toolkit > div > span:nth-child(3n) {
+  background: var(--surface-warm);
+  color: var(--ink);
+}
+.passport-toolkit > div > span:last-child {
+  background: var(--brand-brown);
+  color: var(--ink);
+}
+.passport-toolkit > p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.passport-about {
+  padding: 7px 0 20px;
+}
+.passport-about > p {
+  font-size: 26px;
+  letter-spacing: -1px;
+  line-height: 1.2;
+  margin: 25px 0;
+  color: var(--ink);
+}
+.passport-about > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 9px;
+  color: var(--muted);
+}
+.opportunity-chapter {
+  max-width: 1440px;
+  margin: auto;
+  padding: 100px 64px 75px;
+}
+.opportunity-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 35px;
+  margin-bottom: 42px;
+}
+.opportunity-heading h2 {
+  font-size: 60px;
+  font-weight: 450;
+  line-height: 1.07;
+  letter-spacing: -3px;
+  margin-top: 23px;
+}
+.opportunity-heading h2 > span {
+  color: var(--muted);
+}
+.opportunity-aside {
+  font: 8px/1.9 var(--font-geist-mono);
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  padding-bottom: 6px;
+}
+.opportunity-tickets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+}
+.opportunity-ticket {
+  position: relative;
+  padding: 24px 27px 30px;
+  background: var(--surface);
+  overflow: hidden;
+  transition: translate 0.35s var(--ease-out);
+}
+.ticket-freelance {
+  background: var(--surface-raised);
+}
+.ticket-founder {
+  background: var(--surface-warm);
+}
+.ticket-top {
+  display: flex;
+  justify-content: space-between;
+  font: 9px var(--font-geist-mono);
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+.ticket-freelance .ticket-top {
+  color: var(--muted);
+}
+.ticket-founder .ticket-top {
+  color: var(--muted);
+}
+.ticket-symbol {
+  height: 195px;
+  position: relative;
+  margin: 13px auto 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.symbol-team {
+  display: grid;
+  grid-template-columns: repeat(2, 60px);
+  grid-template-rows: repeat(2, 60px);
+  gap: 8px;
+  align-content: center;
+  rotate: -9deg;
+}
+.symbol-team > i {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.symbol-team > i:nth-child(2) {
+  background: var(--brand-white);
+  border-radius: 3px;
+}
+.symbol-team > i:nth-child(3) {
+  background: #aaa5a7;
+  border-radius: 3px;
+}
+.symbol-team > i:nth-child(4) {
+  background: var(--brand-brown);
+  border-radius: 3px 3px 45px 3px;
+}
+.symbol-freelance > svg {
+  width: 175px;
+  height: 140px;
+  color: var(--accent);
+  rotate: -6deg;
+}
+.symbol-founder > i {
+  width: 93px;
+  height: 122px;
+  border: 19px solid var(--accent);
+  border-radius: 50px;
+  rotate: -30deg;
+  position: relative;
+}
+.symbol-founder > i + i {
+  margin-left: -23px;
+  top: 18px;
+  rotate: 30deg;
+  border-color: var(--brand-white);
+}
+.opportunity-ticket h3 {
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -1.2px;
+  margin-bottom: 13px;
+}
+.opportunity-ticket > p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 250px;
+  min-height: 65px;
+}
+.ticket-freelance > p {
+  color: var(--muted);
+}
+.ticket-founder > p {
+  color: var(--muted);
+}
+.opportunity-ticket > a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-top: 25px;
+  padding-top: 22px;
+  border-top: 1px dashed var(--line);
+  color: var(--ink);
+}
+.ticket-perforation:before,
+.ticket-perforation:after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: var(--paper);
+  width: 18px;
+  height: 18px;
+  bottom: 57px;
+}
+.ticket-perforation:before {
+  left: -9px;
+}
+.ticket-perforation:after {
+  right: -9px;
+}
+.opportunity-footnote {
+  font: 9px var(--font-geist-mono);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+.opportunity-footnote > span {
+  color: var(--accent);
+  font-size: 18px;
+}
+.cofounder-chapter {
+  max-width: 1440px;
+  margin: auto;
+  padding: 50px 64px 75px;
+  display: grid;
+  grid-template-columns: 1.12fr 1fr;
+  align-items: center;
+  gap: 75px;
+  border-top: 1px solid var(--line);
+}
+.cofounder-art {
+  position: relative;
+  min-width: 0;
+}
+.cofounder-art > img {
+  width: 112%;
+  max-width: none;
+  height: auto;
+  margin-left: -8%;
+  mix-blend-mode: normal;
+  mask-image: radial-gradient(
+    ellipse 65% 65% at 50% 50%,
+    #000 60%,
+    transparent 90%
+  );
+}
+.cofounder-art-caption {
+  font: 7px var(--font-geist-mono);
+  letter-spacing: 0.9px;
+  display: block;
+  text-align: center;
+  color: var(--muted);
+  position: relative;
+  margin-top: -14px;
+}
+.cofounder-copy h2 {
+  font-size: 61px;
+  margin-block: 24px;
+}
+.cofounder-copy h2 > span {
+  color: var(--accent);
+}
+.cofounder-copy > p {
+  font-size: 13px;
+  max-width: 290px;
+}
+.cofounder-equation {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 42px;
+  font: 7px var(--font-geist-mono);
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+.cofounder-equation > b {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.equation-star {
+  font:
+    32px/1 Arial,
+    sans-serif;
+  color: var(--accent);
+}
+.questions-chapter {
+  max-width: 1312px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 100px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 72px 0 62px;
+}
+.questions-heading {
+  position: relative;
+}
+.questions-heading h2 {
+  font-size: 50px;
+  line-height: 1.1;
+  font-weight: 450;
+  letter-spacing: -2.7px;
+  margin-top: 24px;
+}
+.questions-heading h2 > span {
+  color: var(--muted);
+}
+.questions-doodle {
+  display: block;
+  font:
+    italic 100px/1 Georgia,
+    serif;
+  color: var(--accent);
+  rotate: -15deg;
+  width: 70px;
+  margin-top: 32px;
+}
+.questions-list details {
+  border-bottom: 1px solid var(--line);
+}
+.questions-list details:first-child {
+  border-top: 1px solid var(--line);
+}
+.questions-list details:last-child {
+  border-bottom: 0;
+}
+.questions-list summary {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.questions-list summary::-webkit-details-marker {
+  display: none;
+}
+.question-number {
+  font: 8px var(--font-geist-mono);
+  color: var(--muted);
+}
+.question-toggle {
+  margin-left: auto;
+  font-size: 22px;
+  font-weight: 350;
+  color: var(--muted);
+  transition:
+    rotate 0.25s,
+    color 0.25s;
+}
+.questions-list details[open] .question-toggle {
+  rotate: 45deg;
+  color: var(--accent);
+}
+.questions-list details > p {
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--muted);
+  padding: 0 30px 25px 33px;
+}
+.questions-list details[open] > summary {
+  color: var(--accent);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .opportunity-ticket:hover {
+    translate: 0 -5px;
+  }
+  .ticket-symbol {
+    transition: rotate 0.6s var(--ease-out);
+  }
+  .opportunity-ticket:hover .ticket-symbol {
+    rotate: 5deg;
+  }
+  .cofounder-art img {
+    transition: translate 0.7s var(--ease-out);
+  }
+  .cofounder-art:hover img {
+    translate: 0 -8px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .passport-work,
+  .passport-toolkit,
+  .passport-about {
+    animation: brand-rise 0.35s var(--ease-out) both;
+  }
+  .questions-list details[open] > p {
+    animation: brand-rise 0.3s var(--ease-out) both;
+  }
+  .opportunity-tickets > [data-reveal]:nth-child(2) {
+    transition-delay: 0.08s;
+  }
+  .opportunity-tickets > [data-reveal]:nth-child(3) {
+    transition-delay: 0.16s;
+  }
+}
+@media (max-width: 1440px) {
+  .questions-chapter {
+    margin-inline: 64px;
+  }
+}
+@media (max-width: 1150px) {
+  .chapter-inner {
+    padding: 75px 40px;
+    gap: 50px;
+  }
+  .chapter-copy h2 {
+    font-size: 54px;
+  }
+  .passport-stage {
+    padding-right: 10px;
+  }
+  .passport-sticker {
+    right: -10px;
+    width: 76px;
+    height: 76px;
+  }
+  .passport-sticker > b {
+    font-size: 25px;
+  }
+  .profile-passport {
+    padding: 23px;
+  }
+  .passport-panel {
+    min-height: 220px;
+  }
+  .passport-identity h3 {
+    font-size: 23px;
+  }
+  .passport-identity p {
+    font-size: 9px;
+  }
+  .passport-identity {
+    gap: 12px;
+  }
+  .opportunity-chapter {
+    padding: 80px 40px 60px;
+  }
+  .opportunity-heading h2 {
+    font-size: 51px;
+  }
+  .opportunity-ticket {
+    padding-inline: 22px;
+  }
+  .opportunity-tickets {
+    gap: 20px;
+  }
+  .opportunity-ticket h3 {
+    font-size: 24px;
+  }
+  .ticket-symbol {
+    height: 175px;
+  }
+  .cofounder-chapter {
+    padding: 45px 40px 65px;
+    gap: 55px;
+  }
+  .cofounder-copy h2 {
+    font-size: 52px;
+  }
+  .cofounder-equation {
+    gap: 10px;
+    font-size: 6px;
+  }
+  .questions-chapter {
+    margin-inline: 40px;
+    gap: 65px;
+  }
+  .questions-heading h2 {
+    font-size: 44px;
+  }
+  .questions-list summary {
+    font-size: 12px;
+    gap: 16px;
+  }
+}
+@media (max-width: 900px) {
+  .chapter-inner {
+    gap: 32px;
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+  .chapter-copy h2 {
+    font-size: 43px;
+    letter-spacing: -2px;
+  }
+  .chapter-copy > p {
+    font-size: 12px;
+  }
+  .profile-side-caption {
+    margin-top: 38px;
+  }
+  .passport-identity h3 {
+    font-size: 19px;
+  }
+  .passport-avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+  .passport-identity p {
+    font-size: 7px;
+  }
+  .passport-topline {
+    font-size: 6px;
+  }
+  .profile-passport {
+    padding: 18px;
+  }
+  .passport-tabs {
+    gap: 19px;
+  }
+  .passport-tabs > button {
+    font-size: 9px;
+  }
+  .passport-work .offscript-title {
+    font-size: 23px;
+    margin-top: 12px;
+  }
+  .passport-work .cover-topline > span:last-child {
+    display: none;
+  }
+  .passport-work .paper-flower {
+    scale: 0.42;
+    bottom: 6px;
+    right: 7px;
+  }
+  .passport-work .cover-bottomline {
+    font-size: 3px;
+  }
+  .passport-panel {
+    min-height: 205px;
+  }
+  .passport-status {
+    font-size: 7px;
+  }
+  .passport-sticker {
+    width: 64px;
+    height: 64px;
+    right: -10px;
+    font-size: 12px;
+  }
+  .passport-sticker > b {
+    font-size: 22px;
+  }
+  .passport-toolkit > div > span {
+    font-size: 10px;
+    padding: 8px;
+  }
+  .passport-toolkit > p {
+    font-size: 11px;
+  }
+  .passport-about > p {
+    font-size: 23px;
+  }
+  .passport-about > div {
+    font-size: 8px;
+  }
+  .opportunity-heading h2 {
+    font-size: 45px;
+    letter-spacing: -2px;
+  }
+  .opportunity-aside {
+    font-size: 6px;
+  }
+  .opportunity-tickets {
+    gap: 15px;
+  }
+  .opportunity-ticket {
+    padding: 20px 18px 25px;
+  }
+  .ticket-top {
+    font-size: 7px;
+  }
+  .ticket-symbol {
+    height: 145px;
+  }
+  .symbol-team {
+    grid-template-columns: repeat(2, 46px);
+    grid-template-rows: repeat(2, 46px);
+    gap: 6px;
+  }
+  .symbol-freelance > svg {
+    width: 140px;
+    height: 110px;
+  }
+  .symbol-founder > i {
+    width: 72px;
+    height: 99px;
+    border-width: 15px;
+  }
+  .opportunity-ticket h3 {
+    font-size: 21px;
+  }
+  .opportunity-ticket > p {
+    font-size: 11px;
+    min-height: 78px;
+  }
+  .opportunity-ticket > a {
+    font-size: 10px;
+  }
+  .cofounder-chapter {
+    gap: 38px;
+  }
+  .cofounder-copy h2 {
+    font-size: 44px;
+  }
+  .cofounder-copy > p {
+    font-size: 12px;
+  }
+  .cofounder-equation {
+    gap: 8px;
+    font-size: 5px;
+    letter-spacing: 0;
+  }
+  .cofounder-art-caption {
+    font-size: 5px;
+  }
+  .questions-chapter {
+    gap: 43px;
+    grid-template-columns: 0.9fr 1.25fr;
+  }
+  .questions-heading h2 {
+    font-size: 36px;
+    letter-spacing: -1.8px;
+  }
+  .questions-heading .section-kicker {
+    font-size: 7px;
+  }
+  .questions-list summary {
+    font-size: 11px;
+    padding: 21px 0;
+    gap: 12px;
+  }
+  .questions-list details > p {
+    font-size: 12px;
+    padding-left: 25px;
+    padding-right: 10px;
+  }
+  .question-number {
+    font-size: 7px;
+  }
+}
+@media (max-width: 650px) {
+  .chapter-inner {
+    padding: 57px 25px 55px;
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  .chapter-copy h2 {
+    font-size: 49px;
+    letter-spacing: -2.6px;
+    margin-block: 21px;
+  }
+  .chapter-copy > p {
+    font-size: 13px;
+  }
+  .chapter-text-link {
+    font-size: 12px;
+    margin-top: 23px;
+    gap: 24px;
+  }
+  .profile-side-caption {
+    display: none;
+  }
+  .passport-stage {
+    max-width: 440px;
+    justify-self: center;
+    padding: 16px 12px 26px 0;
+  }
+  .passport-margin-note {
+    font-size: 6px;
+    margin-bottom: 15px;
+    letter-spacing: 0.7px;
+  }
+  .profile-passport {
+    padding: 22px 20px;
+    transform: rotate(-1.5deg);
+  }
+  .passport-topline {
+    font-size: 6px;
+  }
+  .passport-identity {
+    padding: 21px 0;
+    gap: 12px;
+  }
+  .passport-identity h3 {
+    font-size: 23px;
+  }
+  .passport-identity p {
+    font-size: 8px;
+  }
+  .passport-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+  .passport-tabs {
+    gap: 23px;
+  }
+  .passport-tabs > button {
+    font-size: 10px;
+  }
+  .passport-work .project-cover {
+    aspect-ratio: 1.8;
+    padding: 17px;
+  }
+  .passport-work .offscript-title {
+    font-size: 28px;
+    margin-top: 20px;
+  }
+  .passport-work .paper-flower {
+    scale: 0.52;
+    right: 11px;
+    bottom: 11px;
+  }
+  .passport-work .cover-bottomline {
+    left: 17px;
+    right: 17px;
+    bottom: 11px;
+    font-size: 3px;
+  }
+  .passport-panel {
+    min-height: 232px;
+  }
+  .passport-project-caption {
+    font-size: 11px;
+  }
+  .passport-project-caption small {
+    font-size: 8px;
+  }
+  .passport-status {
+    font-size: 7px;
+  }
+  .passport-sticker {
+    right: -4px;
+    bottom: 4px;
+    width: 69px;
+    height: 69px;
+    font-size: 13px;
+  }
+  .passport-sticker > b {
+    font-size: 23px;
+  }
+  .passport-panel-label {
+    font-size: 7px;
+  }
+  .passport-toolkit > div > span {
+    font-size: 12px;
+    padding: 9px 10px;
+  }
+  .passport-toolkit > p {
+    font-size: 12px;
+  }
+  .passport-about > p {
+    font-size: 26px;
+    margin: 28px 0;
+  }
+  .passport-about > div {
+    font-size: 8px;
+  }
+  .opportunity-chapter {
+    padding: 60px 25px 50px;
+  }
+  .opportunity-heading {
+    display: block;
+    margin-bottom: 30px;
+  }
+  .opportunity-heading h2 {
+    font-size: 43px;
+    letter-spacing: -2.1px;
+    margin-top: 19px;
+  }
+  .opportunity-aside {
+    display: block;
+    font-size: 7px;
+    margin-top: 22px;
+  }
+  .opportunity-aside > br {
+    display: none;
+  }
+  .opportunity-tickets {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .opportunity-ticket {
+    padding: 24px 26px 28px;
+  }
+  .ticket-top {
+    font-size: 9px;
+  }
+  .ticket-symbol {
+    height: 182px;
+    margin-block: 10px 3px;
+  }
+  .symbol-team {
+    grid-template-columns: repeat(2, 57px);
+    grid-template-rows: repeat(2, 57px);
+    gap: 8px;
+  }
+  .symbol-freelance > svg {
+    width: 177px;
+    height: 135px;
+  }
+  .symbol-founder > i {
+    width: 92px;
+    height: 122px;
+    border-width: 19px;
+  }
+  .opportunity-ticket h3 {
+    font-size: 30px;
+    letter-spacing: -1.3px;
+  }
+  .opportunity-ticket > p {
+    font-size: 13px;
+    max-width: 275px;
+    min-height: 0;
+  }
+  .opportunity-ticket > a {
+    font-size: 12px;
+    margin-top: 25px;
+  }
+  .ticket-perforation:before,
+  .ticket-perforation:after {
+    bottom: 57px;
+  }
+  .opportunity-footnote {
+    font-size: 7px;
+    line-height: 1.7;
+    gap: 8px;
+    margin-top: 19px;
+  }
+  .cofounder-chapter {
+    padding: 18px 25px 58px;
+    grid-template-columns: 1fr;
+    gap: 27px;
+  }
+  .cofounder-art {
+    width: 100%;
+    max-width: 410px;
+    justify-self: center;
+  }
+  .cofounder-art > img {
+    width: 112%;
+    margin-left: -6%;
+  }
+  .cofounder-art-caption {
+    font-size: 6px;
+    margin-top: -17px;
+  }
+  .cofounder-copy h2 {
+    font-size: 51px;
+    line-height: 1.05;
+    letter-spacing: -2.7px;
+  }
+  .cofounder-copy > p {
+    font-size: 13px;
+    max-width: 285px;
+  }
+  .cofounder-equation {
+    margin-top: 27px;
+    gap: 14px;
+    font-size: 6px;
+    letter-spacing: 0.4px;
+  }
+  .equation-star {
+    font-size: 29px;
+  }
+  .questions-chapter {
+    margin-inline: 25px;
+    padding: 52px 0 33px;
+    grid-template-columns: 1fr;
+    gap: 29px;
+  }
+  .questions-heading h2 {
+    font-size: 42px;
+    letter-spacing: -2.2px;
+    margin-top: 20px;
+  }
+  .questions-heading .section-kicker {
+    font-size: 7px;
+  }
+  .questions-doodle {
+    position: absolute;
+    right: 14px;
+    top: 29px;
+    font-size: 85px;
+    margin: 0;
+    width: 43px;
+  }
+  .questions-list summary {
+    font-size: 12px;
+    gap: 13px;
+    padding: 21px 0;
+  }
+  .question-number {
+    font-size: 7px;
+  }
+  .question-toggle {
+    font-size: 22px;
+  }
+  .questions-list details > p {
+    font-size: 12px;
+    padding-left: 26px;
+    padding-right: 13px;
+  }
+  .opportunity-tickets > [data-reveal] {
+    transition-delay: 0s !important;
+  }
+  .landing-v2 .footer-utility nav {
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 360px) {
+  .chapter-copy h2 {
+    font-size: 43px;
+  }
+  .passport-identity h3 {
+    font-size: 20px;
+  }
+  .passport-identity p {
+    font-size: 7px;
+  }
+  .passport-topline {
+    font-size: 5px;
+  }
+  .passport-tabs {
+    gap: 18px;
+  }
+  .passport-tabs > button {
+    font-size: 9px;
+  }
+  .passport-work .offscript-title {
+    font-size: 24px;
+    margin-top: 13px;
+  }
+  .passport-work .paper-flower {
+    scale: 0.43;
+    right: 5px;
+  }
+  .passport-panel {
+    min-height: 218px;
+  }
+  .passport-status {
+    font-size: 6px;
+  }
+  .passport-status > a {
+    gap: 4px;
+  }
+  .passport-about > p {
+    font-size: 23px;
+  }
+  .passport-about > div {
+    font-size: 7px;
+  }
+  .opportunity-heading h2 {
+    font-size: 37px;
+  }
+  .opportunity-ticket {
+    padding-inline: 23px;
+  }
+  .opportunity-ticket h3 {
+    font-size: 28px;
+  }
+  .cofounder-copy h2 {
+    font-size: 45px;
+  }
+  .cofounder-equation {
+    font-size: 5px;
+    gap: 12px;
+  }
+  .questions-heading h2 {
+    font-size: 37px;
+  }
+  .questions-doodle {
+    font-size: 72px;
+    right: 10px;
+  }
+  .questions-list summary {
+    font-size: 11px;
+  }
+}
+/* Keep the decorative seal clear of the profile action. */
+.passport-sticker {
+  bottom: -45px;
+}
+@media (max-width: 900px) {
+  .passport-sticker {
+    bottom: -25px;
+  }
+}
+@media (max-width: 650px) {
+  .passport-sticker {
+    bottom: -31px;
+  }
+}
