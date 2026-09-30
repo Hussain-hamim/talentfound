@@ -20,9 +20,12 @@ export function DevMatchHero() {
           <br className="hero-desktop-break" />
           Find your people. Build something that matters.
         </p>
-        <div className="devmatch-fade-rise devmatch-rise-delay-2">
+        <div className="devmatch-hero-actions devmatch-fade-rise devmatch-rise-delay-2">
           <Link className="devmatch-glass devmatch-hero-cta" href="/signup">
             Find your people
+          </Link>
+          <Link className="devmatch-glass devmatch-hero-cta button-outline" href="/signup?role=hiring">
+            Hire talent
           </Link>
         </div>
       </div>

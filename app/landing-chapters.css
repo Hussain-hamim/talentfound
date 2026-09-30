@@ -1,4 +1,4 @@
-/* Additional editorial chapters, using the established DevMatch identity. */
+/* Additional editorial chapters, using the established TalentFound identity. */
 .profile-chapter {
   background: var(--surface);
   border-top: 1px solid var(--line);
@@ -353,16 +353,9 @@
   font-weight: 450;
   line-height: 1.07;
   letter-spacing: -3px;
-  margin-top: 23px;
 }
 .opportunity-heading h2 > span {
   color: var(--muted);
-}
-.opportunity-aside {
-  font: 8px/1.9 var(--font-geist-mono);
-  letter-spacing: 0.8px;
-  color: var(--muted);
-  padding-bottom: 6px;
 }
 .opportunity-tickets {
   display: grid;
@@ -495,18 +488,6 @@
 .ticket-perforation:after {
   right: -9px;
 }
-.opportunity-footnote {
-  font: 9px var(--font-geist-mono);
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 24px;
-}
-.opportunity-footnote > span {
-  color: var(--accent);
-  font-size: 18px;
-}
 .cofounder-chapter {
   max-width: 1440px;
   margin: auto;
@@ -533,18 +514,9 @@
     transparent 90%
   );
 }
-.cofounder-art-caption {
-  font: 7px var(--font-geist-mono);
-  letter-spacing: 0.9px;
-  display: block;
-  text-align: center;
-  color: var(--muted);
-  position: relative;
-  margin-top: -14px;
-}
 .cofounder-copy h2 {
   font-size: 61px;
-  margin-block: 24px;
+  margin: 0 0 24px;
 }
 .cofounder-copy h2 > span {
   color: var(--accent);
@@ -553,25 +525,8 @@
   font-size: 13px;
   max-width: 290px;
 }
-.cofounder-equation {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-top: 42px;
-  font: 7px var(--font-geist-mono);
-  color: var(--muted);
-  letter-spacing: 0.5px;
-}
-.cofounder-equation > b {
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--muted);
-}
-.equation-star {
-  font:
-    32px/1 Arial,
-    sans-serif;
-  color: var(--accent);
+.cofounder-copy .devmatch-hero-cta {
+  margin-top: 30px;
 }
 .questions-chapter {
   max-width: 1312px;
@@ -751,10 +706,6 @@
   .cofounder-copy h2 {
     font-size: 52px;
   }
-  .cofounder-equation {
-    gap: 10px;
-    font-size: 6px;
-  }
   .questions-chapter {
     margin-inline: 40px;
     gap: 65px;
@@ -852,9 +803,6 @@
     font-size: 45px;
     letter-spacing: -2px;
   }
-  .opportunity-aside {
-    font-size: 6px;
-  }
   .opportunity-tickets {
     gap: 15px;
   }
@@ -899,14 +847,6 @@
   }
   .cofounder-copy > p {
     font-size: 12px;
-  }
-  .cofounder-equation {
-    gap: 8px;
-    font-size: 5px;
-    letter-spacing: 0;
-  }
-  .cofounder-art-caption {
-    font-size: 5px;
   }
   .questions-chapter {
     gap: 43px;
@@ -1061,15 +1001,6 @@
   .opportunity-heading h2 {
     font-size: 43px;
     letter-spacing: -2.1px;
-    margin-top: 19px;
-  }
-  .opportunity-aside {
-    display: block;
-    font-size: 7px;
-    margin-top: 22px;
-  }
-  .opportunity-aside > br {
-    display: none;
   }
   .opportunity-tickets {
     grid-template-columns: 1fr;
@@ -1116,12 +1047,6 @@
   .ticket-perforation:after {
     bottom: 57px;
   }
-  .opportunity-footnote {
-    font-size: 7px;
-    line-height: 1.7;
-    gap: 8px;
-    margin-top: 19px;
-  }
   .cofounder-chapter {
     padding: 18px 25px 58px;
     grid-template-columns: 1fr;
@@ -1136,10 +1061,6 @@
     width: 112%;
     margin-left: -6%;
   }
-  .cofounder-art-caption {
-    font-size: 6px;
-    margin-top: -17px;
-  }
   .cofounder-copy h2 {
     font-size: 51px;
     line-height: 1.05;
@@ -1148,15 +1069,6 @@
   .cofounder-copy > p {
     font-size: 13px;
     max-width: 285px;
-  }
-  .cofounder-equation {
-    margin-top: 27px;
-    gap: 14px;
-    font-size: 6px;
-    letter-spacing: 0.4px;
-  }
-  .equation-star {
-    font-size: 29px;
   }
   .questions-chapter {
     margin-inline: 25px;
@@ -1257,10 +1169,6 @@
   }
   .cofounder-copy h2 {
     font-size: 45px;
-  }
-  .cofounder-equation {
-    font-size: 5px;
-    gap: 12px;
   }
   .questions-heading h2 {
     font-size: 37px;

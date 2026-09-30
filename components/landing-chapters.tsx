@@ -40,7 +40,6 @@ export function ProfileChapter() {
 
 const opportunities = [
   {
-    number: "01",
     title: "Your next team.",
     label: "FULL-TIME",
     copy: "A place to do your best work. With people who bring it out of you.",
@@ -49,7 +48,6 @@ const opportunities = [
     type: "team",
   },
   {
-    number: "02",
     title: "Your own rhythm.",
     label: "FREELANCE",
     copy: "Interesting problems. Fresh collaborations. Room to work your way.",
@@ -58,7 +56,6 @@ const opportunities = [
     type: "freelance",
   },
   {
-    number: "03",
     title: "Your big what-if.",
     label: "CO-FOUNDERS",
     copy: "That idea you keep coming back to. Someone to build it with.",
@@ -72,19 +69,11 @@ export function OpportunityChapter() {
   return (
     <section className="opportunity-chapter" id="possibilities">
       <div className="opportunity-heading" data-reveal>
-        <div>
-          <span className="section-kicker">KEEP A FEW DOORS OPEN.</span>
-          <h2>
-            One profile.
-            <br />
-            <span>Many possible futures.</span>
-          </h2>
-        </div>
-        <span className="opportunity-aside">
-          YOU DON’T HAVE TO
+        <h2>
+          One profile.
           <br />
-          HAVE IT ALL FIGURED OUT. ↙
-        </span>
+          <span>Many possible futures.</span>
+        </h2>
       </div>
       <div className="opportunity-tickets">
         {opportunities.map((item) => (
@@ -95,7 +84,6 @@ export function OpportunityChapter() {
           >
             <div className="ticket-top">
               <span>{item.label}</span>
-              <span>/{item.number}</span>
             </div>
             <div
               className={`ticket-symbol symbol-${item.type}`}
@@ -135,9 +123,6 @@ export function OpportunityChapter() {
           </article>
         ))}
       </div>
-      <p className="opportunity-footnote">
-        <span>↳</span> Follow your curiosity. You can change direction.
-      </p>
     </section>
   );
 }
@@ -153,12 +138,8 @@ export function CofounderChapter() {
           height={1254}
           sizes="(max-width: 650px) 100vw, 50vw"
         />
-        <span className="cofounder-art-caption">
-          02 — A DIFFERENT KIND OF CHEMISTRY
-        </span>
       </div>
       <div className="chapter-copy cofounder-copy" data-reveal>
-        <span className="section-kicker">SOME THINGS TAKE TWO.</span>
         <h2>
           You bring
           <br />
@@ -169,16 +150,9 @@ export function CofounderChapter() {
           the <span>why-not.</span>
         </h2>
         <p>Different strengths. A shared itch to make something real.</p>
-        <Link className="chapter-text-link" href="/signup?role=founder">
-          Meet your other half <Arrow diagonal />
+        <Link className="devmatch-glass devmatch-hero-cta" href="/signup?role=founder">
+          Meet your other half
         </Link>
-        <div className="cofounder-equation" aria-hidden="true">
-          <span>YOUR CRAFT</span>
-          <b>+</b>
-          <span>THEIR PERSPECTIVE</span>
-          <b>=</b>
-          <span className="equation-star">✳</span>
-        </div>
       </div>
     </section>
   );
@@ -187,7 +161,7 @@ export function CofounderChapter() {
 const questions = [
   [
     "Is this another job board?",
-    "Your work comes first here. DevMatch is being built around developer profiles, direct invitations, and co-founder connections—so the right people can discover you through what you make.",
+    "Your work comes first here. TalentFound is being built around developer profiles, direct invitations, and co-founder connections, so the right people can discover you through what you make.",
   ],
   [
     "Do I have to be looking for a job?",
@@ -209,29 +183,21 @@ const questions = [
 
 export function QuestionsChapter() {
   return (
-    <section className="questions-chapter" id="questions">
-      <div className="questions-heading" data-reveal>
-        <span className="section-kicker">BEFORE YOU SAY HELLO.</span>
-        <h2>
-          A little
-          <br />
-          <span>good to know.</span>
+    <section className="clarity-faq-section" id="questions" aria-labelledby="faq-title">
+      <div className="clarity-faq-heading" data-reveal>
+        <h2 id="faq-title">
+          A little <span>clarity.</span>
         </h2>
-        <span className="questions-doodle" aria-hidden="true">
-          ?
-        </span>
       </div>
-      <div className="questions-list" data-reveal>
+      <div className="clarity-faq-list" data-reveal>
         {questions.map(([question, answer], index) => (
-          <details name="devmatch-questions" key={question}>
+          <details name="devmatch-questions" key={question} open={index === 0}>
             <summary>
-              <span className="question-number">0{index + 1}</span>
-              <span>{question}</span>
-              <span className="question-toggle" aria-hidden="true">
-                +
-              </span>
+              <span className="clarity-faq-number" aria-hidden="true">0{index + 1}</span>
+              <span className="clarity-faq-question">{question}</span>
+              <span className="clarity-faq-toggle" aria-hidden="true" />
             </summary>
-            <p>{answer}</p>
+            <div className="clarity-faq-answer"><p>{answer}</p></div>
           </details>
         ))}
       </div>

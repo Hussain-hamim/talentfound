@@ -50,13 +50,13 @@ export function Brand({ light = false }: { light?: boolean }) {
     <Link
       href="/"
       className={`brand${light ? " brand-light" : ""}`}
-      aria-label="DevMatch home"
+      aria-label="TalentFound home"
     >
       <span className="brand-mark">
         <MatchMark />
       </span>
       <span>
-        devmatch<span className="brand-period">.</span>
+        talentfound<span className="brand-period">.</span>
       </span>
     </Link>
   );

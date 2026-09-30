@@ -1,6 +1,6 @@
 @import "tailwindcss";
 :root {
-  /* Shared DevMatch brand palette: landing, authentication, and future UI. */
+  /* Shared TalentFound brand palette: landing, authentication, and future UI. */
   --brand-black: #151415;
   --brand-red: #ff3317;
   --brand-brown: #732214;

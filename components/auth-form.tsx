@@ -35,7 +35,7 @@ const content = {
     label: "ONE MORE THING",
     title: "Check your inbox.",
     description:
-      "Verify your email to take the next step toward your DevMatch profile.",
+      "Verify your email to take the next step toward your TalentFound profile.",
   },
 };
 
@@ -129,7 +129,7 @@ export function AuthForm({
   return (
     <div className="auth-form-wrap">
       <Link className="back-link" href={social ? "/" : "/login"}>
-        <span>←</span> {social ? "Back to DevMatch" : "Back to log in"}
+        <span>←</span> {social ? "Back to TalentFound" : "Back to log in"}
       </Link>
       <div className="eyebrow">{copy.label}</div>
       <h1>
@@ -366,7 +366,7 @@ export function AuthForm({
               className="button button-red full-width"
             >
               {mode === "login"
-                ? "Log in to DevMatch"
+                ? "Log in to TalentFound"
                 : mode === "signup"
                   ? "Create your account"
                   : mode === "forgot-password"
@@ -379,7 +379,7 @@ export function AuthForm({
             <p className="auth-switch">
               {mode === "login"
                 ? "New around here?"
-                : "Already part of DevMatch?"}{" "}
+                : "Already part of TalentFound?"}{" "}
               <Link href={mode === "login" ? "/signup" : "/login"}>
                 {mode === "login" ? "Create an account" : "Log in"}
                 <span> ↗</span>

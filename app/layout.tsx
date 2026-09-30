@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./buttons.css";
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -8,8 +9,8 @@ const geistMono = Geist_Mono({
 });
 export const metadata: Metadata = {
   title: {
-    default: "DevMatch — Good work. Great company.",
-    template: "%s | DevMatch",
+    default: "TalentFound. Good work. Great company.",
+    template: "%s | TalentFound",
   },
   description:
     "A home for your work. A starting point for what’s next. Showcase your projects and connect with teams, founders, and your next opportunity.",

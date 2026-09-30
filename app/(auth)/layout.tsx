@@ -36,7 +36,7 @@ export default function AuthLayout({
         </div>
         <div className="auth-story-footer">
           <span>ONE PROFILE. MORE POSSIBILITY.</span>
-          <span>© {new Date().getFullYear()} DevMatch</span>
+          <span>© {new Date().getFullYear()} TalentFound</span>
         </div>
       </aside>
       <section className="auth-panel">

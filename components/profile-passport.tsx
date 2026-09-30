@@ -34,7 +34,7 @@ export function ProfilePassport() {
       </span>
       <div className="profile-passport">
         <div className="passport-topline">
-          <span>DEVMATCH / PEOPLE</span>
+          <span>TALENTFOUND / PEOPLE</span>
           <span>EXAMPLE PROFILE ↗</span>
         </div>
         <div className="passport-identity">

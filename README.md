@@ -1,4 +1,4 @@
-# DevMatch
+# TalentFound
 
 The landing page and authentication UI for a developer discovery and co-founder matching platform. Built with Next.js App Router, React, TypeScript, and custom responsive CSS.
 
@@ -24,7 +24,7 @@ Open [localhost:3000](http://localhost:3000). Use the hostname shown by the deve
 
 This phase is UI only. Forms validate locally and show explicit preview feedback; registration proceeds to the verification preview. No accounts are created, credentials stored, authentication requests made, or emails sent. GitHub and Google buttons display preview notices. The three gallery profiles and projects are illustrative examples. Native dialogs support keyboard dismissal and restore focus to the originating profile.
 
-Authentication controls and presentation live in `components/auth-form.tsx`; the shared authentication layout is in `app/(auth)/layout.tsx`. The landing page remains a Server Component, with small client components for mobile navigation, sample-profile dialogs, role selection, and progressive scroll reveals. Its visual system is scoped in `app/landing.css` and `app/landing-chapters.css`; additional sections are in `components/landing-chapters.tsx` and the keyboard-accessible profile tabs are in `components/profile-passport.tsx`. The original generated hero artwork lives in `public/images/devmatch-connection.png`. The palette uses `#ff3317`, `#151415`, white, and dark red, inspired by Superteam Talent, with original DevMatch branding and content based on `docs/plan.md` and `docs/plan2.md`.
+Authentication controls and presentation live in `components/auth-form.tsx`; the shared authentication layout is in `app/(auth)/layout.tsx`. The landing page remains a Server Component, with small client components for mobile navigation, sample-profile dialogs, role selection, and progressive scroll reveals. Its visual system is scoped in `app/landing.css` and `app/landing-chapters.css`; additional sections are in `components/landing-chapters.tsx` and the keyboard-accessible profile tabs are in `components/profile-passport.tsx`. The original generated hero artwork lives in `public/images/devmatch-connection.png`. The palette uses `#ff3317`, `#151415`, white, and dark red, inspired by Superteam Talent, with original TalentFound branding and content based on `docs/plan.md` and `docs/plan2.md`.
 
 ## Checks
 

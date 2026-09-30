@@ -15,4 +15,4 @@ The background streams the supplied CloudFront video. Google Fonts supplies Inst
 
 Navigation opens lightweight in-page panels. Both journey buttons open a small intention-setting demo that stores text only in the current browser. Contact and journal panels clearly describe their coming-soon status; no backend or email service is connected.
 
-This standalone app preserves the parent DevMatch Next.js application and existing source changes.
+This standalone app preserves the parent TalentFound Next.js application and existing source changes.

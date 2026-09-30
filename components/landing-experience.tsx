@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, type MouseEvent } from "react";
+import Image from "next/image";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { Arrow } from "./brand";
 
 const builders = [
@@ -15,7 +16,6 @@ const builders = [
       "An independent publishing space for people with something to say.",
     className: "offscript",
     title: "A little less ordinary.",
-    number: "01",
   },
   {
     name: "Sam Rivera",
@@ -27,7 +27,6 @@ const builders = [
       "An interactive listening experience that makes room for discovery.",
     className: "frequency",
     title: "Find your frequency.",
-    number: "02",
   },
   {
     name: "Jamie Chen",
@@ -39,7 +38,6 @@ const builders = [
       "A thoughtfully simple workspace for turning loose ideas into real projects.",
     className: "forma",
     title: "A space for what’s next.",
-    number: "03",
   },
 ];
 
@@ -63,7 +61,7 @@ export function ProjectCover({ kind }: { kind: string }) {
           <b />
         </div>
         <span className="cover-bottomline">
-          A JOURNAL FOR THE REST OF US. <span>VOL. 001</span>
+          A JOURNAL FOR THE REST OF US.
         </span>
       </div>
     );
@@ -85,7 +83,7 @@ export function ProjectCover({ kind }: { kind: string }) {
               key={i}
               style={{
                 height: `${Math.round(18 + Math.sin(i * 0.4) ** 2 * 90 + Math.cos(i * 0.18) ** 2 * 58)}px`,
-                animationDelay: `${Number((i * -0.08).toFixed(2))}s`,
+                ["--wave-shift" as string]: `${Number((i * -0.08).toFixed(2))}s`,
               }}
             />
           ))}
@@ -94,7 +92,7 @@ export function ProjectCover({ kind }: { kind: string }) {
           <span className="play-symbol" aria-hidden="true">
             ▶
           </span>{" "}
-          A SOUNDTRACK FOR YOUR HEADSPACE. <span>02:48</span>
+          A SOUNDTRACK FOR YOUR HEADSPACE.
         </span>
       </div>
     );
@@ -115,7 +113,7 @@ export function ProjectCover({ kind }: { kind: string }) {
         <i />
       </div>
       <span className="cover-bottomline">
-        LESS NOISE. MORE SPACE. <span>↗</span>
+        LESS NOISE. MORE SPACE.
       </span>
     </div>
   );
@@ -123,8 +121,32 @@ export function ProjectCover({ kind }: { kind: string }) {
 
 export function BuilderShowcase() {
   const [selected, setSelected] = useState(0);
+  const [intro, setIntro] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
+  const gallery = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const node = gallery.current;
+    if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        setIntro(true);
+        observer.disconnect();
+      },
+      { threshold: 0.4 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!intro) return;
+    const timeout = window.setTimeout(() => setIntro(false), 1700);
+    return () => window.clearTimeout(timeout);
+  }, [intro]);
+
   function openProfile(index: number, event: MouseEvent<HTMLButtonElement>) {
     opener.current = event.currentTarget;
     setSelected(index);
@@ -136,7 +158,7 @@ export function BuilderShowcase() {
   const builder = builders[selected];
   return (
     <>
-      <div className="builder-gallery">
+      <div className={intro ? "builder-gallery cover-intro" : "builder-gallery"} ref={gallery}>
         {builders.map((person, index) => (
           <button
             type="button"
@@ -148,9 +170,6 @@ export function BuilderShowcase() {
           >
             <div className="project-cover-wrap">
               <ProjectCover kind={person.className} />
-              <span className="view-profile-bubble">
-                <Arrow diagonal />
-              </span>
             </div>
             <div className="builder-caption-row">
               <span className="builder-initials">{person.initials}</span>
@@ -158,7 +177,6 @@ export function BuilderShowcase() {
                 {person.name}
                 <small>{person.role}</small>
               </span>
-              <span className="builder-index">/{person.number}</span>
             </div>
           </button>
         ))}
@@ -209,24 +227,18 @@ const directions = [
   {
     label: "I build things",
     role: "developer",
-    person: "THE BUILDER",
-    match: "THE NEXT CHAPTER",
     text: "Your work, in front of people who get it.",
     cta: "Get discovered",
   },
   {
     label: "I’m hiring",
     role: "hiring",
-    person: "THE TEAM",
-    match: "THE MISSING PIECE",
     text: "Find the person behind the work you wish you’d made.",
     cta: "Find your next builder",
   },
   {
     label: "I have an idea",
     role: "founder",
-    person: "THE BIG IDEA",
-    match: "THE CO-FOUNDER",
     text: "Meet someone who’s as all-in on your idea as you are.",
     cta: "Find your co-founder",
   },
@@ -234,73 +246,87 @@ const directions = [
 
 export function ConnectionPlayground() {
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [inView, setInView] = useState(false);
+  const chosen = useRef(false);
+  const layout = useRef<HTMLDivElement>(null);
   const direction = directions[active];
+
+  useEffect(() => {
+    const node = layout.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.45 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView || paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => {
+      setActive((current) => (current + 1) % directions.length);
+    }, 4000);
+    return () => window.clearInterval(timer);
+  }, [inView, paused]);
+
+  function choose(index: number) {
+    chosen.current = true;
+    setPaused(true);
+    setActive(index);
+  }
+
   return (
-    <div className="connection-playground">
-      <div className="connection-visual" key={active} aria-hidden="true">
-        <div className="person-disc disc-you">
-          <span>{direction.person}</span>
-          <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="34" r="12" />
-            <path
-              d="M24 76a26 26 0 0 1 52 0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="13"
-            />
-          </svg>
-        </div>
-        <div className="person-disc disc-next">
-          <span>{direction.match}</span>
-          <svg viewBox="0 0 100 100">
-            <path
-              d="M50 15v70M15 50h70M25 25l50 50M25 75l50-50"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="13"
-            />
-          </svg>
-        </div>
-        <div className="connection-cursor cursor-one">
-          ↖ <span>you</span>
-        </div>
-        <div className="connection-cursor cursor-two">
-          ↖ <span>your kind of person</span>
-        </div>
-        <span className="connection-visual-caption">
-          IT STARTS WITH A CONNECTION.
-        </span>
-      </div>
-      <div className="connection-controls">
+    <div className="match-layout" ref={layout}>
+      <div className="match-editorial" data-reveal>
+        <h2 id="match-title">
+          Good things<br />
+          start with<br />
+          <span>your people.</span>
+        </h2>
         <div
-          className="direction-options"
-          role="group"
-          aria-label="What brings you to DevMatch?"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => {
+            if (!chosen.current) setPaused(false);
+          }}
+          onFocus={() => setPaused(true)}
+          onBlur={(event) => {
+            const next = event.relatedTarget;
+            if (chosen.current || (next instanceof Node && event.currentTarget.contains(next))) return;
+            setPaused(false);
+          }}
         >
-          {directions.map((item, index) => (
-            <button
-              key={item.role}
-              type="button"
-              aria-pressed={active === index}
-              onClick={() => setActive(index)}
-            >
-              <span className="direction-number">0{index + 1}</span>
-              {item.label}
-              <span className="direction-indicator">
-                {active === index ? "↗" : "+"}
-              </span>
-            </button>
-          ))}
+          <div className="match-role-selector" role="group" aria-label="What brings you to TalentFound?">
+            {directions.map((item, index) => (
+              <button
+                key={item.role}
+                type="button"
+                aria-pressed={active === index}
+                aria-controls="match-detail"
+                onClick={() => choose(index)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+          <div className="match-detail" id="match-detail">
+            <p aria-live="polite" aria-atomic="true">{direction.text}</p>
+            <Link className="brand-button match-action" href={`/signup?role=${direction.role}`}>
+              {direction.cta}<Arrow diagonal />
+            </Link>
+          </div>
         </div>
-        <div className="direction-copy" key={direction.role}>
-          <p>{direction.text}</p>
-          <Link
-            className="connection-cta"
-            href={`/signup?role=${direction.role}`}
-          >
-            {direction.cta}
-            <Arrow diagonal />
-          </Link>
+      </div>
+      <div className="match-art" data-role={direction.role} aria-hidden="true">
+        <div className="match-art-frame">
+          <Image
+            src="/images/devmatch-connection-dark.png"
+            alt=""
+            width={1254}
+            height={1254}
+            sizes="(max-width: 650px) 90vw, 50vw"
+          />
         </div>
       </div>
     </div>

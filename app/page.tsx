@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Arrow, Brand } from "@/components/brand";
 import { DevMatchHero } from "@/components/devmatch-hero";
+import { FooterWordmark } from "@/components/footer-wordmark";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import {
   BuilderShowcase,
   ConnectionPlayground,
 } from "@/components/landing-experience";
 import {
-  ProfileChapter,
   OpportunityChapter,
   CofounderChapter,
   QuestionsChapter,
@@ -15,6 +15,8 @@ import {
 import "./landing.css";
 import "./landing-chapters.css";
 import "./hero.css";
+import "./people.css";
+import "./faq.css";
 
 export default function Home() {
   return (
@@ -38,25 +40,12 @@ export default function Home() {
                 <br />
                 Give it a place to be found.
               </p>
-              <span className="example-caption">A FEW PROFILE STUDIES ↙</span>
             </div>
           </div>
           <BuilderShowcase />
         </section>
 
-        <ProfileChapter />
-
-        <section className="people-section" id="for-founders">
-          <div className="people-heading" data-reveal>
-            <span className="section-kicker">
-              DIFFERENT SKILLS. SHARED AMBITION.
-            </span>
-            <h2>
-              Someone out there
-              <br />
-              is your <span>kind of person.</span>
-            </h2>
-          </div>
+        <section className="people-section people-section-redesign" id="for-founders" aria-labelledby="match-title">
           <ConnectionPlayground />
         </section>
 
@@ -64,44 +53,61 @@ export default function Home() {
         <CofounderChapter />
         <QuestionsChapter />
 
-        <section className="closing-section" data-reveal>
-          <span className="section-kicker">
-            YOUR NEXT CHAPTER IS A PERSON AWAY.
-          </span>
-          <h2>
+        <section className="closing-section" aria-labelledby="closing-title" data-reveal>
+          <h2 id="closing-title">
             Let’s make
             <br />
             <span>something click.</span>
-            <span className="closing-star" aria-hidden="true">
-              ✳
-            </span>
           </h2>
+          <p className="closing-description">
+            Bring your work. Find your people.<br />
+            See what you can build together.
+          </p>
           <Link className="brand-button" href="/signup">
-            Put yourself out there <Arrow diagonal />
+            Create your profile <Arrow diagonal />
           </Link>
         </section>
       </main>
       <footer className="brand-footer">
         <div className="footer-utility">
-          <Brand />
-          <nav aria-label="Footer">
-            <a href="#for-developers">The people</a>
-            <a href="#questions">Good to know</a>
-            <Link href="/login">
-              Log in <Arrow diagonal />
+          <div className="footer-brand">
+            <Brand />
+            <p className="footer-tagline">Good work. Great company.</p>
+            <p className="footer-description">
+              A home for independent minds to share their work, find their people,
+              and build what comes next.
+            </p>
+            <Link className="brand-button footer-invitation" href="/signup">
+              Find your people <Arrow diagonal />
             </Link>
+          </div>
+          <nav className="footer-navigation" aria-label="Footer">
+            <div className="footer-link-group">
+              <h2>For talent</h2>
+              <Link href="/signup?role=developer">Create your profile</Link>
+              <a href="#for-developers">Show your work</a>
+              <a href="#possibilities">Explore opportunities</a>
+              <Link href="/login">Log in</Link>
+            </div>
+            <div className="footer-link-group">
+              <h2>For teams</h2>
+              <Link href="/signup?role=hiring">Hire developers</Link>
+              <a href="#for-developers">Meet the builders</a>
+              <a href="#build-together">Find a co-founder</a>
+              <Link href="/signup?role=founder">Bring your idea</Link>
+            </div>
+            <div className="footer-link-group">
+              <h2>Explore</h2>
+              <a href="#for-founders">Find your match</a>
+              <a href="#possibilities">Ways to work</a>
+              <a href="#questions">FAQs</a>
+              <Link href="/signup">Join the network</Link>
+            </div>
           </nav>
-          <span>
-            Independent minds.
-            <br />
-            Better, together.
-          </span>
         </div>
-        <div className="oversized-wordmark" aria-hidden="true">
-          devmatch<span>✳</span>
-        </div>
+        <FooterWordmark />
         <div className="footer-colophon">
-          <span>© {new Date().getFullYear()} DEVMATCH</span>
+          <span>© {new Date().getFullYear()} TALENTFOUND</span>
           <span>MADE FOR THE ONES WHO MAKE.</span>
           <a href="#main-content">BACK TO TOP ↑</a>
         </div>

@@ -1,10 +1,10 @@
-# DevMatch cinematic hero QA
+# TalentFound cinematic hero QA
 
 final result: passed
 
 ## Scope and source
 
-The user clarified that the reference treatment belongs on the existing DevMatch homepage. This is an adaptation: DevMatch's headline, logo, navigation destinations, signup flow, and subsequent sections are intentionally retained.
+The user clarified that the reference treatment belongs on the existing TalentFound homepage. This is an adaptation: TalentFound's headline, logo, navigation destinations, signup flow, and subsequent sections are intentionally retained.
 
 Source visual: `/var/folders/sp/33j8nyh535jb846k8yn2zh9h0000gn/T/codex-clipboard-43e6407a-2a7d-44b2-a541-e76611228bec.png`.
 Implementation: `docs/hero-qa/desktop.png` and `docs/hero-qa/mobile.png`.
@@ -22,11 +22,11 @@ The reference and final desktop screenshot were opened together in the same tool
 
 ## Fidelity surfaces
 
-- Typography: Instrument Serif regular display; Inter 400/500 for hero text; muted upright emphasis. DevMatch headline is intentionally different from the Velorah copy.
-- Layout: fullscreen video, centered content, generous negative space, rounded glass CTA. Existing DevMatch header switches to mobile navigation at 900px; this deliberate breakpoint differs from the reference. The remaining page follows immediately below the fullscreen hero.
-- Colors: deep navy fallback, white primary type, supplied gray emphasis and glass-border gradient. Red DevMatch symbol retained. No decorative background overlay.
+- Typography: Instrument Serif regular display; Inter 400/500 for hero text; muted upright emphasis. TalentFound headline is intentionally different from the Velorah copy.
+- Layout: fullscreen video, centered content, generous negative space, rounded glass CTA. Existing TalentFound header switches to mobile navigation at 900px; this deliberate breakpoint differs from the reference. The remaining page follows immediately below the fullscreen hero.
+- Colors: deep navy fallback, white primary type, supplied gray emphasis and glass-border gradient. Red TalentFound symbol retained. No decorative background overlay.
 - Imagery: exact supplied CloudFront film, object-cover, autoplay/loop/muted/playsInline. Browser confirms decoded video. Frame-by-frame subject movement is expected.
-- Content: original DevMatch headline and signup action retained; descriptive supporting sentence added. Existing navigation targets and lower homepage sections retained.
+- Content: original TalentFound headline and signup action retained; descriptive supporting sentence added. Existing navigation targets and lower homepage sections retained.
 
 ## Verification
 

@@ -1,0 +1,125 @@
+/* A quiet editorial frame for the connection sculpture. */
+.people-section.people-section-redesign {
+  background: var(--brand-black);
+  padding: 0 64px;
+  color: var(--brand-white);
+}
+.match-layout {
+  max-width: 1312px;
+  margin: auto;
+  border-block: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  align-items: center;
+  gap: 60px;
+  padding: 88px 0;
+}
+.match-editorial h2 {
+  font-size: clamp(48px, 5.2vw, 76px);
+  font-weight: 450;
+  line-height: 1.04;
+  letter-spacing: -3.5px;
+  margin: 0 0 38px;
+}
+.match-editorial h2 > span {
+  color: var(--brand-red);
+}
+.match-role-selector {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  border-bottom: 1px solid var(--line-strong);
+  gap: 25px;
+}
+.match-role-selector button {
+  position: relative;
+  background: none;
+  color: var(--muted);
+  padding: 14px 0;
+  min-height: 46px;
+  font-size: 12px;
+  white-space: nowrap;
+  transition: color 180ms;
+}
+.match-role-selector button::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--brand-red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+.match-role-selector button[aria-pressed="true"],
+.match-role-selector button:hover {
+  color: var(--brand-white);
+}
+.match-role-selector button[aria-pressed="true"]::after {
+  transform: scaleX(1);
+}
+.match-detail p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  max-width: 325px;
+  min-height: 51px;
+  margin: 24px 0;
+}
+.match-detail .match-action {
+  min-height: 52px;
+  font-size: 12px;
+  padding: 15px 22px;
+  gap: 38px;
+}
+.match-art {
+  min-width: 0;
+  align-self: stretch;
+  display: grid;
+  align-items: center;
+}
+.match-art-frame {
+  position: relative;
+  padding: 20px 0;
+}
+.match-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-block: -8px;
+  mask-image: radial-gradient(ellipse 66% 65% at center, #000 55%, transparent 87%);
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.match-art[data-role="hiring"] img {
+  transform: rotate(6deg) scale(0.96);
+}
+.match-art[data-role="founder"] img {
+  transform: rotate(-6deg) scale(0.96);
+}
+@media (max-width: 1150px) {
+  .people-section.people-section-redesign { padding-inline: 40px; }
+  .match-layout { gap: 35px; padding-block: 70px; }
+  .match-editorial h2 { letter-spacing: -2.7px; }
+}
+@media (max-width: 800px) {
+  .match-layout { gap: 20px; grid-template-columns: 1fr 1fr; }
+  .match-editorial h2 { font-size: 46px; }
+  .match-role-selector { gap: 17px; }
+  .match-role-selector button { font-size: 11px; }
+}
+@media (max-width: 650px) {
+  .people-section.people-section-redesign { padding-inline: 25px; }
+  .match-layout { grid-template-columns: 1fr; padding: 45px 0 50px; gap: 30px; }
+  .match-editorial h2 { font-size: clamp(45px, 11vw, 64px); margin-bottom: 24px; }
+  .match-role-selector { gap: 24px; }
+  .match-role-selector button { font-size: 12px; }
+  .match-detail p { margin-block: 20px; }
+  .match-art { grid-row: 1; max-width: 400px; width: 100%; justify-self: center; }
+  .match-art-frame { padding: 0; }
+  .match-art img { width: 88%; margin: -18px auto -10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .match-art img, .match-role-selector button, .match-role-selector button::after { transition: none; }
+}

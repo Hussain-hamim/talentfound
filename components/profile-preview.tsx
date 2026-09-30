@@ -8,7 +8,7 @@ export function ProfilePreview() {
           <i />
           <i />
         </span>
-        <span>devmatch / alexmorgan</span>
+        <span>talentfound / alexmorgan</span>
         <Arrow diagonal />
       </div>
       <div className="profile-content">

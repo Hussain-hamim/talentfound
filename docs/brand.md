@@ -1,4 +1,4 @@
-# DevMatch color system
+# TalentFound color system
 
 The shared palette lives in `app/globals.css`. Landing and authentication UI use the same dark foundation.
 
@@ -15,6 +15,6 @@ The shared palette lives in `app/globals.css`. Landing and authentication UI use
 
 Use dark surfaces throughout; reserve white for type and small graphic details. Borders use the shared translucent white `--line` and `--line-strong` tokens. Use red sparingly so actions and the wordmark stay distinctive. Brown is an accent surface, not small text on black.
 
-Portfolio examples can retain their own artwork palettes: they represent the members’ work, rather than DevMatch interface colors. Brand sculptures use dark studio backgrounds that blend into the page.
+Portfolio examples can retain their own artwork palettes: they represent the members’ work, rather than TalentFound interface colors. Brand sculptures use dark studio backgrounds that blend into the page.
 
 Keep the established typography, editorial spacing, understated motion, and reduced-motion support when adding new sections.
