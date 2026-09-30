@@ -18,3 +18,11 @@ Use dark surfaces throughout; reserve white for type and small graphic details. 
 Portfolio examples can retain their own artwork palettes: they represent the members’ work, rather than TalentFound interface colors. Brand sculptures use dark studio backgrounds that blend into the page.
 
 Keep the established typography, editorial spacing, understated motion, and reduced-motion support when adding new sections.
+
+## Logo
+
+The approved identity is the lowercase `talentfound` wordmark enclosed by red square brackets. The compact icon is `[tf]`. Do not use the former code-angle symbol or trailing period.
+
+The outlined geometry is shared in `components/brand-artwork.ts`; `Brand` renders the responsive wordmark, and `MatchMark` renders the compact icon. The footer keeps its dot animation using the same outlined artwork. There is no runtime font dependency for the logo.
+
+Ready-to-use SVG exports live in `public/brand/`: `talentfound-wordmark-dark.svg` (white lettering / red brackets), `talentfound-wordmark-light.svg` (black lettering / red brackets), `talentfound-wordmark-white.svg` (monochrome for red backgrounds), and `talentfound-icon.svg`. Keep the brackets square, preserve proportions, and use clean solid fills without glow or shadows.

@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { WORDMARK_WIDTH, WORDMARK_HEIGHT, WORDMARK_LETTERS, WORDMARK_BRACKETS } from "./brand-artwork";
 
 const WIDTH = 1200;
-const HEIGHT = 160;
-const LABEL = "TALENTFOUND";
+const SCALE = (WIDTH - 16) / WORDMARK_WIDTH;
+const HEIGHT = Math.ceil(WORDMARK_HEIGHT * SCALE) + 16;
 
 export function FooterWordmark() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -80,11 +81,10 @@ export function FooterWordmark() {
       if (!maskContext) return;
       const styles = getComputedStyle(canvas);
       color = styles.color;
-      maskContext.font = `600 150px ${styles.fontFamily}`;
-      const textWidth = maskContext.measureText(LABEL).width;
-      maskContext.translate(8, 0);
-      maskContext.scale(1184 / textWidth, 1);
-      maskContext.fillText(LABEL, 0, 132);
+      maskContext.translate(8, 8);
+      maskContext.scale(SCALE, SCALE);
+      maskContext.fill(new Path2D(WORDMARK_LETTERS));
+      maskContext.fill(new Path2D(WORDMARK_BRACKETS));
       const pixels = maskContext.getImageData(0, 0, WIDTH, HEIGHT).data;
       dots = [];
       for (let y = 4; y < HEIGHT; y += 8) {
@@ -110,15 +110,16 @@ export function FooterWordmark() {
   return (
     <div className="oversized-wordmark" aria-hidden="true">
       <canvas ref={canvasRef} />
-      <svg viewBox="0 0 1200 160" focusable="false">
+      <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} focusable="false">
         <defs>
-          <pattern id="footer-letter-dots" width="8" height="8" patternUnits="userSpaceOnUse">
-            <circle cx="4" cy="4" r="1.8" fill="currentColor" />
+          <pattern id="footer-letter-dots" width={8 / SCALE} height={8 / SCALE} patternUnits="userSpaceOnUse">
+            <circle cx={4 / SCALE} cy={4 / SCALE} r={1.8 / SCALE} fill="currentColor" />
           </pattern>
         </defs>
-        <text x="8" y="132" textLength="1184" lengthAdjust="spacingAndGlyphs" fill="url(#footer-letter-dots)">
-          {LABEL}
-        </text>
+        <g transform={`translate(8 8) scale(${SCALE})`} fill="url(#footer-letter-dots)">
+          <path d={WORDMARK_BRACKETS} />
+          <path d={WORDMARK_LETTERS} />
+        </g>
       </svg>
     </div>
   );

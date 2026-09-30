@@ -502,18 +502,6 @@
   position: relative;
   min-width: 0;
 }
-.cofounder-art > img {
-  width: 112%;
-  max-width: none;
-  height: auto;
-  margin-left: -8%;
-  mix-blend-mode: normal;
-  mask-image: radial-gradient(
-    ellipse 65% 65% at 50% 50%,
-    #000 60%,
-    transparent 90%
-  );
-}
 .cofounder-copy h2 {
   font-size: 61px;
   margin: 0 0 24px;
@@ -618,12 +606,6 @@
   }
   .opportunity-ticket:hover .ticket-symbol {
     rotate: 5deg;
-  }
-  .cofounder-art img {
-    transition: translate 0.7s var(--ease-out);
-  }
-  .cofounder-art:hover img {
-    translate: 0 -8px;
   }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -1056,10 +1038,6 @@
     width: 100%;
     max-width: 410px;
     justify-self: center;
-  }
-  .cofounder-art > img {
-    width: 112%;
-    margin-left: -6%;
   }
   .cofounder-copy h2 {
     font-size: 51px;

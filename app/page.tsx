@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Arrow, Brand } from "@/components/brand";
+import { DeveloperProfiles } from "@/components/developer-profiles";
 import { DevMatchHero } from "@/components/devmatch-hero";
 import { FooterWordmark } from "@/components/footer-wordmark";
 import { ScrollReveal } from "@/components/scroll-reveal";
@@ -17,6 +18,8 @@ import "./landing-chapters.css";
 import "./hero.css";
 import "./people.css";
 import "./faq.css";
+import "./developer-profiles.css";
+import "./landing-layout.css";
 
 export default function Home() {
   return (
@@ -24,6 +27,7 @@ export default function Home() {
       <ScrollReveal />
       <main id="main-content">
         <DevMatchHero />
+        <DeveloperProfiles />
 
         <section className="work-section" id="for-developers">
           <div className="work-heading" data-reveal>
@@ -92,7 +96,7 @@ export default function Home() {
             <div className="footer-link-group">
               <h2>For teams</h2>
               <Link href="/signup?role=hiring">Hire developers</Link>
-              <a href="#for-developers">Meet the builders</a>
+              <a href="#developers">Meet the builders</a>
               <a href="#build-together">Find a co-founder</a>
               <Link href="/signup?role=founder">Bring your idea</Link>
             </div>

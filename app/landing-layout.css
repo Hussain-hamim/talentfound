@@ -1,0 +1,48 @@
+/* Shared horizontal layout. Individual sections control their vertical spacing. */
+.landing-v2 {
+  --page-content-width: 1312px;
+  --page-gutter: 64px;
+  --page-section-width: min(var(--page-content-width), calc(100% - 2 * var(--page-gutter)));
+}
+
+.landing-v2 :is(
+  .developer-profiles,
+  .work-section,
+  .people-section-redesign,
+  .opportunity-chapter,
+  .cofounder-chapter,
+  .clarity-faq-section,
+  .brand-footer,
+  .devmatch-hero-content
+) {
+  width: var(--page-section-width);
+  max-width: none;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+.landing-v2 .closing-section {
+  width: var(--page-section-width);
+  max-width: none;
+  margin-inline: auto;
+}
+
+.landing-v2 .match-layout {
+  width: 100%;
+  max-width: none;
+}
+
+.landing-v2 .devmatch-cinematic-hero .header-inner {
+  width: var(--page-section-width);
+  max-width: none;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+@media (max-width: 1150px) {
+  .landing-v2 { --page-gutter: 40px; }
+}
+
+@media (max-width: 650px) {
+  .landing-v2 { --page-gutter: 25px; }
+}

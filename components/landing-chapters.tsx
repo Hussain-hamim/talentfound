@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { ConnectionArt } from "./connection-art";
 import Link from "next/link";
 import { Arrow } from "./brand";
 import { ProfilePassport } from "./profile-passport";
@@ -131,13 +131,7 @@ export function CofounderChapter() {
   return (
     <section className="cofounder-chapter" id="build-together">
       <div className="cofounder-art" data-reveal>
-        <Image
-          src="/images/devmatch-build-together-dark.png"
-          alt="Two sculptural keyboard keys: a red code key and a graphite asterisk key"
-          width={1254}
-          height={1254}
-          sizes="(max-width: 650px) 100vw, 50vw"
-        />
+        <ConnectionArt variant="together" />
       </div>
       <div className="chapter-copy cofounder-copy" data-reveal>
         <h2>

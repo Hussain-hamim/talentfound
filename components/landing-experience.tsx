@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { ConnectionArt } from "./connection-art";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { Arrow } from "./brand";
 
@@ -320,13 +320,7 @@ export function ConnectionPlayground() {
       </div>
       <div className="match-art" data-role={direction.role} aria-hidden="true">
         <div className="match-art-frame">
-          <Image
-            src="/images/devmatch-connection-dark.png"
-            alt=""
-            width={1254}
-            height={1254}
-            sizes="(max-width: 650px) 90vw, 50vw"
-          />
+          <ConnectionArt variant="people" />
         </div>
       </div>
     </div>

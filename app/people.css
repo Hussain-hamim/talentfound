@@ -84,20 +84,21 @@
   position: relative;
   padding: 20px 0;
 }
-.match-art img {
+.connection-graphic {
   display: block;
-  width: 100%;
+  width: 82%;
+  max-width: 340px;
   height: auto;
-  margin-block: -8px;
-  mask-image: radial-gradient(ellipse 66% 65% at center, #000 55%, transparent 87%);
+  margin: 0 auto;
+}
+.connection-graphic .connection-pieces {
+  filter: drop-shadow(0 8px 8px rgb(0 0 0 / 12%));
+}
+.match-art .connection-graphic {
   transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.match-art[data-role="hiring"] img {
-  transform: rotate(6deg) scale(0.96);
-}
-.match-art[data-role="founder"] img {
-  transform: rotate(-6deg) scale(0.96);
-}
+.match-art[data-role="hiring"] .connection-graphic { transform: rotate(4deg); }
+.match-art[data-role="founder"] .connection-graphic { transform: rotate(-4deg); }
 @media (max-width: 1150px) {
   .people-section.people-section-redesign { padding-inline: 40px; }
   .match-layout { gap: 35px; padding-block: 70px; }
@@ -118,8 +119,8 @@
   .match-detail p { margin-block: 20px; }
   .match-art { grid-row: 1; max-width: 400px; width: 100%; justify-self: center; }
   .match-art-frame { padding: 0; }
-  .match-art img { width: 88%; margin: -18px auto -10px; }
+  .connection-graphic { width: 76%; max-width: 260px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .match-art img, .match-role-selector button, .match-role-selector button::after { transition: none; }
+  .match-art .connection-graphic, .match-role-selector button, .match-role-selector button::after { transition: none; }
 }

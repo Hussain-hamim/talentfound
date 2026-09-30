@@ -1,4 +1,8 @@
 import Link from "next/link";
+import {
+  WORDMARK_WIDTH, WORDMARK_HEIGHT, WORDMARK_LETTERS, WORDMARK_BRACKETS,
+  ICON_LETTERS, ICON_LETTERS_X, ICON_BRACKETS,
+} from "./brand-artwork";
 export function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return (
     <svg
@@ -20,13 +24,9 @@ export function Arrow({ diagonal = false }: { diagonal?: boolean }) {
 }
 export function MatchMark() {
   return (
-    <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
-      <path
-        d="m16 8-12 12 12 12M24 8l12 12-12 12M24 4l-8 32"
-        stroke="currentColor"
-        strokeWidth="5"
-        strokeLinejoin="miter"
-      />
+    <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true" focusable="false">
+      <path d={ICON_BRACKETS} />
+      <path d={ICON_LETTERS} transform={`translate(${ICON_LETTERS_X} 0)`} />
     </svg>
   );
 }
@@ -45,19 +45,22 @@ export function CodeIcon() {
     </svg>
   );
 }
+export function BrandWordmark() {
+  return (
+    <svg className="brand-wordmark" viewBox={`0 0 ${WORDMARK_WIDTH} ${WORDMARK_HEIGHT}`} aria-hidden="true" focusable="false">
+      <path className="brand-brackets" d={WORDMARK_BRACKETS} />
+      <path className="brand-lettering" d={WORDMARK_LETTERS} />
+    </svg>
+  );
+}
 export function Brand({ light = false }: { light?: boolean }) {
   return (
     <Link
       href="/"
-      className={`brand${light ? " brand-light" : ""}`}
+      className={`brand bracket-brand${light ? " brand-light" : ""}`}
       aria-label="TalentFound home"
     >
-      <span className="brand-mark">
-        <MatchMark />
-      </span>
-      <span>
-        talentfound<span className="brand-period">.</span>
-      </span>
+      <BrandWordmark />
     </Link>
   );
 }

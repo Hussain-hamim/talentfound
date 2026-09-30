@@ -1,0 +1,25 @@
+/* Approved square-bracket wordmark. Paths keep typography consistent everywhere. */
+.brand.bracket-brand {
+  width: 214px;
+  max-width: 100%;
+  flex-shrink: 0;
+  gap: 0;
+  line-height: 1;
+}
+.brand-wordmark {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.brand-brackets { fill: var(--brand-red); }
+.brand-lettering { fill: var(--brand-white); }
+.brand-light .brand-brackets,
+.brand-light .brand-lettering { fill: var(--brand-white); }
+.footer-utility .brand.bracket-brand { width: 206px; }
+@media (max-width: 700px) {
+  .brand.bracket-brand { width: 174px; }
+}
+@media (max-width: 370px) {
+  .brand.bracket-brand { width: 142px; }
+}
