@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useSyncExternalStore, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Arrow, CodeIcon } from "./brand";
+import { Arrow, Brand } from "./brand";
 
 export type AuthMode =
   "login" | "signup" | "forgot-password" | "reset-password" | "verify-email";
@@ -14,12 +14,12 @@ const content = {
   login: {
     label: "GOOD TO SEE YOU AGAIN",
     title: "Welcome back.",
-    description: "Your next opportunity could be one conversation away.",
+    description: "Log in to find your people and pick up where you left off.",
   },
   signup: {
     label: "YOUR NEXT CHAPTER STARTS HERE",
-    title: "Make your next move.",
-    description: "A home for your work. A world of possibilities.",
+    title: "Find your people.",
+    description: "Create your account. Make room for what’s next.",
   },
   "forgot-password": {
     label: "LET’S GET YOU BACK IN",
@@ -127,10 +127,11 @@ export function AuthForm({
   }
 
   return (
-    <div className="auth-form-wrap">
-      <Link className="back-link" href={social ? "/" : "/login"}>
-        <span>←</span> {social ? "Back to TalentFound" : "Back to log in"}
-      </Link>
+    <div className={`auth-form-wrap auth-form-${mode}`}>
+      <div className="auth-form-brand"><Brand /></div>
+      {!social && <Link className="back-link" href="/login">
+        <span aria-hidden="true">←</span> Back to log in
+      </Link>}
       <div className="eyebrow">{copy.label}</div>
       <h1>
         {complete
@@ -205,14 +206,10 @@ export function AuthForm({
               <legend>I’m here to</legend>
               <div>
                 {[
-                  ["developer", "Get discovered", <CodeIcon key="code" />],
-                  ["hiring", "Hire builders", <span key="hire">↗</span>],
-                  [
-                    "founder",
-                    "Find a co-founder",
-                    <span key="founder">⌘</span>,
-                  ],
-                ].map(([value, label, icon]) => (
+                  ["developer", "Get discovered"],
+                  ["hiring", "Hire builders"],
+                  ["founder", "Find a co-founder"],
+                ].map(([value, label]) => (
                   <label
                     className={
                       role === value ? "role-option selected" : "role-option"
@@ -226,7 +223,6 @@ export function AuthForm({
                       checked={role === value}
                       onChange={() => setRole(String(value))}
                     />
-                    {icon}
                     <span>{label}</span>
                   </label>
                 ))}

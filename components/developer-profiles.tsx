@@ -51,13 +51,9 @@ export function DeveloperProfiles() {
   return (
     <section className="developer-profiles" id="developers" aria-labelledby="developers-title">
       <div className="developer-section-heading">
-        <div>
-          <span className="section-kicker">THE PEOPLE BEHIND THE WORK</span>
-          <h2 id="developers-title">Good people.<br /><span>Worth getting to know.</span></h2>
-        </div>
+        <h2 id="developers-title">Good people.<br /><span>Worth getting to know.</span></h2>
         <div className="developer-section-intro">
           <p>Different skills. Shared curiosity.<br />Meet the builders making things happen.</p>
-          <Link href="/signup" className="developer-join">Your profile belongs here <Arrow diagonal /></Link>
         </div>
       </div>
       <div className="developer-toolbar">
