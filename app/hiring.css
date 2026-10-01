@@ -3,6 +3,12 @@
 .hiring-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; min-height: 100px; border-bottom: 1px solid var(--line); padding-block: 22px; }
 .hiring-header .brand { width: 185px; }
 .hiring-header nav { display: flex; align-items: center; gap: 26px; font-size: 12px; }
+.hiring-header nav { flex-wrap: wrap; }
+.hiring-contact-actions { display: grid; grid-template-columns: 1fr 48px; gap: 10px; }
+.hiring-contact-actions > .hiring-message-link { grid-column: 1 / -1; }
+.hiring-conversation-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.hiring-message-link { border: 1px solid #ffffff30; background: #ffffff05; color: #eee9eb; border-radius: 0; }
+.hiring-message-link:hover { border-color: #ffffff70; background: #ffffff0b; }
 .hiring-main { min-height: 60vh; }
 .hiring-footer { padding: 32px 0; margin-top: 64px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 11px; }
 .hiring-shell .developer-profiles { padding-top: 58px; }

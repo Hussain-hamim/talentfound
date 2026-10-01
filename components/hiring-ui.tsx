@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Bookmark, ArrowUpRight, Link as LinkIcon } from 'lucide-react';
+import { Bookmark, ArrowUpRight, Link as LinkIcon, MessageSquare } from 'lucide-react';
 import { savedDeveloperIds, saveDeveloper, updateHiringStore, useHiringStore } from './hiring-store';
 
 export function SaveDeveloper({ id, name }: { id: string; name: string }) {
@@ -30,3 +30,4 @@ export function CopyLink({ path, label = 'Copy link' }: { path?: string; label?:
   return <div className="hiring-copy"><button type="button" className="hiring-text-link" onClick={copy}><LinkIcon size={14} />{label}</button><span role="status">{message}</span>{fallback && <input aria-label="Share link" readOnly value={fallback} onFocus={event => event.currentTarget.select()} />}</div>;
 }
 export function InviteLink({ id }: { id: string }) { return <Link className="button button-red" href={`/developers/${id}/invite`}>Invite to project <ArrowUpRight size={17} /></Link>; }
+export function MessageLink({ id }: { id: string }) { return <Link className="button hiring-message-link" href={`/messages/${id}`}><MessageSquare size={16} />Message</Link>; }

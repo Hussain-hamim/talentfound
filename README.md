@@ -18,6 +18,7 @@ Open [localhost:3000](http://localhost:3000). Use the hostname shown by the deve
 - `/developers/[id]` — six shareable sample profiles with project case studies, work preferences, and contextual client feedback.
 - `/developers/[id]/invite` — engagement-specific brief, review, and browser-saved draft; no messages are sent.
 - `/shortlist` — named browser-saved lists, private notes, comparison of up to three people, shareable profile selections, and invitation drafts. Shared links contain profile IDs and a list name only.
+- `/messages` and `/messages/[developerId]` — local inbox, conversation drafts, explicit simulated replies, and invitation brief snapshots. Nothing is delivered.
 - `/signup` — registration UI with developer, hiring, and co-founder role selection. `?role=hiring` and `?role=founder` preselect the relevant option.
 - `/login` — email/password and social sign-in UI.
 - `/forgot-password` — email entry and reset confirmation preview.
@@ -48,3 +49,7 @@ The requested React + Vite + TypeScript + Tailwind + shadcn/ui hero is a standal
 ## Hiring prototype structure
 
 `components/developer-hiring-data.ts` contains illustrative fit preferences, project context, and pure filtering helpers. Search applies all selected requirements before the existing rating sort; online status and saves do not affect fit or reputation. The three engagement types have separate expectations and invitation fields. `components/hiring-store.ts` owns browser persistence and validates the stored schema. `tests/developer-hiring.test.mjs` covers fit combinations and storage validation; the existing ranking tests cover averages, small samples, ties, and newcomer handling. Sample directory and profile routes are marked noindex.
+
+## Local chat prototype
+
+Messages and composer drafts use separate versioned localStorage (`talentfound:messages:v1`). One conversation is kept per sample developer, starting only when a message is added. Chat updates across browser tabs; clearing browser data removes it. A saved brief is copied into the conversation only after explicit preview and confirmation. Later edits to the invitation cannot alter that snapshot. The Add demo reply control inserts labeled, predefined sample feedback; there is no messaging server, AI, delivery/read receipt, or connection to real developers. Private content never appears in route parameters or share links. `tests/developer-messages.test.mjs` covers validation, persistence failures, ordering, drafts, and brief snapshots.
