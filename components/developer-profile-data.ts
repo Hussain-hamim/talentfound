@@ -1,3 +1,11 @@
+export const developerCategories = ['Frontend', 'Full-stack', 'Backend'] as const;
+export type DeveloperCategory = (typeof developerCategories)[number];
+export const developerCategoryThemes = {
+  Frontend: 'sage',
+  'Full-stack': 'coral',
+  Backend: 'lavender',
+} as const satisfies Record<DeveloperCategory, string>;
+
 export type DeveloperProject = {
   name: string;
   kind: string;
@@ -13,7 +21,7 @@ export type Developer = {
   avatar: string;
   isOnline: boolean;
   role: string;
-  category: string;
+  category: DeveloperCategory;
   location: string;
   experience: string;
   availability: string;

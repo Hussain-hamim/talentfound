@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { Accessibility, Bookmark, Check, CodeXml, Globe, BriefcaseBusiness, MapPin, ArrowUpRight, ArrowLeft, Waves, X } from "lucide-react";
-import { developers, type Developer, type DeveloperProject } from "./developer-profile-data";
+import { developers, developerCategories, developerCategoryThemes, type Developer, type DeveloperProject } from "./developer-profile-data";
 
-const categories = ["All developers", "Frontend", "Full-stack", "Backend"] as const;
+const categories = ["All developers", ...developerCategories] as const;
 type Preview = "profile" | "portfolio" | "social";
 
 const skillIcons: Record<string, string> = {
@@ -101,7 +101,7 @@ export function DeveloperProfiles() {
       </div>
       <p className="sr-only" role="status">Showing {visible.length} sample developer profiles. {saved.length} saved for this visit.</p>
       <div className="developer-grid">
-        {visible.map(person => <article className={`developer-card theme-${person.theme}`} key={person.name}>
+        {visible.map(person => <article className={`developer-card theme-${developerCategoryThemes[person.category]}`} key={person.name}>
           <div className="developer-card-header">
             <Identity person={person} />
             <div className="developer-card-details">
@@ -131,7 +131,7 @@ export function DeveloperProfiles() {
         </article>)}
       </div>
       <p className="developer-avatar-credit">Illustrative profiles, projects, social handles and online status. Saved profiles last for this visit.<br />Avatars: <a href="https://www.dicebear.com/styles/adventurer/" target="_blank" rel="noreferrer">Adventurer by Lisa Wischofsky</a> via DiceBear · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></p>
-      <dialog className={`developer-dialog ${selected ? `theme-${selected.theme}` : ''}`} ref={dialog} aria-labelledby="developer-dialog-title" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }} onClose={() => { setSelected(null); opener.current?.focus(); }}>
+      <dialog className={`developer-dialog ${selected ? `theme-${developerCategoryThemes[selected.category]}` : ''}`} ref={dialog} aria-labelledby="developer-dialog-title" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }} onClose={() => { setSelected(null); opener.current?.focus(); }}>
         {selected && <>
           <button type="button" className="developer-dialog-close" aria-label="Close developer profile" onClick={() => dialog.current?.close()}><X size={20} /></button>
           <span className="section-kicker">{project ? 'PROJECT PREVIEW' : preview === 'portfolio' ? 'PORTFOLIO PREVIEW' : preview === 'social' ? 'FIND ME ONLINE' : 'DEVELOPER PROFILE'}</span>
