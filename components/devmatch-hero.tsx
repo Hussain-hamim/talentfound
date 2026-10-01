@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Instrument_Serif, Inter } from "next/font/google";
+import { Instrument_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import { Header } from "@/components/header";
 import { HeroFilm } from "@/components/hero-film";
 
 const display = Instrument_Serif({ weight: "400", subsets: ["latin"], variable: "--font-hero-display", display: "swap" });
-const body = Inter({ weight: ["400", "500"], subsets: ["latin"], variable: "--font-hero-body", display: "swap" });
+const body = localFont({ src: "../public/fonts/inter-latin.woff2", weight: "400 500", style: "normal", variable: "--font-hero-body", display: "swap" });
 
 export function DevMatchHero() {
   return (

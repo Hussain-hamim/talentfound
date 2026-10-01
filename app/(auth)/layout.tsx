@@ -7,7 +7,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="auth-shell">
       <aside className="auth-visual" aria-hidden="true">
-        <Image src="/images/auth-portal.png" alt="" fill sizes="50vw" priority />
+        <div className="auth-visual-image">
+          <Image src="/images/auth-portal.png" alt="" fill sizes="(max-width: 760px) 0px, 50vw" priority />
+        </div>
       </aside>
       <div className="auth-form-side">
         <header className="auth-header">

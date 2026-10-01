@@ -3,37 +3,70 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { Arrow } from "./brand";
-
-const developers = [
-  { name: "Alex Morgan", avatar: "/images/avatars/alex.svg", role: "Frontend developer", category: "Frontend", location: "London, UK", experience: "5 years", availability: "Open to full-time", skills: ["React", "TypeScript", "Accessibility"], bio: "Making complex products feel simple, fast, and a little more human.", project: "Orbit", projectType: "A calmer project workspace", projectDetail: "A keyboard-first workspace with accessible components, real-time updates, and a design system built to grow.", theme: "sage" },
-  { name: "Jamie Chen", avatar: "/images/avatars/jamie.svg", role: "Full-stack developer", category: "Full-stack", location: "Toronto, Canada", experience: "6 years", availability: "Open to collaborations", skills: ["Next.js", "Node.js", "PostgreSQL"], bio: "From the first sketch to the last API. I like making the whole thing work.", project: "Gather", projectType: "Community, without the noise", projectDetail: "A small-community platform with event scheduling, member profiles, and a thoughtful onboarding experience.", theme: "coral" },
-  { name: "Nadia Hassan", avatar: "/images/avatars/nadia.svg", role: "Backend developer", category: "Backend", location: "Berlin, Germany", experience: "4 years", availability: "Open to freelance", skills: ["Python", "FastAPI", "Redis"], bio: "Reliable systems, thoughtful APIs, and fewer late-night alerts.", project: "Relay", projectType: "An API that keeps things moving", projectDetail: "A background-job service with retries, observability, and clear documentation for the teams building on it.", theme: "lavender" },
-  { name: "Sam Rivera", avatar: "/images/avatars/sam.svg", role: "Creative developer", category: "Frontend", location: "Lisbon, Portugal", experience: "3 years", availability: "Open to freelance", skills: ["React", "WebGL", "Motion"], bio: "A little interaction can make a big difference. I build for that moment.", project: "Playground", projectType: "Experiments worth clicking", projectDetail: "An interactive collection of sound and motion experiments, with responsive graphics and reduced-motion alternatives.", theme: "sand" },
-  { name: "Maya Patel", avatar: "/images/avatars/maya.svg", role: "Full-stack developer", category: "Full-stack", location: "Bengaluru, India", experience: "5 years", availability: "Open to full-time", skills: ["TypeScript", "React", "Go"], bio: "Turning early ideas into useful products, one considered release at a time.", project: "Fieldnotes", projectType: "A home for scattered ideas", projectDetail: "A collaborative research notebook with full-text search, shared collections, and a clean writing experience.", theme: "rose" },
-  { name: "Leo Martins", avatar: "/images/avatars/leo.svg", role: "Backend developer", category: "Backend", location: "São Paulo, Brazil", experience: "7 years", availability: "Open to collaborations", skills: ["Go", "PostgreSQL", "Docker"], bio: "Building the quiet infrastructure that lets good ideas scale.", project: "Pulse", projectType: "Know how your systems feel", projectDetail: "A lightweight monitoring toolkit that turns service metrics into useful signals, with simple alerting and readable dashboards.", theme: "slate" },
-] as const;
+import { Accessibility, Bookmark, Check, CodeXml, Globe, BriefcaseBusiness, MapPin, ArrowUpRight, ArrowLeft, Waves, X } from "lucide-react";
+import { developers, type Developer, type DeveloperProject } from "./developer-profile-data";
 
 const categories = ["All developers", "Frontend", "Full-stack", "Backend"] as const;
-type Developer = (typeof developers)[number];
+type Preview = "profile" | "portfolio" | "social";
 
-function ProjectPreview({ person }: { person: Developer }) {
-  return (
-    <div className={`developer-project theme-${person.theme}`}>
-      <div className="developer-project-art" aria-hidden="true">
-        <span /><span /><span /><i />
-      </div>
-      <div><span className="developer-project-label">SELECTED WORK</span><strong>{person.project}</strong><p>{person.projectType}</p></div>
-    </div>
-  );
+const skillIcons: Record<string, string> = {
+  React: 'react', TypeScript: 'typescript', 'Next.js': 'nextjs', 'Node.js': 'nodejs',
+  PostgreSQL: 'postgresql', Python: 'python', FastAPI: 'fastapi', Redis: 'redis',
+  WebGL: 'webgl', Go: 'go', Docker: 'docker',
+};
+
+function SkillList({ person }: { person: Developer }) {
+  return <div className="developer-tech-stack"><span className="developer-tech-stack-label">Tech stack:</span><ul className="developer-skills" aria-label={`${person.name}'s skills`}>
+    {person.skills.map(skill => <li key={skill} tabIndex={0}>
+      {skillIcons[skill]
+        ? <Image className={`developer-skill-icon skill-${skillIcons[skill]}`} src={`/images/skills/${skillIcons[skill]}.svg`} alt={skill} width={24} height={24} />
+        : <span role="img" aria-label={skill}>{skill === 'Accessibility' ? <Accessibility size={24} aria-hidden="true" /> : skill === 'Motion' ? <Waves size={24} aria-hidden="true" /> : <CodeXml size={24} aria-hidden="true" />}</span>}
+      <span className="developer-skill-tooltip" aria-hidden="true">{skill}</span>
+    </li>)}
+  </ul></div>;
+}
+
+function ProjectCover({ project }: { project: DeveloperProject }) {
+  const tile = project.image?.sampleTile;
+  return <span className={`developer-project-cover project-color-${project.color}${project.image ? ' has-project-image' : ''}`}>
+    <span className="project-cover-copy">
+      <span className="project-cover-top">{project.kind}<ArrowUpRight size={14} /></span>
+      <strong>{project.name}</strong>
+      <span className="project-cover-stack">{project.stack}</span>
+    </span>
+    {project.image && <span className="project-cover-thumbnail">
+      <span className="project-thumbnail-crop"><Image
+        src={project.image.src}
+        alt={project.image.alt}
+        width={tile === undefined ? 400 : 1536}
+        height={tile === undefined ? 400 : 1024}
+        sizes="(max-width: 760px) 300px, 450px"
+        className={tile === undefined ? 'project-upload-image' : 'project-sample-sheet'}
+        style={tile === undefined ? undefined : { left: `${-(tile % 3) * 100}%`, top: `${-Math.floor(tile / 3) * 100}%` }}
+      /></span>
+    </span>}
+  </span>;
+}
+
+function Identity({ person, dialog = false }: { person: Developer; dialog?: boolean }) {
+  return <div className="developer-identity">
+    <span className="developer-avatar-wrap">
+      <Image className={`developer-avatar theme-${person.theme}`} src={person.avatar} alt="" width={64} height={64} />
+      {person.isOnline && <span className="developer-online-dot" role="img" aria-label="Online now (sample status)" title="Online now (sample status)" />}
+    </span>
+    <div>{dialog ? <h2 id="developer-dialog-title">{person.name}</h2> : <h3>{person.name}</h3>}<p>{person.role}</p></div>
+  </div>;
 }
 
 export function DeveloperProfiles() {
   const [category, setCategory] = useState<(typeof categories)[number]>("All developers");
   const [selected, setSelected] = useState<Developer | null>(null);
+  const [preview, setPreview] = useState<Preview>("profile");
+  const [project, setProject] = useState<DeveloperProject | null>(null);
+  const [saved, setSaved] = useState<string[]>([]);
   const dialog = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
-  const visible = developers.filter((person) => category === "All developers" || person.category === category);
+  const visible = developers.filter(person => category === "All developers" || person.category === category);
 
   useEffect(() => {
     if (!selected) return;
@@ -43,59 +76,93 @@ export function DeveloperProfiles() {
     return () => { document.body.style.overflow = previousOverflow; };
   }, [selected]);
 
-  function openProfile(person: Developer, event: MouseEvent<HTMLButtonElement>) {
+  function openProfile(person: Developer, event: MouseEvent<HTMLButtonElement>, view: Preview = "profile", work: DeveloperProject | null = null) {
     opener.current = event.currentTarget;
+    setPreview(view);
+    setProject(work);
     setSelected(person);
+  }
+
+  function toggleSaved(name: string) {
+    setSaved(previous => previous.includes(name) ? previous.filter(item => item !== name) : [...previous, name]);
   }
 
   return (
     <section className="developer-profiles" id="developers" aria-labelledby="developers-title">
       <div className="developer-section-heading">
         <h2 id="developers-title">Good people.<br /><span>Worth getting to know.</span></h2>
-        <div className="developer-section-intro">
-          <p>Different skills. Shared curiosity.<br />Meet the builders making things happen.</p>
-        </div>
+        <div className="developer-section-intro"><p>Different skills. Shared curiosity.{" "}<br />Meet the builders making things happen.</p></div>
       </div>
       <div className="developer-toolbar">
         <div className="developer-filters" role="group" aria-label="Filter developers by specialty">
-          {categories.map((item) => <button key={item} type="button" aria-pressed={category === item} onClick={() => setCategory(item)}>{item}<span aria-hidden="true">{item === "All developers" ? developers.length : developers.filter(p => p.category === item).length}</span></button>)}
+          {categories.map(item => <button key={item} type="button" aria-pressed={category === item} onClick={() => setCategory(item)}>{item}<span aria-hidden="true">{item === "All developers" ? developers.length : developers.filter(p => p.category === item).length}</span></button>)}
         </div>
-        <span className="developer-sample-label">Sample profiles</span>
+        <span className="developer-sample-label">Sample profiles{saved.length > 0 && ` · ${saved.length} saved`}</span>
       </div>
-      <p className="sr-only" role="status">Showing {visible.length} sample developer profiles.</p>
+      <p className="sr-only" role="status">Showing {visible.length} sample developer profiles. {saved.length} saved for this visit.</p>
       <div className="developer-grid">
-        {visible.map((person) => (
-          <article className="developer-card" key={person.name}>
-            <span className="developer-availability"><i aria-hidden="true" />{person.availability}</span>
-            <div className="developer-identity">
-              <Image className={`developer-avatar theme-${person.theme}`} src={person.avatar} alt="" width={56} height={56} />
-              <div><h3>{person.name}</h3><p>{person.role}</p></div>
+        {visible.map(person => <article className={`developer-card theme-${person.theme}`} key={person.name}>
+          <div className="developer-card-header">
+            <Identity person={person} />
+            <div className="developer-card-details">
+              <span className="developer-availability"><i aria-hidden="true" />{person.availability}</span>
+              <p className="developer-meta"><span><MapPin size={12} aria-hidden="true" />{person.location}</span><span>{person.experience} experience</span></p>
             </div>
-            <p className="developer-meta">{person.location}<span aria-hidden="true">·</span>{person.experience} experience</p>
-            <p className="developer-bio">{person.bio}</p>
-            <ul className="developer-skills" aria-label={`${person.name}'s skills`}>{person.skills.map(skill => <li key={skill}>{skill}</li>)}</ul>
-            <ProjectPreview person={person} />
-            <button type="button" className="developer-profile-link" onClick={event => openProfile(person, event)} aria-label={`View ${person.name}'s sample profile`}>View profile <Arrow diagonal /></button>
-          </article>
-        ))}
-      </div>
-      <p className="developer-avatar-credit">Avatars: <a href="https://www.dicebear.com/styles/adventurer/" target="_blank" rel="noreferrer">Adventurer by Lisa Wischofsky</a> via DiceBear · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></p>
-      <dialog className="developer-dialog" ref={dialog} aria-labelledby="developer-dialog-title" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }} onClose={() => { setSelected(null); opener.current?.focus(); }}>
-        {selected && <>
-          <button type="button" className="developer-dialog-close" aria-label="Close developer profile" onClick={() => dialog.current?.close()}>×</button>
-          <span className="section-kicker">SAMPLE DEVELOPER PROFILE</span>
-          <div className="developer-identity">
-            <Image className={`developer-avatar theme-${selected.theme}`} src={selected.avatar} alt="" width={56} height={56} />
-            <div><h2 id="developer-dialog-title">{selected.name}</h2><p>{selected.role}</p></div>
           </div>
+          <p className="developer-bio">{person.bio}</p>
+          <div className="developer-strengths"><span className="developer-specialty">{person.specialty}</span>{person.strengths.map(strength => <span key={strength}><Check size={11} aria-hidden="true" />{strength}</span>)}</div>
+          <SkillList person={person} />
+          <dl className="developer-fit"><div><dt>WORK STYLE</dt><dd>{person.workStyle}</dd></div><div><dt>CAN START</dt><dd>{person.start}</dd></div></dl>
+          <div className="developer-work-heading"><h4>Selected work</h4><span>{String(person.projects.length).padStart(2, '0')} projects</span></div>
+          <div className={`developer-project-grid ${person.projects.length === 3 ? 'three-projects' : ''}`}>
+            {person.projects.map(work => <button type="button" key={work.name} className="developer-project-tile" aria-label={`Preview ${work.name} by ${person.name}`} onClick={event => openProfile(person, event, "portfolio", work)}><ProjectCover project={work} /></button>)}
+          </div>
+          <div className="developer-card-links">
+            <button type="button" onClick={event => openProfile(person, event, "portfolio")} aria-label={`View ${person.name}'s portfolio`}><Globe size={15} />Portfolio<ArrowUpRight size={12} /></button>
+            <div>
+              <button type="button" onClick={event => openProfile(person, event, "social")} aria-label={`${person.name}'s GitHub preview`} title="GitHub preview"><CodeXml size={15} /><span>GitHub</span></button>
+              <button type="button" onClick={event => openProfile(person, event, "social")} aria-label={`${person.name}'s LinkedIn preview`} title="LinkedIn preview"><BriefcaseBusiness size={15} /><span>LinkedIn</span></button>
+            </div>
+          </div>
+          <div className="developer-card-actions">
+            <button type="button" className="button button-red developer-profile-action" onClick={event => openProfile(person, event)} aria-label={`View ${person.name}'s sample profile`}>View profile <ArrowUpRight size={18} /></button>
+            <button className="developer-save" type="button" aria-label={`${saved.includes(person.name) ? 'Unsave' : 'Save'} ${person.name}`} aria-pressed={saved.includes(person.name)} onClick={() => toggleSaved(person.name)}><Bookmark size={17} fill={saved.includes(person.name) ? 'currentColor' : 'none'} /></button>
+          </div>
+        </article>)}
+      </div>
+      <p className="developer-avatar-credit">Illustrative profiles, projects, social handles and online status. Saved profiles last for this visit.<br />Avatars: <a href="https://www.dicebear.com/styles/adventurer/" target="_blank" rel="noreferrer">Adventurer by Lisa Wischofsky</a> via DiceBear · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></p>
+      <dialog className={`developer-dialog ${selected ? `theme-${selected.theme}` : ''}`} ref={dialog} aria-labelledby="developer-dialog-title" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }} onClose={() => { setSelected(null); opener.current?.focus(); }}>
+        {selected && <>
+          <button type="button" className="developer-dialog-close" aria-label="Close developer profile" onClick={() => dialog.current?.close()}><X size={20} /></button>
+          <span className="section-kicker">{project ? 'PROJECT PREVIEW' : preview === 'portfolio' ? 'PORTFOLIO PREVIEW' : preview === 'social' ? 'FIND ME ONLINE' : 'DEVELOPER PROFILE'}</span>
+          <Identity person={selected} dialog />
           <p className="developer-meta">{selected.location}<span aria-hidden="true">·</span>{selected.experience} experience</p>
-          <span className="developer-availability"><i aria-hidden="true" />{selected.availability}</span>
-          <p className="developer-dialog-bio">{selected.bio}</p>
-          <ul className="developer-skills" aria-label="Skills">{selected.skills.map(skill => <li key={skill}>{skill}</li>)}</ul>
-          <ProjectPreview person={selected} />
-          <p className="developer-project-description">{selected.projectDetail}</p>
-          <Link className="brand-button" href="/signup" onClick={() => dialog.current?.close()}>Create your own profile <Arrow diagonal /></Link>
-          <p className="developer-demo-note">An illustrative profile with mock details.</p>
+          {project ? <div className="developer-project-detail">
+            <button type="button" className="developer-back-projects" onClick={() => setProject(null)}><ArrowLeft size={14} /> All projects</button>
+            <ProjectCover project={project} />
+            <h3>{project.name}</h3><p>{project.description}</p>
+            <h4>What I built</h4><p>{project.contribution}</p>
+            <span className="developer-detail-stack">{project.stack}</span>
+          </div> : <>
+            {preview === 'social' ? <div className="developer-social-preview">
+              <p>Where {selected.name.split(' ')[0]} shares work and stays in touch.</p>
+              <div><Globe size={19} /><span><strong>Portfolio</strong>{selected.handle}.example</span><button type="button" onClick={() => setPreview('portfolio')}>Preview <ArrowUpRight size={14} /></button></div>
+              <div><CodeXml size={19} /><span><strong>GitHub</strong>@{selected.handle}</span><small>Sample handle</small></div>
+              <div><BriefcaseBusiness size={19} /><span><strong>LinkedIn</strong>{selected.name}</span><small>Sample profile</small></div>
+            </div> : <>
+              {preview === 'profile' && <>
+                <p className="developer-dialog-bio">{selected.bio}</p>
+                <div className="developer-strengths"><span className="developer-specialty">{selected.specialty}</span>{selected.strengths.map(strength => <span key={strength}><Check size={11} />{strength}</span>)}</div>
+                <SkillList person={selected} />
+                <dl className="developer-fit"><div><dt>WORK STYLE</dt><dd>{selected.workStyle}</dd></div><div><dt>CAN START</dt><dd>{selected.start}</dd></div><div><dt>TIME ZONE</dt><dd>{selected.timezone}</dd></div><div><dt>LOOKING FOR</dt><dd>{selected.availability.replace('Open to ', '')}</dd></div></dl>
+              </>}
+              <div className="developer-work-heading"><h3>Selected work</h3><span>{selected.projects.length} projects</span></div>
+              <div className="developer-project-grid">{selected.projects.map(work => <button type="button" className="developer-project-tile" key={work.name} onClick={() => setProject(work)} aria-label={`Preview ${work.name}`}><ProjectCover project={work} /></button>)}</div>
+              <button type="button" className="developer-dialog-socials" onClick={() => setPreview('social')}><CodeXml size={16} /><BriefcaseBusiness size={16} /> Social profiles <ArrowUpRight size={14} /></button>
+            </>}
+          </>}
+          <Link className="button button-red developer-profile-action" href="/signup?role=hiring" onClick={() => dialog.current?.close()}>Join to connect <ArrowUpRight size={18} /></Link>
+          <p className="developer-demo-note">Mock profile: projects and social details are illustrative.</p>
         </>}
       </dialog>
     </section>
