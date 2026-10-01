@@ -19,6 +19,7 @@ import "./hero.css";
 import "./people.css";
 import "./faq.css";
 import "./developer-profiles.css";
+import "./hiring.css";
 import "./landing-layout.css";
 
 export default function Home() {
@@ -95,9 +96,9 @@ export default function Home() {
             </div>
             <div className="footer-link-group">
               <h2>For teams</h2>
-              <Link href="/signup?role=hiring">Hire developers</Link>
+              <Link href="/developers">Hire developers</Link>
               <a href="#developers">Meet the builders</a>
-              <a href="#build-together">Find a co-founder</a>
+              <Link href="/developers?engagement=Co-founder">Find a co-founder</Link>
               <Link href="/signup?role=founder">Bring your idea</Link>
             </div>
             <div className="footer-link-group">

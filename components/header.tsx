@@ -9,7 +9,7 @@ export function Header() {
       <div className="header-inner frame">
         <Brand />
         <nav className="desktop-nav" aria-label="Main navigation">
-          <a href="#for-developers">The people</a>
+          <a href="#developers">The people</a>
           <a href="#for-founders">Find your match</a>
         </nav>
         <div className="header-actions">
@@ -45,7 +45,7 @@ export function Header() {
           aria-label="Mobile navigation"
           onClick={() => setOpen(false)}
         >
-          <a href="#for-developers">The people</a>
+          <a href="#developers">The people</a>
           <a href="#for-founders">Find your match</a>
           <Link href="/login">Log in</Link>
           <Link href="/signup">

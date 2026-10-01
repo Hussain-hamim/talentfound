@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test:ranking": "node --experimental-strip-types --experimental-default-type=module --test tests/developer-ranking.test.mjs",
     "dev:velorah": "npm --prefix velorah run dev -- --port 4173",
-    "build:velorah": "npm --prefix velorah run build"
+    "build:velorah": "npm --prefix velorah run build",
+    "test:hiring": "node --experimental-strip-types --experimental-default-type=module --test tests/developer-*.test.mjs"
   },
   "dependencies": {
     "framer-motion": "^13.4.4",

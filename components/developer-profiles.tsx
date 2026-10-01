@@ -1,77 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { Accessibility, Bookmark, Check, CodeXml, Eye, Globe, BriefcaseBusiness, MapPin, ArrowUpRight, ArrowLeft, Waves, X } from "lucide-react";
+import { Check, CodeXml, Eye, Globe, BriefcaseBusiness, MapPin, ArrowUpRight, ArrowLeft, X } from "lucide-react";
 import { developers, developerCategories, developerCategoryThemes, type Developer, type DeveloperProject } from "./developer-profile-data";
 import { rankingPrior, selectDevelopers, type DeveloperSort } from './developer-ranking';
+import { Identity, SkillList, ProjectCover } from "./developer-card-parts";
+import { SaveDeveloper, ShortlistLink } from "./hiring-ui";
+import { savedDeveloperIds, useHiringStore } from "./hiring-store";
+import { emptyFit, developerFit, hasFitFilters, compensation, type Engagement, type FitFilters } from "./developer-hiring-data";
+import { DeveloperFitControls } from "./developer-fit-controls";
+import { ProjectEvidenceDetail } from "./project-evidence-detail";
 import { DeveloperRating, DeveloperReviews, ReviewExcerpt } from './developer-reviews';
 
 const categories = ["All developers", ...developerCategories] as const;
 type Preview = "profile" | "portfolio" | "social" | "reviews";
 
-const skillIcons: Record<string, string> = {
-  React: 'react', TypeScript: 'typescript', 'Next.js': 'nextjs', 'Node.js': 'nodejs',
-  PostgreSQL: 'postgresql', Python: 'python', FastAPI: 'fastapi', Redis: 'redis',
-  WebGL: 'webgl', Go: 'go', Docker: 'docker',
-};
-
-function SkillList({ person }: { person: Developer }) {
-  return <div className="developer-tech-stack"><span className="developer-tech-stack-label">Tech stack:</span><ul className="developer-skills" aria-label={`${person.name}'s skills`}>
-    {person.skills.map(skill => <li key={skill} tabIndex={0}>
-      {skillIcons[skill]
-        ? <Image className={`developer-skill-icon skill-${skillIcons[skill]}`} src={`/images/skills/${skillIcons[skill]}.svg`} alt={skill} width={24} height={24} />
-        : <span role="img" aria-label={skill}>{skill === 'Accessibility' ? <Accessibility size={24} aria-hidden="true" /> : skill === 'Motion' ? <Waves size={24} aria-hidden="true" /> : <CodeXml size={24} aria-hidden="true" />}</span>}
-      <span className="developer-skill-tooltip" aria-hidden="true">{skill}</span>
-    </li>)}
-  </ul></div>;
-}
-
-function ProjectCover({ project }: { project: DeveloperProject }) {
-  const tile = project.image?.sampleTile;
-  return <span className={`developer-project-cover project-color-${project.color}${project.image ? ' has-project-image' : ''}`}>
-    <span className="project-cover-copy">
-      <span className="project-cover-top">{project.kind}<ArrowUpRight size={14} /></span>
-      <strong>{project.name}</strong>
-      <span className="project-cover-stack">{project.stack}</span>
-    </span>
-    {project.image && <span className="project-cover-thumbnail">
-      <span className="project-thumbnail-crop"><Image
-        src={project.image.src}
-        alt={project.image.alt}
-        width={tile === undefined ? 400 : 1536}
-        height={tile === undefined ? 400 : 1024}
-        sizes="(max-width: 760px) 300px, 450px"
-        className={tile === undefined ? 'project-upload-image' : 'project-sample-sheet'}
-        style={tile === undefined ? undefined : { left: `${-(tile % 3) * 100}%`, top: `${-Math.floor(tile / 3) * 100}%` }}
-      /></span>
-    </span>}
-  </span>;
-}
-
-function Identity({ person, dialog = false }: { person: Developer; dialog?: boolean }) {
-  return <div className="developer-identity">
-    <span className="developer-avatar-wrap">
-      <Image className={`developer-avatar theme-${person.theme}`} src={person.avatar} alt="" width={64} height={64} />
-      {person.isOnline && <span className="developer-online-dot" role="img" aria-label="Online now (sample status)" title="Online now (sample status)" />}
-    </span>
-    <div>{dialog ? <h2 id="developer-dialog-title">{person.name}</h2> : <h3>{person.name}</h3>}<p>{person.role}</p></div>
-  </div>;
-}
-
-export function DeveloperProfiles() {
+export function DeveloperProfiles({ directory = false, initialEngagement = '' }: { directory?: boolean; initialEngagement?: Engagement | '' }) {
   const [category, setCategory] = useState<(typeof categories)[number]>("All developers");
   const [sort, setSort] = useState<DeveloperSort>('featured');
   const [newTalent, setNewTalent] = useState(false);
   const [selected, setSelected] = useState<Developer | null>(null);
   const [preview, setPreview] = useState<Preview>("profile");
   const [project, setProject] = useState<DeveloperProject | null>(null);
-  const [saved, setSaved] = useState<string[]>([]);
+  const saved = savedDeveloperIds(useHiringStore());
+  const [fit, setFit] = useState<FitFilters>({ ...emptyFit, engagement: initialEngagement });
+  const [compact, setCompact] = useState(directory);
   const [profileViews, setProfileViews] = useState<Record<string, number>>({});
   const dialog = useRef<HTMLDialogElement>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
-  const visible = selectDevelopers(developers, category, newTalent, sort);
+  const visible = selectDevelopers(developers, category, newTalent, sort).filter(person => developerFit(person, fit).matches);
 
   useEffect(() => {
     if (!selected) return;
@@ -92,14 +50,11 @@ export function DeveloperProfiles() {
     setSelected(person);
   }
 
-  function toggleSaved(id: string) {
-    setSaved(previous => previous.includes(id) ? previous.filter(item => item !== id) : [...previous, id]);
-  }
-
   function resetFilters() {
     setCategory('All developers');
     setNewTalent(false);
     setSort('featured');
+    setFit(emptyFit);
   }
 
   return (
@@ -108,6 +63,8 @@ export function DeveloperProfiles() {
         <h2 id="developers-title">Good people.<br /><span>Worth getting to know.</span></h2>
         <div className="developer-section-intro"><p>Different skills. Shared curiosity.{" "}<br />Meet the builders making things happen.</p></div>
       </div>
+      <div className="hiring-discovery-top"><div className="hiring-view-toggle" role="group" aria-label="Card layout"><button type="button" aria-pressed={!compact} onClick={() => setCompact(false)}>Showcase</button><button type="button" aria-pressed={compact} onClick={() => setCompact(true)}>Compact</button></div><div className="hiring-directory-links">{!directory && <Link href="/developers" className="hiring-text-link">Browse directory <ArrowUpRight size={14} /></Link>}<ShortlistLink /></div></div>
+      <DeveloperFitControls value={fit} onChange={setFit} />
       <div className="developer-toolbar">
         <div className="developer-filters" role="group" aria-label="Filter developers by specialty">
           {categories.map(item => <button key={item} type="button" aria-pressed={category === item} onClick={() => setCategory(item)}>{item}<span aria-hidden="true">{item === "All developers" ? developers.length : developers.filter(p => p.category === item).length}</span></button>)}
@@ -121,9 +78,9 @@ export function DeveloperProfiles() {
         <details className="developer-ranking-explanation"><summary>Top rated considers both client ratings and review count.</summary><p>The prototype score is (sum of review ratings + {rankingPrior.count} × {rankingPrior.rating.toFixed(1)}) ÷ (review count + {rankingPrior.count}). It adds the weight of five 4-star reviews to temper small samples. Visible stars show the actual average. Ties use review count, then profile ID; unreviewed profiles appear last. Featured keeps our curated order; Newest uses the date joined. All feedback is sample data.</p></details>
         <span className="developer-sample-label">Sample profiles{saved.length > 0 && ` · ${saved.length} saved`}</span>
       </div>
-      <p className="sr-only" role="status">Showing {visible.length} sample developer {visible.length === 1 ? 'profile' : 'profiles'}, sorted by {sort === 'top-rated' ? 'top rated' : sort}. {saved.length} saved for this visit.</p>
-      {visible.length === 0 && <div className="developer-discovery-empty"><h3>No developers match these filters.</h3><p>Try another specialty or include developers with reviews.</p><button type="button" className="button button-red" onClick={resetFilters}>Reset filters <ArrowUpRight size={16} /></button></div>}
-      <div className="developer-grid">
+      <p className="sr-only" role="status">Showing {visible.length} sample developer {visible.length === 1 ? 'profile' : 'profiles'}, sorted by {sort === 'top-rated' ? 'top rated' : sort}. {saved.length} saved in this browser.</p>
+      {visible.length === 0 && <div className="developer-discovery-empty"><h3>No developers match these filters.</h3><p>Try broadening your requirements or include developers with reviews.</p><button type="button" className="button button-red" onClick={resetFilters}>Reset filters <ArrowUpRight size={16} /></button></div>}
+      <div className={`developer-grid${compact ? " developer-grid-compact" : ""}`}>
         {visible.map(person => <article className={`developer-card theme-${developerCategoryThemes[person.category]}`} key={person.id}>
           <div className="developer-card-header">
             <Identity person={person} />
@@ -138,15 +95,17 @@ export function DeveloperProfiles() {
               <Eye size={14} aria-hidden="true" /><span>{(profileViews[person.id] ?? 0).toLocaleString('en-US')} {(profileViews[person.id] ?? 0) === 1 ? 'view' : 'views'}</span>
             </span>
           </div>
+          {hasFitFilters(fit) && <p className="hiring-fit-reasons"><Check size={12} />{developerFit(person, fit).reasons.slice(0, 3).join(" · ") || "Meets your selected requirements"}</p>}
           <p className="developer-bio">{person.bio}</p>
           <div className="developer-strengths"><span className="developer-specialty">{person.specialty}</span>{person.strengths.map(strength => <span key={strength}><Check size={11} aria-hidden="true" />{strength}</span>)}</div>
           <SkillList person={person} />
           <dl className="developer-fit"><div><dt>WORK STYLE</dt><dd>{person.workStyle}</dd></div><div><dt>CAN START</dt><dd>{person.start}</dd></div></dl>
+          <p className="hiring-card-budget">{compensation(person, fit.engagement)} <span>· Sample expectation</span></p>
           <div className="developer-work-heading"><h4>Selected work</h4><span>{String(person.projects.length).padStart(2, '0')} projects</span></div>
-          <div className={`developer-project-grid ${person.projects.length === 3 ? 'three-projects' : ''}`}>
-            {person.projects.map(work => <button type="button" key={work.name} className="developer-project-tile" aria-label={`Preview ${work.name} by ${person.name}`} onClick={event => openProfile(person, event, "portfolio", work)}><ProjectCover project={work} /></button>)}
+          <div className={`developer-project-grid ${!compact && person.projects.length === 3 ? 'three-projects' : ''}`}>
+            {(compact ? person.projects.slice(0, 2) : person.projects).map(work => <button type="button" key={work.name} className="developer-project-tile" aria-label={`Preview ${work.name} by ${person.name}`} onClick={event => openProfile(person, event, "portfolio", work)}><ProjectCover project={work} /></button>)}
           </div>
-          <ReviewExcerpt person={person} />
+          {compact ? <Link className="hiring-more-work" href={`/developers/${person.id}#work`}>Explore all {person.projects.length} projects <ArrowUpRight size={12} /></Link> : <ReviewExcerpt person={person} />}
           <div className="developer-card-links">
             <button type="button" onClick={event => openProfile(person, event, "portfolio")} aria-label={`View ${person.name}'s portfolio`}><Globe size={15} />Portfolio<ArrowUpRight size={12} /></button>
             <div>
@@ -155,12 +114,12 @@ export function DeveloperProfiles() {
             </div>
           </div>
           <div className="developer-card-actions">
-            <button type="button" className="button button-red developer-profile-action" onClick={event => openProfile(person, event)} aria-label={`View ${person.name}'s sample profile`}>View profile <ArrowUpRight size={18} /></button>
-            <button className="developer-save" type="button" aria-label={`${saved.includes(person.id) ? 'Unsave' : 'Save'} ${person.name}`} aria-pressed={saved.includes(person.id)} onClick={() => toggleSaved(person.id)}><Bookmark size={17} fill={saved.includes(person.id) ? 'currentColor' : 'none'} /></button>
+            <Link className="button button-red developer-profile-action" href={`/developers/${person.id}`} onClick={() => setProfileViews(previous => ({ ...previous, [person.id]: (previous[person.id] ?? 0) + 1 }))} aria-label={`View ${person.name}'s sample profile`}>View profile <ArrowUpRight size={18} /></Link>
+            <SaveDeveloper id={person.id} name={person.name} />
           </div>
         </article>)}
       </div>
-      <p className="developer-avatar-credit">Illustrative profiles, reviews, projects, social handles and online status. Saved profiles last for this visit.<br />Avatars: <a href="https://www.dicebear.com/styles/adventurer/" target="_blank" rel="noreferrer">Adventurer by Lisa Wischofsky</a> via DiceBear · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></p>
+      <p className="developer-avatar-credit">Illustrative profiles, reviews, projects, social handles and online status. Saved profiles stay in this browser. Online presence is separate from work availability.<br />Avatars: <a href="https://www.dicebear.com/styles/adventurer/" target="_blank" rel="noreferrer">Adventurer by Lisa Wischofsky</a> via DiceBear · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a></p>
       <dialog className={`developer-dialog ${selected ? `theme-${developerCategoryThemes[selected.category]}` : ''}`} ref={dialog} aria-labelledby="developer-dialog-title" onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }} onClose={() => { setSelected(null); opener.current?.focus(); }}>
         {selected && <>
           <button type="button" className="developer-dialog-close" aria-label="Close developer profile" onClick={() => dialog.current?.close()}><X size={20} /></button>
@@ -170,9 +129,7 @@ export function DeveloperProfiles() {
           {preview === 'reviews' ? <><button type="button" className="developer-back-projects" onClick={() => setPreview('profile')}><ArrowLeft size={14} /> Back to profile</button><DeveloperReviews person={selected} /></> : project ? <div className="developer-project-detail">
             <button type="button" className="developer-back-projects" onClick={() => setProject(null)}><ArrowLeft size={14} /> All projects</button>
             <ProjectCover project={project} />
-            <h3>{project.name}</h3><p>{project.description}</p>
-            <h4>What I built</h4><p>{project.contribution}</p>
-            <span className="developer-detail-stack">{project.stack}</span>
+            <ProjectEvidenceDetail person={selected} project={project} />
           </div> : <>
             {preview === 'social' ? <div className="developer-social-preview">
               <p>Where {selected.name.split(' ')[0]} shares work and stays in touch.</p>
@@ -192,7 +149,7 @@ export function DeveloperProfiles() {
               <button type="button" className="developer-dialog-socials" onClick={() => setPreview('social')}><CodeXml size={16} /><BriefcaseBusiness size={16} /> Social profiles <ArrowUpRight size={14} /></button>
             </>}
           </>}
-          <Link className="button button-red developer-profile-action" href="/signup?role=hiring" onClick={() => dialog.current?.close()}>Join to connect <ArrowUpRight size={18} /></Link>
+          <Link className="button button-red developer-profile-action" href={`/developers/${selected.id}`} onClick={() => dialog.current?.close()}>Explore full profile <ArrowUpRight size={18} /></Link>
           <p className="developer-demo-note">Mock profile: reviews, projects and social details are illustrative.</p>
         </>}
       </dialog>

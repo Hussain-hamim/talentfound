@@ -25,7 +25,7 @@ export function DevMatchHero() {
           <Link className="devmatch-glass devmatch-hero-cta" href="/signup">
             Find your people
           </Link>
-          <Link className="devmatch-glass devmatch-hero-cta button-outline" href="/signup?role=hiring">
+          <Link className="devmatch-glass devmatch-hero-cta button-outline" href="/developers">
             Hire talent
           </Link>
         </div>

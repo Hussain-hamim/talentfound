@@ -1,5 +1,7 @@
 import type { MouseEvent } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { projectSlug } from './developer-hiring-data';
 import { ChevronRight, Star } from 'lucide-react';
 import type { Developer } from './developer-profile-data';
 import { newestReviews, reviewRating, reviewSummary } from './developer-ranking';
@@ -32,6 +34,7 @@ export function DeveloperReviews({ person }: { person: Developer }) {
     {summary.average === null || !summary.dimensions ? <div className="developer-reviews-empty">
       <span className="developer-new-talent">New talent</span><h4>No reviews yet</h4><p>{person.name.split(' ')[0]} is new to the network. Explore their projects and skills to see what they can bring to your team.</p>
     </div> : <>
+      <p className="hiring-review-context">{summary.count} reviews from {new Set(person.reviews.map(review => review.clientId)).size} distinct sample clients. Feedback describes past delivery, not a technical assessment or a guarantee of fit.</p>
       <div className="developer-review-summary">
         <div className="developer-review-overall"><Star size={22} fill="currentColor" aria-hidden="true" /><strong>{summary.average.toFixed(1)}<small> / 5</small></strong><span>From {summary.count} sample {summary.count === 1 ? 'review' : 'reviews'}</span></div>
         <dl className="developer-review-dimensions">{Object.entries(summary.dimensions).map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value.toFixed(1)}<span> / 5</span></dd></div>)}</dl>
@@ -39,7 +42,10 @@ export function DeveloperReviews({ person }: { person: Developer }) {
       <ol className="developer-review-list">{newestReviews(person.reviews).map(review => <li key={review.id}>
         <div className="developer-review-byline"><div className="developer-review-author"><Image className="developer-client-avatar" src={review.avatar} alt="" width={28} height={28} /><div><strong>{review.client}</strong><span>{review.company}</span></div></div><span className="developer-review-score"><Star size={12} fill="currentColor" aria-hidden="true" />{reviewRating(review).toFixed(1)}<span className="sr-only"> out of 5</span></span></div>
         <p className="developer-review-project">{review.project}<span> · </span><time dateTime={review.date}>{reviewDate.format(new Date(`${review.date}T00:00:00Z`))}</time></p>
+        <span className="hiring-review-source">Sample feedback · Engagement not verified</span>
         <blockquote>{review.feedback}</blockquote>
+        {person.projects.filter(project => review.project === project.name || review.project.startsWith(`${project.name} `)).map(project => <Link key={project.name} className="hiring-text-link" href={`/developers/${person.id}#project-${projectSlug(project)}`}>Explore {project.name} case study ↗</Link>)}
+        {review.reply && <div className="hiring-review-reply"><strong>{person.name} replied · Sample</strong>{review.reply}</div>}
         <dl className="developer-review-scores">{Object.entries(review.scores).map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}/5</dd></div>)}</dl>
       </li>)}</ol>
     </>}
