@@ -1,3 +1,5 @@
+import { sampleReviews, type DeveloperReview } from './developer-review-data';
+
 export const developerCategories = ['Frontend', 'Full-stack', 'Backend'] as const;
 export type DeveloperCategory = (typeof developerCategories)[number];
 export const developerCategoryThemes = {
@@ -16,6 +18,9 @@ export type DeveloperProject = {
   image?: { src: string; alt: string; sampleTile?: number };
 };
 export type Developer = {
+  id: string;
+  joinedAt: string;
+  reviews: DeveloperReview[];
   name: string;
   handle: string;
   avatar: string;
@@ -49,6 +54,7 @@ const projectImages = {
 
 export const developers: Developer[] = [
   {
+    id: 'alex-morgan', joinedAt: '2026-01-12', reviews: sampleReviews['alex-morgan'],
     name: 'Alex Morgan', isOnline: true, handle: 'alexmorgan', avatar: '/images/avatars/alex.svg', role: 'Frontend developer', category: 'Frontend', location: 'London, UK', experience: '5 years', availability: 'Open to full-time', start: 'In 2 weeks', timezone: 'UK / Europe overlap', workStyle: 'Remote or hybrid', specialty: 'Design systems', strengths: ['Accessible by default', 'Product-minded'], skills: ['React', 'TypeScript', 'Accessibility'], bio: 'I turn complex workflows into interfaces people can actually enjoy.', theme: 'sage',
     projects: [
       { name: 'Orbit', image: projectImages.workspace, kind: 'Workspace', stack: 'React · TypeScript', description: 'A keyboard-first project workspace with real-time updates and a calm, focused interface.', contribution: 'Owned frontend architecture and an accessible component library.', color: 'sage' },
@@ -58,6 +64,7 @@ export const developers: Developer[] = [
     ],
   },
   {
+    id: 'jamie-chen', joinedAt: '2026-02-08', reviews: sampleReviews['jamie-chen'],
     name: 'Jamie Chen', isOnline: true, handle: 'jamiebuilds', avatar: '/images/avatars/jamie.svg', role: 'Full-stack developer', category: 'Full-stack', location: 'Toronto, Canada', experience: '6 years', availability: 'Open to collaborations', start: 'This month', timezone: 'North America overlap', workStyle: 'Remote', specialty: 'Early-stage products', strengths: ['Idea to launch', 'End-to-end ownership'], skills: ['Next.js', 'Node.js', 'PostgreSQL'], bio: 'From the first sketch to the last API. I make the whole product work.', theme: 'coral',
     projects: [
       { name: 'Gather', image: projectImages.community, kind: 'Community', stack: 'Next.js · Postgres', description: 'A small-community platform with member profiles, events, and thoughtful onboarding.', contribution: 'Built the full product, from database schema to onboarding.', color: 'orange' },
@@ -66,6 +73,7 @@ export const developers: Developer[] = [
     ],
   },
   {
+    id: 'nadia-hassan', joinedAt: '2026-04-04', reviews: sampleReviews['nadia-hassan'],
     name: 'Nadia Hassan', isOnline: true, handle: 'nadiaengineers', avatar: '/images/avatars/nadia.svg', role: 'Backend developer', category: 'Backend', location: 'Berlin, Germany', experience: '4 years', availability: 'Open to freelance', start: 'Available now', timezone: 'Europe overlap', workStyle: 'Remote · 20–30h/week', specialty: 'Reliable APIs', strengths: ['Clear documentation', 'Observability first'], skills: ['Python', 'FastAPI', 'Redis'], bio: 'Reliable systems, thoughtful APIs, and fewer late-night alerts.', theme: 'lavender',
     projects: [
       { name: 'Relay', image: projectImages.systems, kind: 'Job queues', stack: 'Python · Redis', description: 'A background-job service with retries, scheduling, and a readable activity log.', contribution: 'Designed queue processing, retry policies, and monitoring.', color: 'violet' },
@@ -74,6 +82,7 @@ export const developers: Developer[] = [
     ],
   },
   {
+    id: 'sam-rivera', joinedAt: '2026-08-28', reviews: sampleReviews['sam-rivera'],
     name: 'Sam Rivera', isOnline: true, handle: 'samcreates', avatar: '/images/avatars/sam.svg', role: 'Creative developer', category: 'Frontend', location: 'Lisbon, Portugal', experience: '3 years', availability: 'Open to freelance', start: 'Available now', timezone: 'Europe / US overlap', workStyle: 'Remote · Project-based', specialty: 'Interactive experiences', strengths: ['Creative coding', 'Motion with purpose'], skills: ['React', 'WebGL', 'Motion'], bio: 'A little interaction can make a big difference. I build for that moment.', theme: 'sand',
     projects: [
       { name: 'Playground', image: projectImages.design, kind: 'Experiments', stack: 'WebGL · React', description: 'A collection of interactive visual experiments with reduced-motion alternatives.', contribution: 'Created the graphics, interactions, and responsive rendering.', color: 'orange' },
@@ -83,6 +92,7 @@ export const developers: Developer[] = [
     ],
   },
   {
+    id: 'maya-patel', joinedAt: '2026-09-26', reviews: sampleReviews['maya-patel'],
     name: 'Maya Patel', isOnline: true, handle: 'mayamakes', avatar: '/images/avatars/maya.svg', role: 'Full-stack developer', category: 'Full-stack', location: 'Bengaluru, India', experience: '5 years', availability: 'Open to full-time', start: 'In 4 weeks', timezone: 'Asia / Europe overlap', workStyle: 'Remote', specialty: 'Collaborative products', strengths: ['Real-time features', 'Thoughtful UX'], skills: ['TypeScript', 'React', 'Go'], bio: 'Turning early ideas into useful products, one considered release at a time.', theme: 'rose',
     projects: [
       { name: 'Fieldnotes', image: projectImages.reading, kind: 'Research', stack: 'React · Go', description: 'A collaborative research notebook with shared collections and full-text search.', contribution: 'Built the editor, search service, and shared collections.', color: 'rose' },
@@ -91,6 +101,7 @@ export const developers: Developer[] = [
     ],
   },
   {
+    id: 'leo-martins', joinedAt: '2026-05-15', reviews: sampleReviews['leo-martins'],
     name: 'Leo Martins', isOnline: true, handle: 'leosystems', avatar: '/images/avatars/leo.svg', role: 'Backend developer', category: 'Backend', location: 'São Paulo, Brazil', experience: '7 years', availability: 'Open to collaborations', start: 'This month', timezone: 'Americas overlap', workStyle: 'Remote', specialty: 'Platform engineering', strengths: ['Infrastructure as code', 'Developer experience'], skills: ['Go', 'PostgreSQL', 'Docker'], bio: 'Building the quiet infrastructure that lets good ideas scale.', theme: 'slate',
     projects: [
       { name: 'Pulse', image: projectImages.systems, kind: 'Observability', stack: 'Go · PostgreSQL', description: 'Service metrics turned into clear dashboards and useful alerts.', contribution: 'Designed ingestion, storage, and the alerting service.', color: 'blue' },
