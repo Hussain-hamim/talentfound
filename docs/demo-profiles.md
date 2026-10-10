@@ -1,6 +1,8 @@
 # Demo developer profiles
 
-Three explicitly requested, persistent demo developers are seeded in project `zgpqyctyxozsvbjayhaf`: Alex Morgan (`demo-alex-morgan`), Jamie Chen (`demo-jamie-chen`), and Nadia Hassan (`demo-nadia-hassan`). They have complete public details, PNG avatars, and ten published projects with WebP covers in Supabase Storage.
+Five explicitly requested, persistent demo developers are seeded in project `zgpqyctyxozsvbjayhaf`: Alex Morgan (`demo-alex-morgan`), Jamie Chen (`demo-jamie-chen`), Nadia Hassan (`demo-nadia-hassan`), Sam Rivera (`demo-sam-rivera`), and Maya Patel (`demo-maya-patel`). They have complete public details, PNG avatars, and seventeen published projects with WebP covers in Supabase Storage.
+
+To seed only the two newest fixtures, append `demo-sam-rivera demo-maya-patel` to the seed command.
 
 Run `node --env-file=.env.local scripts/seed-demo-developers.mjs` to seed or refresh only these fixtures. The script checks the project, reserved fixture email, and administrator-controlled `talentfound_demo` metadata before updating anything. Passwords are random and not retained, logins are banned, and notifications are off. Existing real member profiles are untouched.
 

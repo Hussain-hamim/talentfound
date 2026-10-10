@@ -10,6 +10,14 @@ const people = JSON.parse(
     "utf8",
   ),
 );
+const selectedHandles = process.argv.slice(2);
+for (const handle of selectedHandles) {
+  if (!people.some((person) => person.handle === handle))
+    throw new Error(`Unknown demo handle: ${handle}`);
+}
+const selectedPeople = selectedHandles.length
+  ? people.filter((person) => selectedHandles.includes(person.handle))
+  : people;
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 if (new URL(url).hostname !== "zgpqyctyxozsvbjayhaf.supabase.co")
   throw new Error("Incorrect project");
@@ -32,7 +40,7 @@ for (let page = 1; ; page++) {
   users.push(...batch);
   if (batch.length < 1000) break;
 }
-for (const p of people) {
+for (const p of selectedPeople) {
   const email = `${p.handle}@talentfound.example`;
   let user = users.find((u) => u.email === email);
   if (user && !user.app_metadata.talentfound_demo)

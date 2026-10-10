@@ -10,6 +10,32 @@ export function avatarUrl(path: string | null) {
     ? `${supabaseConfig().url}/storage/v1/object/public/avatars/${path}`
     : null;
 }
+// Call only after resolving which published profiles are visible to the visitor.
+// Raw analytics and visitor identities stay private on the server.
+export async function getProfileViewCounts(developerIds: string[]) {
+  const viewCounts = new Map<string, number>();
+  if (!developerIds.length) return viewCounts;
+  try {
+    const { data: counts, error: countError } = await adminClient()
+      .from("developer_profiles")
+      .select("id, analytics_events(count)")
+      .in("id", developerIds)
+      .eq("published", true)
+      .eq("analytics_events.kind", "profile_view")
+      .gte(
+        "analytics_events.created_at",
+        new Date(Date.now() - 90 * 86400000).toISOString(),
+      );
+    if (countError) throw countError;
+    for (const profile of counts || []) {
+      viewCounts.set(profile.id, profile.analytics_events[0]?.count ?? 0);
+    }
+  } catch {
+    // A missing analytics count must not prevent a public profile from loading.
+    console.error("Could not load profile view counts");
+  }
+  return viewCounts;
+}
 export async function searchDevelopers(
   params: Record<string, string | string[] | undefined>,
 ) {
@@ -18,39 +44,17 @@ export async function searchDevelopers(
   const { data, error } = await db.rpc("search_developers", { filters });
   if (error) throw error;
   const result = data as unknown as { total: number; people: Developer[] };
-  // Only aggregate counts for profiles already visible to this visitor.
-  // Raw analytics and visitor identities stay private on the server.
-  const viewCounts = new Map<string, number>();
-  if (result.people.length) {
-    const { data: counts, error: countError } = await adminClient()
-      .from("developer_profiles")
-      .select("id, analytics_events(count)")
-      .in(
-        "id",
-        result.people.map((person) => person.id),
-      )
-      .eq("published", true)
-      .eq("analytics_events.kind", "profile_view")
-      .gte(
-        "analytics_events.created_at",
-        new Date(Date.now() - 90 * 86400000).toISOString(),
-      );
-    if (countError) {
-      console.error("Could not load profile view counts", countError.code);
-    } else {
-      for (const profile of counts || []) {
-        viewCounts.set(profile.id, profile.analytics_events[0]?.count ?? 0);
-      }
-    }
-  }
   const paths = result.people.flatMap((p) =>
     p.projects.flatMap((project) =>
       project.image_path ? [project.image_path] : [],
     ),
   );
-  const covers = paths.length
-    ? await db.storage.from("project-media").createSignedUrls(paths, 3600)
-    : null;
+  const [covers, viewCounts] = await Promise.all([
+    paths.length
+      ? db.storage.from("project-media").createSignedUrls(paths, 3600)
+      : null,
+    getProfileViewCounts(result.people.map((person) => person.id)),
+  ]);
   const coverUrls = new Map(
     (covers?.data || []).map((image) => [image.path, image.signedUrl]),
   );

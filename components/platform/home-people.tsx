@@ -19,7 +19,7 @@ export async function HomePeople() {
   return (
     <section
       id="developers"
-      className="developer-profiles home-profiles"
+      className="developer-profiles home-profiles home-profiles-atmosphere"
       aria-labelledby="developers-title"
     >
       <div className="developer-section-heading">

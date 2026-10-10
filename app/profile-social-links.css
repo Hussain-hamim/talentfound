@@ -1,0 +1,38 @@
+.profile-socials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  margin: 16px 0 0;
+  list-style: none;
+}
+.profile-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  gap: 7px;
+  background: #ffffff06;
+  border: 1px solid #ffffff12;
+  color: #c7c1c4;
+  transition:
+    color 160ms,
+    border-color 160ms,
+    background 160ms;
+}
+.profile-social-link:hover {
+  color: #fff;
+  border-color: #ffffff40;
+  background: #ffffff0c;
+}
+.profile-portfolio {
+  width: auto;
+  padding: 0 10px;
+  font-size: 11px;
+}
+.profile-social-link:focus-visible {
+  outline: 2px solid #e6c3b7;
+  outline-offset: 4px;
+}

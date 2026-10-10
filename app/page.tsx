@@ -4,10 +4,7 @@ import { HomePeople } from "@/components/platform/home-people";
 import { DevMatchHero } from "@/components/devmatch-hero";
 import { FooterWordmark } from "@/components/footer-wordmark";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import {
-  BuilderShowcase,
-  ConnectionPlayground,
-} from "@/components/landing-experience";
+import { ConnectionPlayground } from "@/components/landing-experience";
 import {
   OpportunityChapter,
   CofounderChapter,
@@ -29,26 +26,6 @@ export default function Home() {
       <main id="main-content">
         <DevMatchHero />
         <HomePeople />
-
-        <section className="work-section" id="for-developers">
-          <div className="work-heading" data-reveal>
-            <div>
-              <h2>
-                Less résumé.
-                <br />
-                <span>More you.</span>
-              </h2>
-            </div>
-            <div className="work-intro">
-              <p>
-                Projects. Experiments. That thing you stayed up to finish.
-                <br />
-                Give it a place to be found.
-              </p>
-            </div>
-          </div>
-          <BuilderShowcase />
-        </section>
 
         <section className="people-section people-section-redesign" id="for-founders" aria-labelledby="match-title">
           <ConnectionPlayground />
@@ -90,7 +67,7 @@ export default function Home() {
             <div className="footer-link-group">
               <h2>For talent</h2>
               <Link href="/signup?role=developer">Create your profile</Link>
-              <a href="#for-developers">Show your work</a>
+              <Link href="/signup?role=developer">Show your work</Link>
               <a href="#possibilities">Explore opportunities</a>
               <Link href="/login">Log in</Link>
             </div>

@@ -1,6 +1,45 @@
 .home-profiles {
   padding-block: 100px;
 }
+/* Optional backdrop experiment: remove home-profiles-atmosphere to revert. */
+.landing-v2 .home-profiles.home-profiles-atmosphere {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  padding-inline: max(
+    var(--page-gutter),
+    calc((100% - var(--page-content-width)) / 2)
+  );
+}
+.directory-atmosphere > .platform {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+.home-profiles-atmosphere::before,
+.directory-atmosphere > .platform::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: url("/images/hero-poster.jpg") center 75% / cover no-repeat;
+  filter: blur(70px) saturate(0.8);
+  opacity: 0.55;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 18%,
+    #000 72%,
+    transparent
+  );
+}
+.home-profiles-atmosphere .home-showcase-card,
+.directory-atmosphere .home-showcase-card {
+  background: color-mix(in srgb, var(--profile-surface) 93%, transparent);
+  box-shadow: 0 16px 48px #00000030;
+}
 .home-profiles .developer-grid,
 .directory-showcase-grid {
   display: grid;
@@ -145,40 +184,6 @@
 .home-showcase-location svg,
 .home-showcase-card .developer-availability i {
   flex-shrink: 0;
-}
-.home-showcase-socials {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding: 0;
-  margin: 16px 0 0;
-  list-style: none;
-}
-.home-showcase-social-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  gap: 7px;
-  background: #ffffff06;
-  border: 1px solid #ffffff12;
-  color: #c7c1c4;
-  transition:
-    color 160ms,
-    border-color 160ms,
-    background 160ms;
-}
-.home-showcase-social-link:hover {
-  color: #fff;
-  border-color: #ffffff40;
-  background: #ffffff0c;
-}
-.home-showcase-portfolio {
-  width: auto;
-  padding: 0 10px;
-  font-size: 11px;
 }
 .home-showcase-card .developer-project-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));

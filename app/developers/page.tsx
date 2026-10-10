@@ -17,8 +17,10 @@ export default async function Page({
     getSession(),
   ]);
   return (
-    <PublicShell>
-      <Directory {...results} signedIn={!!s.user} viewerId={s.user?.id} />
-    </PublicShell>
+    <div className="directory-atmosphere">
+      <PublicShell>
+        <Directory {...results} signedIn={!!s.user} viewerId={s.user?.id} />
+      </PublicShell>
+    </div>
   );
 }

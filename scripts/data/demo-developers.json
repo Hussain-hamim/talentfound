@@ -490,5 +490,225 @@
       ],
       "approach": "Define the failure modes before the happy path. Small API contracts, observable services, and a handover your team can maintain."
     }
+  },
+  {
+    "id": "sam-rivera",
+    "joinedAt": "2026-08-28",
+    "reviews": [
+      {
+        "id": "sam-softspace",
+        "clientId": "iris-shaw",
+        "source": "sample",
+        "client": "Iris Shaw",
+        "avatar": "/images/avatars/clients/client-6.svg",
+        "company": "Soft Space Studio",
+        "project": "Soft Space",
+        "date": "2026-09-18",
+        "feedback": "Sam captured the personality of our studio without sacrificing usability. The small interactions make the site feel like us.",
+        "scores": {
+          "quality": 5,
+          "communication": 5,
+          "reliability": 5
+        }
+      }
+    ],
+    "name": "Sam Rivera",
+    "isOnline": true,
+    "handle": "demo-sam-rivera",
+    "avatar": "/images/avatars/sam.svg",
+    "role": "Creative developer",
+    "category": "Frontend",
+    "location": "Lisbon, Portugal",
+    "experience": "3 years",
+    "availability": "Open to freelance",
+    "start": "Available now",
+    "timezone": "Europe/Lisbon",
+    "workStyle": "Remote · Project-based",
+    "specialty": "Interactive experiences",
+    "strengths": [
+      "Creative coding",
+      "Motion with purpose"
+    ],
+    "skills": [
+      "React",
+      "WebGL",
+      "Motion"
+    ],
+    "bio": "A little interaction can make a big difference. I build for that moment.",
+    "theme": "sand",
+    "projects": [
+      {
+        "name": "Playground",
+        "image": {
+          "src": "/images/projects/sample-projects.png",
+          "alt": "Design system screenshot",
+          "sampleTile": 1
+        },
+        "kind": "Experiments",
+        "stack": "WebGL · React",
+        "description": "A collection of interactive visual experiments with reduced-motion alternatives.",
+        "contribution": "Created the graphics, interactions, and responsive rendering.",
+        "color": "orange",
+        "summary": "Playful experiments for the web."
+      },
+      {
+        "name": "Frequency",
+        "image": {
+          "src": "/images/projects/sample-projects.png",
+          "alt": "Service monitoring screenshot",
+          "sampleTile": 3
+        },
+        "kind": "Audio experience",
+        "stack": "Web Audio · Canvas",
+        "description": "A browser-based audio experience that responds to the music.",
+        "contribution": "Built audio analysis and accessible playback controls.",
+        "color": "violet",
+        "summary": "Music you can see and explore."
+      },
+      {
+        "name": "Soft Space",
+        "image": {
+          "src": "/images/projects/sample-projects.png",
+          "alt": "Travel planning screenshot",
+          "sampleTile": 2
+        },
+        "kind": "Brand website",
+        "stack": "Next.js · Motion",
+        "description": "An expressive studio website with tactile, playful interactions.",
+        "contribution": "Translated the visual identity into a responsive experience.",
+        "color": "rose",
+        "summary": "A studio with room to play."
+      },
+      {
+        "name": "Afterimage",
+        "image": {
+          "src": "/images/projects/sample-projects.png",
+          "alt": "Reading and research screenshot",
+          "sampleTile": 5
+        },
+        "kind": "Digital gallery",
+        "stack": "Three.js · React",
+        "description": "An immersive gallery with an equally considered standard browsing mode.",
+        "contribution": "Built 3D navigation, image loading, and keyboard controls.",
+        "color": "blue",
+        "summary": "Art with a new perspective."
+      }
+    ],
+    "fit": {
+      "engagements": [
+        "Freelance"
+      ],
+      "domains": [
+        "Creative",
+        "Commerce"
+      ],
+      "hourlyUsd": 70,
+      "salaryUsd": 90000,
+      "hoursPerWeek": 20,
+      "startWeeks": 0,
+      "utcHours": [
+        11,
+        19
+      ],
+      "approach": "Prototype the interaction early, then refine the details. Every expressive experience gets a fast, keyboard-friendly alternative."
+    }
+  },
+  {
+    "id": "maya-patel",
+    "joinedAt": "2026-09-26",
+    "reviews": [],
+    "name": "Maya Patel",
+    "isOnline": true,
+    "handle": "demo-maya-patel",
+    "avatar": "/images/avatars/maya.svg",
+    "role": "Full-stack developer",
+    "category": "Full-stack",
+    "location": "Bengaluru, India",
+    "experience": "5 years",
+    "availability": "Open to full-time",
+    "start": "In 4 weeks",
+    "timezone": "Asia/Kolkata",
+    "workStyle": "Remote",
+    "specialty": "Collaborative products",
+    "strengths": [
+      "Real-time features",
+      "Thoughtful UX"
+    ],
+    "skills": [
+      "TypeScript",
+      "React",
+      "Go"
+    ],
+    "bio": "Turning early ideas into useful products, one considered release at a time.",
+    "theme": "rose",
+    "projects": [
+      {
+        "name": "Fieldnotes",
+        "image": {
+          "src": "/images/projects/sample-projects.png",
+          "alt": "Reading and research screenshot",
+          "sampleTile": 5
+        },
+        "kind": "Research",
+        "stack": "React · Go",
+        "description": "A collaborative research notebook with shared collections and full-text search.",
+        "contribution": "Built the editor, search service, and shared collections.",
+        "color": "rose",
+        "summary": "Research worth sharing."
+      },
+      {
+        "name": "Together",
+        "image": {
+          "src": "/images/projects/sample-projects.png",
+          "alt": "Project workspace screenshot",
+          "sampleTile": 0
+        },
+        "kind": "Collaboration",
+        "stack": "WebSockets · React",
+        "description": "A team planning board with live cursors and conflict-safe updates.",
+        "contribution": "Implemented real-time sync and optimistic interactions.",
+        "color": "sage",
+        "summary": "Plan together, in real time."
+      },
+      {
+        "name": "Thread",
+        "image": {
+          "src": "/images/projects/sample-projects.png",
+          "alt": "Community and calendar screenshot",
+          "sampleTile": 4
+        },
+        "kind": "Team knowledge",
+        "stack": "Go · PostgreSQL",
+        "description": "A searchable home for team decisions and their context.",
+        "contribution": "Built permissions, search, and the publishing workflow.",
+        "color": "sand",
+        "summary": "Team decisions, easy to find."
+      }
+    ],
+    "fit": {
+      "engagements": [
+        "Full-time",
+        "Co-founder"
+      ],
+      "domains": [
+        "SaaS",
+        "Collaboration"
+      ],
+      "hourlyUsd": 75,
+      "salaryUsd": 100000,
+      "hoursPerWeek": 40,
+      "startWeeks": 4,
+      "utcHours": [
+        5,
+        13
+      ],
+      "approach": "Bring the team into the prototype early. I like clear ownership, asynchronous updates, and shipping small improvements continuously.",
+      "founder": {
+        "stage": "Prototype or early validation",
+        "commitment": "Full-time after a four-week transition",
+        "equity": "Discussed together after a working session",
+        "lookingFor": "A domain expert with a clear customer problem and time to validate it."
+      }
+    }
   }
 ]
