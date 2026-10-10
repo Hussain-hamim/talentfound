@@ -26,35 +26,24 @@ export function ContactActions({
   return (
     <div className="developer-contact">
       <div className="developer-contact-actions" aria-label={`Contact ${name}`}>
-        {demo ? (
-          <>
-            <button className="developer-contact-primary" disabled>
-              <MessageCircle size={17} aria-hidden="true" /> Message
-            </button>
-            <button className="developer-contact-secondary" disabled>
-              <Send size={16} aria-hidden="true" /> Invite to project
-            </button>
-          </>
-        ) : (
-          <>
-            <Link
-              className="developer-contact-primary"
-              href={`/developers/${handle}/message`}
-              aria-label={`Message ${name}`}
-            >
-              <MessageCircle size={17} aria-hidden="true" /> Message
-            </Link>
-            <Link
-              className="developer-contact-secondary"
-              href={`/developers/${handle}/invite`}
-              aria-label={`Invite ${name} to a project`}
-            >
-              <Send size={16} aria-hidden="true" /> Invite to project
-            </Link>
-          </>
-        )}
+        <Link
+          className="developer-contact-primary"
+          href={`/developers/${handle}/message`}
+          aria-label={`Message ${name}`}
+        >
+          <MessageCircle size={17} aria-hidden="true" /> Message
+        </Link>
+        <Link
+          className="developer-contact-secondary"
+          href={`/developers/${handle}/invite`}
+          aria-label={`Invite ${name} to a project`}
+        >
+          <Send size={16} aria-hidden="true" /> Invite to project
+        </Link>
       </div>
-      {demo && <p>Demo profile · Messages and invitations are unavailable.</p>}
+      {demo && (
+        <p>Demo profile · Try messaging or sending a test invitation.</p>
+      )}
     </div>
   );
 }

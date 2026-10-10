@@ -1,0 +1,393 @@
+.profile-modal.platform {
+  position: fixed;
+  inset: 0;
+  width: min(1120px, calc(100vw - 64px));
+  height: calc(100dvh - 24px);
+  max-width: none;
+  max-height: none;
+  min-height: 0;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #ffffff26;
+  border-radius: 24px;
+  background: #191819;
+  box-shadow:
+    0 32px 120px #0009,
+    0 8px 36px #0006,
+    0 0 48px #bbb4ae0b;
+}
+.profile-modal[open] {
+  animation: profile-modal-in 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.profile-modal::backdrop {
+  background: #0708098a;
+  -webkit-backdrop-filter: blur(14px) saturate(0.7);
+  backdrop-filter: blur(14px) saturate(0.7);
+  animation: profile-backdrop-in 350ms ease both;
+}
+.profile-modal[data-closing="true"] {
+  animation: profile-modal-out 180ms ease-in both;
+  pointer-events: none;
+}
+.profile-modal[data-closing="true"]::backdrop {
+  animation: profile-backdrop-out 180ms ease-in both;
+}
+.profile-modal-shell {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.profile-modal-shell::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: url("/images/hero-poster.jpg") center 75% / cover no-repeat;
+  filter: blur(70px) saturate(0.8);
+  opacity: 0.5;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 18%,
+    #000 72%,
+    transparent
+  );
+}
+.profile-modal-toolbar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  padding: 3px 18px 3px 30px;
+  border-bottom: 1px solid #ffffff0d;
+  background: linear-gradient(110deg, #ffffff04, transparent);
+}
+.profile-modal-toolbar > span {
+  color: #aca6a9;
+  font:
+    10px var(--font-geist-mono),
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+}
+.profile-modal-close {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ffffff1c;
+  border-radius: 50%;
+  background: #ffffff05;
+  color: #d8d2d3;
+}
+.profile-modal-close:hover {
+  background: #ffffff12;
+  color: #fff;
+  border-color: #ffffff40;
+}
+.profile-modal-close:focus-visible {
+  outline-offset: 3px;
+}
+.profile-modal-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff29 transparent;
+  padding: 18px 30px 56px;
+  scroll-padding-block: 18px 56px;
+}
+.profile-modal-scroll:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 1px #ffffff40;
+}
+.profile-modal-bottom-blur {
+  position: absolute;
+  inset: auto 0 0;
+  height: 44px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to top, #191819f5, #19181900);
+  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(7px);
+  mask-image: linear-gradient(to top, #000 10%, #0009 40%, transparent);
+}
+.profile-modal .dp-topline {
+  margin-bottom: 20px;
+}
+.profile-modal .dp-hero {
+  padding: 28px;
+  gap: 28px;
+  border-radius: 12px;
+}
+.profile-modal .dp-identity h1 {
+  font-size: clamp(28px, 3vw, 40px);
+}
+.profile-modal .dp-layout {
+  gap: 24px;
+}
+.profile-modal .dp-contact-panel,
+.profile-modal .dp-project,
+.profile-modal .dp-review {
+  border-radius: 10px;
+}
+.profile-modal .dp-contact-panel {
+  top: 0;
+}
+.profile-modal [data-profile-loaded] {
+  animation: profile-content-in 280ms ease-out both;
+}
+.profile-modal-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+  text-align: center;
+}
+.profile-modal-message h2 {
+  font-size: 24px;
+  font-weight: 500;
+}
+.profile-modal-message p {
+  color: var(--muted);
+}
+.profile-skeleton {
+  padding-bottom: 20px;
+}
+.profile-skeleton-line,
+.profile-skeleton-avatar,
+.profile-skeleton-cover,
+.profile-skeleton-button,
+.profile-skeleton-socials > span {
+  display: block;
+  background: linear-gradient(
+    100deg,
+    #ffffff06 20%,
+    #ffffff10 45%,
+    #ffffff06 70%
+  );
+  background-size: 240% 100%;
+  animation: profile-skeleton-shimmer 1.8s ease-in-out infinite;
+  border-radius: 5px;
+}
+.profile-skeleton-line {
+  height: 12px;
+  width: 75%;
+  margin-bottom: 16px;
+}
+.profile-skeleton-title {
+  height: 24px;
+  width: 90%;
+}
+.profile-skeleton-short {
+  width: 45%;
+}
+.profile-skeleton-topline {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.profile-skeleton-topline > span {
+  width: 120px;
+  height: 10px;
+  margin: 0;
+}
+.profile-skeleton-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 28px;
+  padding: 32px 28px;
+  border: 1px solid #ffffff12;
+  border-radius: 12px;
+  background: #ffffff03;
+}
+.profile-skeleton-identity {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.profile-skeleton-identity > div {
+  flex: 1;
+}
+.profile-skeleton-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.profile-skeleton-socials {
+  display: flex;
+  gap: 10px;
+}
+.profile-skeleton-socials > span {
+  width: 32px;
+  height: 32px;
+}
+.profile-skeleton-socials > span:last-child {
+  width: 100px;
+}
+.profile-skeleton-nav {
+  display: flex;
+  gap: 24px;
+  padding-block: 28px;
+}
+.profile-skeleton-nav > span {
+  width: 90px;
+  margin: 0;
+}
+.profile-skeleton-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 24px;
+}
+.profile-skeleton-projects {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.profile-skeleton-project {
+  min-width: 0;
+}
+.profile-skeleton-cover {
+  aspect-ratio: 16/10;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+.profile-skeleton-contact {
+  padding: 24px;
+  border: 1px solid #ffffff12;
+  border-radius: 10px;
+}
+.profile-skeleton-button {
+  height: 44px;
+  margin-block: 14px;
+}
+@keyframes profile-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes profile-modal-out {
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+}
+@keyframes profile-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes profile-backdrop-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes profile-content-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes profile-skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+@media (max-width: 850px) {
+  .profile-modal.platform {
+    width: calc(100vw - 36px);
+    height: calc(100dvh - 28px);
+    border-radius: 18px;
+  }
+  .profile-modal-scroll {
+    padding: 16px 22px 52px;
+  }
+  .profile-skeleton-hero {
+    grid-template-columns: 1fr;
+  }
+  .profile-skeleton-bio {
+    border-top: 1px solid #ffffff12;
+    padding-top: 24px;
+  }
+  .profile-skeleton-body {
+    grid-template-columns: 1fr;
+  }
+  .profile-skeleton-contact {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  .profile-modal.platform {
+    width: calc(100vw - 20px);
+    height: calc(100dvh - 16px);
+    border-radius: 16px;
+  }
+  .profile-modal-toolbar {
+    min-height: 36px;
+    padding: 3px 12px 3px 18px;
+  }
+  .profile-modal-scroll {
+    padding: 14px 14px 48px;
+  }
+  .profile-modal .dp-hero {
+    padding: 20px;
+  }
+  .profile-modal .dp-availability {
+    max-width: 50%;
+  }
+  .profile-modal .dp-section-nav {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .profile-modal .dp-section-nav a {
+    font-size: 11px;
+  }
+  .profile-skeleton-hero {
+    padding: 22px;
+  }
+  .profile-skeleton-avatar {
+    width: 58px;
+    height: 58px;
+  }
+  .profile-skeleton-identity {
+    gap: 14px;
+  }
+  .profile-skeleton-projects {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .profile-modal[open],
+  .profile-modal[open]::backdrop,
+  .profile-modal [data-profile-loaded] {
+    animation-duration: 1ms;
+  }
+  .profile-skeleton * {
+    animation: none;
+  }
+}

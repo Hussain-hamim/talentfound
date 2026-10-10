@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import Link from "next/link";
 import { PublicShell } from "./public-shell";
 import { Compose } from "./compose";
 import { getSession } from "@/lib/platform/session";
@@ -14,19 +13,6 @@ export async function ContactPage({
 }) {
   const [person, s] = await Promise.all([getDeveloper(handle), getSession()]);
   if (!person) notFound();
-  if (isDemoProfile(handle))
-    return (
-      <PublicShell>
-        <h1>This is a demo profile.</h1>
-        <p>
-          These projects show what a complete profile can look like. Demo
-          accounts do not receive messages or invitations.
-        </p>
-        <Link className="pf-button" href="/developers">
-          Explore the community ↗
-        </Link>
-      </PublicShell>
-    );
   if (s.user) {
     const next = encodeURIComponent(
       `/developers/${handle}/${invite ? "invite" : "message"}`,
@@ -58,6 +44,7 @@ export async function ContactPage({
         name={person.member.name}
         handle={handle}
         invite={invite}
+        demo={isDemoProfile(person.profile.handle)}
         signedIn={
           !!s.user &&
           !!s.user.email_confirmed_at &&

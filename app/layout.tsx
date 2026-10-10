@@ -19,8 +19,10 @@ export const metadata: Metadata = {
 };
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <html
@@ -33,6 +35,7 @@ export default function RootLayout({
           Skip to content
         </a>
         {children}
+        {modal}
       </body>
     </html>
   );

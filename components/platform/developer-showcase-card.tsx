@@ -69,7 +69,9 @@ export function DeveloperShowcaseCard({
             </span>
             <div>
               <h3>
-                <Link href={href}>{p.member.name}</Link>
+                <Link href={href} scroll={false}>
+                  {p.member.name}
+                </Link>
               </h3>
               <p>{p.headline}</p>
             </div>
@@ -77,6 +79,7 @@ export function DeveloperShowcaseCard({
           <Link
             className="home-showcase-reviews"
             href={`${href}#${demo ? "demo-reviews" : "reviews"}`}
+            scroll={false}
             aria-label={
               rating !== null
                 ? `${rating.toFixed(1)} out of 5. Read ${reviewCount} ${demo ? "sample " : ""}${reviewCount === 1 ? "review" : "reviews"} for ${p.member.name}`
@@ -152,6 +155,7 @@ export function DeveloperShowcaseCard({
                 key={project.id}
                 className="developer-project-tile home-project-preview"
                 href={`${href}#project-${project.id}`}
+                scroll={false}
                 aria-label={`Explore ${project.title} by ${p.member.name}`}
                 aria-describedby={
                   summary ? `project-summary-${project.id}` : undefined
@@ -201,6 +205,7 @@ export function DeveloperShowcaseCard({
         <Link
           className="button button-red developer-profile-action"
           href={href}
+          scroll={false}
         >
           View profile
           <ArrowUpRight size={19} aria-hidden="true" />

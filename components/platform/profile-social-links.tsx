@@ -1,4 +1,5 @@
 import { ArrowUpRight, Globe } from "lucide-react";
+import Link from "next/link";
 import "@/app/profile-social-links.css";
 
 export function ProfileSocialLinks({
@@ -30,7 +31,7 @@ export function ProfileSocialLinks({
             const label = `${name}'s ${network}${demo ? " (demo)" : " (opens in a new tab)"}`;
             return (
               <li key={network}>
-                <a
+                <Link
                   className={`profile-social-link${icon === "portfolio" ? " profile-portfolio" : ""}`}
                   href={
                     demo
@@ -38,6 +39,7 @@ export function ProfileSocialLinks({
                       : url.trim()
                   }
                   target={demo ? undefined : "_blank"}
+                  scroll={demo ? false : undefined}
                   rel={demo ? undefined : "noopener noreferrer"}
                   aria-label={label}
                   title={label}
@@ -65,7 +67,7 @@ export function ProfileSocialLinks({
                       )}
                     </svg>
                   )}
-                </a>
+                </Link>
               </li>
             );
           })}

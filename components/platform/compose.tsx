@@ -13,6 +13,7 @@ function ComposeEditor({
   handle,
   signedIn,
   invite = false,
+  demo = false,
   opportunities = [],
   draft,
 }: {
@@ -21,6 +22,7 @@ function ComposeEditor({
   handle: string;
   signedIn: boolean;
   invite?: boolean;
+  demo?: boolean;
   opportunities?: Row<"opportunities">[];
   draft: PendingDraft | null;
 }) {
@@ -138,7 +140,11 @@ function ComposeEditor({
           <Avatar name={name} />
           <div>
             <h3>{name}</h3>
-            <p className="pf-note">A conversation on TalentFound</p>
+            <p className="pf-note">
+              {demo
+                ? "Demo profile · Test conversation"
+                : "A conversation on TalentFound"}
+            </p>
           </div>
         </div>
         {invite && (
@@ -252,9 +258,11 @@ function ComposeEditor({
           </button>
         </div>
         <p className="pf-note">
-          {signedIn
-            ? "The recipient may receive your message in an email notification."
-            : "Your draft stays in this browser for up to 24 hours. Nothing is sent until you finish signing in and confirm."}
+          {demo && signedIn
+            ? "This is a test account. Messages and invitations are saved in your inbox; this profile won’t reply."
+            : signedIn
+              ? "The recipient may receive your message in an email notification."
+              : "Your draft stays in this browser for up to 24 hours. Nothing is sent until you finish signing in and confirm."}
         </p>
       </form>
     </div>
@@ -268,6 +276,7 @@ export function Compose(props: {
   handle: string;
   signedIn: boolean;
   invite?: boolean;
+  demo?: boolean;
   opportunities?: Row<"opportunities">[];
 }) {
   const hydrated = useSyncExternalStore(
@@ -284,6 +293,7 @@ function LoadedCompose(props: {
   handle: string;
   signedIn: boolean;
   invite?: boolean;
+  demo?: boolean;
   opportunities?: Row<"opportunities">[];
 }) {
   const [draft] = useState(() => {
