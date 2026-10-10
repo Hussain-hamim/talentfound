@@ -1,0 +1,6 @@
+DO $$ BEGIN CREATE ROLE stingray_app_login LOGIN INHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE ROLE stingray_widget_login LOGIN INHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE ROLE stingray_worker_login LOGIN INHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+GRANT stingray_app TO stingray_app_login;
+GRANT stingray_widget TO stingray_widget_login;
+GRANT stingray_worker TO stingray_worker_login;;

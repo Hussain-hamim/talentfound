@@ -1,55 +1,61 @@
 # TalentFound
 
-The landing page and authentication UI for a developer discovery and co-founder matching platform. Built with Next.js App Router, React, TypeScript, and custom responsive CSS.
+A Next.js 16 / React 19 developer discovery platform backed by Supabase. The editorial landing page retains its dark palette, typography, and red accents. Real discovery, profiles, dashboards, and conversations use project **zgpqyctyxozsvbjayhaf** exclusively.
 
-## Run locally
+## Local development
 
-```bash
+```sh
 pnpm install
+cp .env.example .env.local # Only if you don't already have local configuration
 pnpm dev
 ```
 
-Open [localhost:3000](http://localhost:3000). Use the hostname shown by the development server; Next.js restricts development resources from other origins.
+Fill the environment values from the named project. `.env.local` is ignored. Never expose the service-role key or analytics secret through `NEXT_PUBLIC_` variables. Use `http://localhost:3000` consistently for authentication redirects and browser drafts.
 
-## Pages
+## Implemented
 
-- `/` — editorial landing page, original connection artwork, interactive example-profile gallery, developer / hiring / co-founder paths, an interactive profile walkthrough, opportunity panels, a co-founder feature, and an accordion FAQ.
-- `/developers` — compact or showcase discovery, combined fit filters, category/review filters, and transparent sorting. `?engagement=Co-founder` opens that path.
-- `/developers/[id]` — six shareable sample profiles with project case studies, work preferences, and contextual client feedback.
-- `/developers/[id]/invite` — engagement-specific brief, review, and browser-saved draft; no messages are sent.
-- `/shortlist` — named browser-saved lists, private notes, comparison of up to three people, shareable profile selections, and invitation drafts. Shared links contain profile IDs and a list name only.
-- `/messages` and `/messages/[developerId]` — local inbox, conversation drafts, explicit simulated replies, and invitation brief snapshots. Nothing is delivered.
-- `/signup` — registration UI with developer, hiring, and co-founder role selection. `?role=hiring` and `?role=founder` preselect the relevant option.
-- `/login` — email/password and social sign-in UI.
-- `/forgot-password` — email entry and reset confirmation preview.
-- `/reset-password` — new password and confirmation validation.
-- `/verify-email` — verification and resend preview.
+- Email/password authentication, verification, recovery, cookie sessions, OAuth callback handling, and logout.
+- Two-step onboarding; one identity with optional developer and recruiter workspaces.
+- Public developer profiles, profile editing, portfolio publishing/reordering, owner-restricted image storage, metadata, and sitemap.
+- Search and URL filters, showcase/compact layouts, pagination, saved searches, shortlists, notes, and private candidate stages.
+- Opportunity management, immutable invitation briefs and responses, private direct messages, unread counts, Realtime updates, reports, and blocking.
+- A guest can compose before login. The same-browser draft lasts 24 hours and returns for explicit review after authentication/onboarding. It never sends automatically.
+- Community ratings/reviews and developer replies, with no employment-verification claims.
+- Owner-only 7/30-day analytics, rolling 30-minute deduplication, optional visitor identification, and 90-day retention.
+- Durable notification jobs, grouped email templates, private scheduled worker, retries, read suppression, and delivery limits.
 
-## Current scope
+The remaining **external launch prerequisites and exact configuration steps** are in [docs/launch.md](docs/launch.md). GitHub OAuth and production email delivery are not enabled by code alone. The notification scheduler deliberately remains inactive until the sending service is configured and tested.
 
-This phase is UI only. Forms validate locally and show explicit preview feedback; registration proceeds to the verification preview. No accounts are created, credentials stored, authentication requests made, or emails sent. GitHub and Google buttons display preview notices. All developer profiles, projects, reviews, availability, and compensation expectations are illustrative examples. There are no verified identities, client engagements, or technical assessments. Shortlists, private notes, and invitation drafts use versioned localStorage (`talentfound:hiring:v1`), persist on this browser only, and are removed when browser data is cleared. This is not account-level storage or messaging. Public links to selections do not include notes or drafts. Native dialogs support keyboard dismissal and restore focus to the originating profile.
+## Routes
 
-Authentication controls and presentation live in `components/auth-form.tsx`; the shared authentication layout is in `app/(auth)/layout.tsx`. The landing page remains a Server Component, with small client components for mobile navigation, sample-profile dialogs, role selection, and progressive scroll reveals. Its visual system is scoped in `app/landing.css` and `app/landing-chapters.css`; additional sections are in `components/landing-chapters.tsx` and the keyboard-accessible profile tabs are in `components/profile-passport.tsx`. The original generated hero artwork lives in `public/images/devmatch-connection.png`. The palette uses `#ff3317`, `#151415`, white, and dark red, inspired by Superteam Talent, with original TalentFound branding and content based on `docs/plan.md` and `docs/plan2.md`.
+`/developers` and `/developers/[handle]` are public. `/dashboard` contains role-specific overview, profiles, projects, talent search, shortlists, opportunities, invitations, messages, analytics, and settings. Shared conversations live at `/dashboard/messages/[conversationId]`. Legacy `/messages` and `/shortlist` links redirect into authenticated workspaces.
 
-## Checks
+Illustrative landing artwork and examples remain clearly labeled. Legacy prototype components/tests remain in the repository for reference, but live account, discovery, contact, and dashboard routes do not use their mock stores or simulated replies. The separate `velorah/` project is unchanged.
 
-```bash
-pnpm lint
-pnpm exec tsc --noEmit
-pnpm test:hiring
-pnpm build
+## Database and security
+
+Versioned migrations under `supabase/migrations/` retain the project's existing migration history. TalentFound additions start at `20261002164253`. Existing unrelated application tables are preserved. Do not reset this shared remote database or reapply old migrations manually.
+
+Public identity/profile data is separate from account preferences, hiring notes, messages, reports, analytics, and the private notification queue. Exposed tables use explicit grants and RLS; transactional RPCs enforce verified onboarding, membership, ownership, immutable invitations, blocking, and configurable contact/message limits. Dashboard snapshots use the requesting member's RLS context. Database types are generated in `lib/supabase/database.types.ts`.
+
+```sh
+supabase link --project-ref zgpqyctyxozsvbjayhaf
+supabase db push --linked
+supabase gen types typescript --linked --schema public > lib/supabase/database.types.ts
 ```
 
-The existing `next/font/google` setup downloads Geist and Geist Mono during production builds, so the initial build requires internet access.
+## Verification
 
-## Velorah hero
+```sh
+pnpm lint
+pnpm exec tsc --noEmit
+pnpm test:platform
+pnpm test:hiring
+pnpm test:database
+pnpm test:auth
+pnpm test:storage
+pnpm build
+npx --yes supabase@2.119.0 db query --linked --project-ref zgpqyctyxozsvbjayhaf --file tests/platform/notifications.sql
+```
 
-The requested React + Vite + TypeScript + Tailwind + shadcn/ui hero is a standalone app in [`velorah/`](./velorah/README.md). Run `npm run dev:velorah` from this folder, or `npm run build:velorah` for a production build. The existing Next.js app retains its original scripts and source.
-
-## Hiring prototype structure
-
-`components/developer-hiring-data.ts` contains illustrative fit preferences, project context, and pure filtering helpers. Search applies all selected requirements before the existing rating sort; online status and saves do not affect fit or reputation. The three engagement types have separate expectations and invitation fields. `components/hiring-store.ts` owns browser persistence and validates the stored schema. `tests/developer-hiring.test.mjs` covers fit combinations and storage validation; the existing ranking tests cover averages, small samples, ties, and newcomer handling. Sample directory and profile routes are marked noindex.
-
-## Local chat prototype
-
-Messages and composer drafts use separate versioned localStorage (`talentfound:messages:v1`). One conversation is kept per sample developer, starting only when a message is added. Chat updates across browser tabs; clearing browser data removes it. A saved brief is copied into the conversation only after explicit preview and confirmation. Later edits to the invitation cannot alter that snapshot. The Add demo reply control inserts labeled, predefined sample feedback; there is no messaging server, AI, delivery/read receipt, or connection to real developers. Private content never appears in route parameters or share links. `tests/developer-messages.test.mjs` covers validation, persistence failures, ordering, drafts, and brief snapshots.
+Live tests require `.env.local`, deliberately create disposable `@example.test` accounts, and remove them afterward. Notification SQL runs inside a rolled-back transaction and never contacts an email provider. Authentication tests generate verification/recovery tokens without sending email; actual mailbox delivery and OAuth consent must also be tested before launch. See [docs/verification.md](docs/verification.md).

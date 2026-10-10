@@ -1,0 +1,9 @@
+project_id = "talentfound"
+
+# Remote project: zgpqyctyxozsvbjayhaf. Use CLI >= 2.119 for partial config push.
+# The worker uses the private x-cron-secret header, not a user JWT.
+[functions.talentfound-notifications]
+verify_jwt = false
+
+[auth.email]
+enable_confirmations = true

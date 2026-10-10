@@ -1,0 +1,41 @@
+-- This suite never invokes an email provider. All fixtures and queue changes roll back.
+begin;
+do $$
+declare a uuid:=gen_random_uuid(); b uuid:=gen_random_uuid(); c uuid:=gen_random_uuid(); m1 uuid:=gen_random_uuid(); m2 uuid:=gen_random_uuid(); m3 uuid:=gen_random_uuid(); batch uuid; jobs jsonb; retry jsonb; begin
+ insert into auth.users(id,email,email_confirmed_at) values(a,'queue-a-'||a||'@example.test',now()),(b,'queue-b-'||b||'@example.test',now());
+ insert into public.members(id,name) values(a,'Queue QA sender'),(b,'Queue QA recipient');
+ insert into public.accounts(id) values(a),(b);
+ insert into public.conversations(id,member_a,member_b) values(c,least(a,b),greatest(a,b));
+ insert into public.messages(id,conversation_id,sender_id,body) values(m1,c,a,'First queue fixture'),(m2,c,a,'Second queue fixture');
+ insert into talentfound_private.notification_jobs(conversation_id,recipient_id,message_id) values(c,b,m1),(c,b,m2);
+ jobs:=public.claim_notification_batches();
+ if exists(select 1 from jsonb_array_elements(jobs) x where x->'payload'->>'conversation'=c::text) then raise exception 'Five minute delay was ignored'; end if;
+ update talentfound_private.notification_jobs set due_at=now()-interval '1 minute' where conversation_id=c;
+ jobs:=public.claim_notification_batches();
+ select (x->>'id')::uuid into batch from jsonb_array_elements(jobs) x where x->'payload'->>'conversation'=c::text;
+ if batch is null or (select jsonb_array_length(payload->'messages') from talentfound_private.notification_batches where id=batch)<>2 then raise exception 'Messages were not grouped'; end if;
+ if not public.notification_batch_allowed(batch) then raise exception 'Unread batch should be eligible'; end if;
+ perform public.finish_notification_batch(batch,false,'Transient QA failure');
+ update talentfound_private.notification_batches set next_attempt_at=now()-interval '1 second' where id=batch;
+ retry:=public.claim_notification_batches();
+ if not exists(select 1 from jsonb_array_elements(retry) x where x->>'id'=batch::text) then raise exception 'Retry did not retain stable idempotency key'; end if;
+ insert into public.conversation_reads(conversation_id,member_id,read_at) values(c,b,now());
+ if public.notification_batch_allowed(batch) then raise exception 'Read-before-send was not suppressed'; end if;
+ delete from public.conversation_reads where conversation_id=c;
+ update talentfound_private.notification_batches set status='pending' where id=batch;
+ update public.accounts set email_notifications=false where id=b;
+ if public.notification_batch_allowed(batch) then raise exception 'Muted recipient was not suppressed'; end if;
+ update public.accounts set email_notifications=true where id=b;
+ update talentfound_private.notification_batches set status='pending' where id=batch;
+ insert into public.blocks(owner_id,blocked_id) values(b,a);
+ if public.notification_batch_allowed(batch) then raise exception 'Blocked sender was not suppressed'; end if;
+ delete from public.blocks where owner_id=b;
+ update talentfound_private.notification_batches set status='pending' where id=batch;
+ perform public.finish_notification_batch(batch,true,null);
+ insert into public.messages(id,conversation_id,sender_id,body) values(m3,c,a,'Cooldown fixture');
+ insert into talentfound_private.notification_jobs(conversation_id,recipient_id,message_id,due_at) values(c,b,m3,now()-interval '1 minute');
+ jobs:=public.claim_notification_batches();
+ if exists(select 1 from jsonb_array_elements(jobs) x where x->'payload'->>'conversation'=c::text) then raise exception 'Fifteen minute email limit was ignored'; end if;
+end $$;
+rollback;
+select 'PASS: delay, grouping, stable retry, read suppression, mute, block, cooldown; all fixtures rolled back' as result;

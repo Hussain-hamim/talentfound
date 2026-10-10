@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Arrow, Brand } from "@/components/brand";
-import { DeveloperProfiles } from "@/components/developer-profiles";
+import { HomePeople } from "@/components/platform/home-people";
 import { DevMatchHero } from "@/components/devmatch-hero";
 import { FooterWordmark } from "@/components/footer-wordmark";
 import { ScrollReveal } from "@/components/scroll-reveal";
@@ -28,7 +28,7 @@ export default function Home() {
       <ScrollReveal />
       <main id="main-content">
         <DevMatchHero />
-        <DeveloperProfiles />
+        <HomePeople />
 
         <section className="work-section" id="for-developers">
           <div className="work-heading" data-reveal>

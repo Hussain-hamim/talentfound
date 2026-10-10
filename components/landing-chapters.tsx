@@ -171,7 +171,7 @@ const questions = [
   ],
   [
     "Can I create an account right now?",
-    "You can explore the sign-up experience today. This is the UI preview; live accounts, profile publishing, and connections are coming in a later build.",
+    "Yes. Create an account, tell us a little about yourself, and start sharing your work or finding your next collaborator. Developer profiles are public; sign in to start a conversation.",
   ],
 ];
 

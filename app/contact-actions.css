@@ -1,0 +1,55 @@
+.developer-contact {
+  margin-block: 18px 6px;
+}
+.developer-contact-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.developer-contact-primary,
+.developer-contact-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 11px 14px;
+  border: 1px solid #ffffff30;
+  color: #f7f1ed;
+  background: #ffffff05;
+  font:
+    500 13px/1.4 var(--font-geist-sans),
+    sans-serif;
+  text-align: center;
+}
+.developer-contact-primary {
+  background: #c93825;
+  border-color: #f2503c;
+}
+.developer-contact a:hover {
+  border-color: #f2503c;
+  background: #693028;
+}
+.developer-contact a:focus-visible {
+  outline: 2px solid #f7f1ed;
+  outline-offset: 3px;
+}
+.developer-contact button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.developer-contact p,
+.pf-talent-card .developer-contact p {
+  margin: 9px 0 0;
+  color: #aaa3a7;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.pf-talent-inner .developer-contact {
+  margin-block: 0;
+}
+@media (max-width: 380px) {
+  .developer-contact-actions {
+    grid-template-columns: 1fr;
+  }
+}

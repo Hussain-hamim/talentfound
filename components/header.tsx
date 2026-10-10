@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { AccountLinks } from "./platform/account-links";
 import { Arrow, Brand } from "./brand";
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -13,12 +14,7 @@ export function Header() {
           <a href="#for-founders">Find your match</a>
         </nav>
         <div className="header-actions">
-          <Link href="/login" className="login-link">
-            Log in
-          </Link>
-          <Link href="/signup" className="button button-red button-small">
-            Join the network <Arrow diagonal />
-          </Link>
+          <AccountLinks />
         </div>
         <button
           type="button"
@@ -47,7 +43,7 @@ export function Header() {
         >
           <a href="#developers">The people</a>
           <a href="#for-founders">Find your match</a>
-          <Link href="/login">Log in</Link>
+          <AccountLinks />
           <Link href="/signup">
             Create your profile <Arrow />
           </Link>

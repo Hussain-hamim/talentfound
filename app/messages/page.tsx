@@ -1,2 +1,4 @@
-import { HiringMessages } from '@/components/hiring-messages';
-export default function MessagesPage() { return <HiringMessages />; }
+import { redirect } from "next/navigation";
+export default function Page() {
+  redirect("/dashboard/messages");
+}

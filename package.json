@@ -10,14 +10,22 @@
     "test:ranking": "node --experimental-strip-types --experimental-default-type=module --test tests/developer-ranking.test.mjs",
     "dev:velorah": "npm --prefix velorah run dev -- --port 4173",
     "build:velorah": "npm --prefix velorah run build",
-    "test:hiring": "node --experimental-strip-types --experimental-default-type=module --test tests/developer-*.test.mjs"
+    "test:hiring": "node --experimental-strip-types --experimental-default-type=module --test tests/developer-*.test.mjs",
+    "test:platform": "node --experimental-strip-types --test tests/platform/core.test.mjs",
+    "test:database": "TALENTFOUND_DB_TESTS=1 node --env-file=.env.local --test tests/platform/database.test.mjs",
+    "test:auth": "TALENTFOUND_DB_TESTS=1 node --env-file=.env.local --test tests/platform/auth.test.mjs",
+    "test:storage": "TALENTFOUND_DB_TESTS=1 node --env-file=.env.local --test tests/platform/storage.test.mjs"
   },
   "dependencies": {
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.117.2",
     "framer-motion": "^13.4.4",
     "lucide-react": "^1.48.0",
     "next": "16.3.6",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "server-only": "0.0.1",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -26,6 +34,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
+    "prettier": "3.9.9",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

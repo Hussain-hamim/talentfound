@@ -8,7 +8,7 @@ const skillIcons: Record<string, string> = {
   WebGL: 'webgl', Go: 'go', Docker: 'docker',
 };
 
-export function SkillList({ person }: { person: Developer }) {
+export function SkillList({ person }: { person: Pick<Developer, 'name' | 'skills'> }) {
   return <div className="developer-tech-stack"><span className="developer-tech-stack-label">Tech stack:</span><ul className="developer-skills" aria-label={`${person.name}'s skills`}>
     {person.skills.map(skill => <li key={skill} tabIndex={0}>
       {skillIcons[skill]
@@ -30,6 +30,7 @@ export function ProjectCover({ project }: { project: DeveloperProject }) {
     {project.image && <span className="project-cover-thumbnail">
       <span className="project-thumbnail-crop"><Image
         src={project.image.src}
+        unoptimized={project.image.src.startsWith('https://')}
         alt={project.image.alt}
         width={tile === undefined ? 400 : 1536}
         height={tile === undefined ? 400 : 1024}
@@ -50,4 +51,3 @@ export function Identity({ person, dialog = false }: { person: Developer; dialog
     <div>{dialog ? <h2 id="developer-dialog-title">{person.name}</h2> : <h3>{person.name}</h3>}<p>{person.role}</p></div>
   </div>;
 }
-

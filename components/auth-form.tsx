@@ -1,397 +1,372 @@
 "use client";
-
 import Link from "next/link";
-import { useState, useSyncExternalStore, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import {
+  useState,
+  useSyncExternalStore,
+  Suspense,
+  type FormEvent,
+} from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Code2, Eye, EyeOff } from "lucide-react";
 import { Arrow, Brand } from "./brand";
-
+import { createClient } from "@/lib/supabase/client";
+import { safeNext } from "@/lib/supabase/config";
 export type AuthMode =
   "login" | "signup" | "forgot-password" | "reset-password" | "verify-email";
-const subscribeToHydration = () => () => {};
-const clientSnapshot = () => true;
-const serverSnapshot = () => false;
-const content = {
-  login: {
-    label: "GOOD TO SEE YOU AGAIN",
-    title: "Welcome back.",
-    description: "Log in to find your people and pick up where you left off.",
-  },
-  signup: {
-    label: "YOUR NEXT CHAPTER STARTS HERE",
-    title: "Find your people.",
-    description: "Create your account. Make room for what’s next.",
-  },
-  "forgot-password": {
-    label: "LET’S GET YOU BACK IN",
-    title: "Forgot your password?",
-    description: "It happens. Enter your email and we’ll help you reset it.",
-  },
-  "reset-password": {
-    label: "A FRESH START",
-    title: "Set a new password.",
-    description: "Make it a strong one. Your next chapter is waiting.",
-  },
-  "verify-email": {
-    label: "ONE MORE THING",
-    title: "Check your inbox.",
-    description:
-      "Verify your email to take the next step toward your TalentFound profile.",
-  },
+const copy = {
+  login: [
+    "GOOD TO SEE YOU AGAIN",
+    "Welcome back.",
+    "Log in to find your people and pick up where you left off.",
+  ],
+  signup: [
+    "YOUR NEXT CHAPTER STARTS HERE",
+    "Find your people.",
+    "One account. Your work, your conversations, your next opportunity.",
+  ],
+  "forgot-password": [
+    "LET’S GET YOU BACK IN",
+    "Forgot your password?",
+    "Enter your email and we’ll send a secure reset link.",
+  ],
+  "reset-password": [
+    "A FRESH START",
+    "Set a new password.",
+    "At least eight characters. Make it uniquely yours.",
+  ],
+  "verify-email": [
+    "ONE MORE THING",
+    "Check your inbox.",
+    "Verify your email to finish setting up your TalentFound account.",
+  ],
 };
-
-function Eye({ visible }: { visible: boolean }) {
-  return (
-    <svg
-      width="19"
-      height="19"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
-      <circle cx="12" cy="12" r="3" />
-      {visible && <path d="m3 3 18 18" />}
-    </svg>
-  );
-}
-function GithubIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.11-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 6.84c.85 0 1.71.11 2.51.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.21 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
-    </svg>
-  );
-}
-
-export function AuthForm({
+function AuthFormContent({
   mode,
   initialRole = "developer",
 }: {
   mode: AuthMode;
   initialRole?: string;
 }) {
-  const router = useRouter();
   const hydrated = useSyncExternalStore(
-    subscribeToHydration,
-    clientSnapshot,
-    serverSnapshot,
+    subscribeStorage,
+    () => true,
+    () => false,
   );
-  const [role, setRole] = useState(
-    ["developer", "hiring", "founder"].includes(initialRole)
-      ? initialRole
-      : "developer",
-  );
-  const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const router = useRouter();
   const [error, setError] = useState("");
-  const [complete, setComplete] = useState(false);
-  const copy = content[mode];
-  const social = mode === "login" || mode === "signup";
-  const hasPassword = social || mode === "reset-password";
+  const [message, setMessage] = useState("");
+  const [pending, setPending] = useState(false);
+  const params = useSearchParams();
+  const next = safeNext(params.get("next"));
+  const storedEmail = useSyncExternalStore(
+    subscribeStorage,
+    readEmail,
+    () => "",
+  );
+  const [visible, setVisible] = useState(false);
+  const [emailInput, setEmail] = useState<string | null>(null);
+  const email = emailInput ?? storedEmail;
+  const [role, setRole] = useState(
+    initialRole === "developer" ? "developer" : "recruiter",
+  );
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function destination() {
+    return mode === "signup"
+      ? `/onboarding?role=${role}&next=${encodeURIComponent(next)}`
+      : next;
+  }
+  async function social(provider: "google" | "github") {
+    setPending(true);
+    setError("");
+    try {
+      const { error } = await createClient().auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(destination())}`,
+        },
+      });
+      if (error) throw error;
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Sign-in failed. Please try again.",
+      );
+      setPending(false);
+    }
+  }
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setMessage("");
-    const data = new FormData(event.currentTarget);
-    if (mode === "signup" && !String(data.get("name") ?? "").trim()) {
-      setError("Please enter your name.");
-      return;
-    }
-    if (
-      mode === "reset-password" &&
-      data.get("password") !== data.get("confirm-password")
-    ) {
-      setError("Your passwords don’t match. Please try again.");
-      return;
-    }
-    if (mode === "signup") {
-      router.push("/verify-email");
-      return;
-    }
-    if (mode === "login") {
-      setMessage(
-        "You’ve reached the end of the sign-in preview. Live sign-in will be available when authentication is connected.",
+    setPending(true);
+    const form = new FormData(event.currentTarget);
+    const db = createClient();
+    try {
+      const password = String(form.get("password") || "");
+      if (mode === "signup") {
+        const { data, error } = await db.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: String(form.get("name") || "") },
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(destination())}`,
+          },
+        });
+        if (error) throw error;
+        try {
+          sessionStorage.setItem("talentfound:signup-email", email);
+        } catch {}
+        router.push(
+          data.session
+            ? destination()
+            : `/verify-email?next=${encodeURIComponent(destination())}`,
+        );
+      } else if (mode === "login") {
+        const { error } = await db.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        router.push(next);
+        router.refresh();
+      } else if (mode === "forgot-password") {
+        const { error } = await db.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
+        });
+        if (error) throw error;
+        setMessage(
+          "If an account exists for this email, a reset link is on its way.",
+        );
+      } else if (mode === "reset-password") {
+        if (password !== String(form.get("confirm-password")))
+          throw new Error("Your passwords don’t match.");
+        const {
+          data: { user },
+        } = await db.auth.getUser();
+        if (!user)
+          throw new Error("Open the secure reset link from your email first.");
+        const { error } = await db.auth.updateUser({ password });
+        if (error) throw error;
+        setMessage("Your password has been updated.");
+        router.push("/dashboard");
+        router.refresh();
+      } else {
+        const { error } = await db.auth.resend({
+          type: "signup",
+          email,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+          },
+        });
+        if (error) throw error;
+        setMessage(
+          "A new verification email has been requested. Please check your inbox.",
+        );
+      }
+    } catch (e) {
+      setError(
+        e instanceof Error
+          ? e.message
+          : "Something went wrong. Please try again.",
       );
-      return;
+    } finally {
+      setPending(false);
     }
-    setComplete(true);
   }
-
+  const socialMode = mode === "login" || mode === "signup";
   return (
     <div className={`auth-form-wrap auth-form-${mode}`}>
-      <div className="auth-form-brand"><Brand /></div>
-      {!social && <Link className="back-link" href="/login">
-        <span aria-hidden="true">←</span> Back to log in
-      </Link>}
-      <div className="eyebrow">{copy.label}</div>
-      <h1>
-        {complete
-          ? mode === "forgot-password"
-            ? "Next, check your email."
-            : "A fresh start, ready."
-          : copy.title}
-      </h1>
-      <p className="auth-description">
-        {complete
-          ? mode === "forgot-password"
-            ? "This is the reset email confirmation preview. No email has been sent."
-            : "Password reset preview complete. No password has been changed."
-          : copy.description}
-      </p>
-      {complete ? (
-        <div className="auth-complete">
-          <div className="mail-illustration">
-            {mode === "forgot-password" ? "↗" : "✓"}
+      <div className="auth-form-brand">
+        <Brand />
+      </div>
+      {!socialMode && (
+        <Link className="back-link" href="/login">
+          ← Back to log in
+        </Link>
+      )}
+      <div className="eyebrow">{copy[mode][0]}</div>
+      <h1>{copy[mode][1]}</h1>
+      <p className="auth-description">{copy[mode][2]}</p>
+      {mode === "signup" && (
+        <fieldset className="role-picker">
+          <legend>I’m here to</legend>
+          <div>
+            {[
+              ["developer", "Get discovered"],
+              ["recruiter", "Hire or collaborate"],
+            ].map(([value, label]) => (
+              <label
+                className={`role-option ${role === value ? "selected" : ""}`}
+                key={value}
+              >
+                <input
+                  type="radio"
+                  name="role"
+                  value={value}
+                  checked={role === value}
+                  onChange={() => setRole(value)}
+                />
+                <span>{label}</span>
+              </label>
+            ))}
           </div>
-          <Link
-            className="button button-red full-width"
-            href={mode === "forgot-password" ? "/reset-password" : "/login"}
-          >
-            {mode === "forgot-password"
-              ? "Preview password reset"
-              : "Return to log in"}
-            <Arrow />
-          </Link>
-          <button className="subtle-button" onClick={() => setComplete(false)}>
-            Try again
-          </button>
-        </div>
-      ) : mode === "verify-email" ? (
-        <div className="verify-content">
-          <div className="mail-illustration">
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.3"
-              aria-hidden="true"
-            >
-              <rect x="2" y="4" width="20" height="16" rx="2" />
-              <path d="m2 6 10 7L22 6" />
-            </svg>
-          </div>
-          <div className="verification-note">
-            This is a preview of the verification step. Your account has not
-            been created and no email has been sent.
-          </div>
-          <button
-            className="button button-red full-width"
-            onClick={() =>
-              setMessage(
-                "Resend preview complete. Email delivery will be available when authentication is connected.",
-              )
-            }
-          >
-            Resend verification email <Arrow />
-          </button>
-          <Link href="/signup" className="auth-bottom-link">
-            Used a different email? Go back to sign up
-          </Link>
-        </div>
-      ) : (
+        </fieldset>
+      )}
+      {socialMode && (
         <>
-          {mode === "signup" && (
-            <fieldset className="role-picker">
-              <legend>I’m here to</legend>
-              <div>
-                {[
-                  ["developer", "Get discovered"],
-                  ["hiring", "Hire builders"],
-                  ["founder", "Find a co-founder"],
-                ].map(([value, label]) => (
-                  <label
-                    className={
-                      role === value ? "role-option selected" : "role-option"
-                    }
-                    key={String(value)}
-                  >
-                    <input
-                      type="radio"
-                      name="role"
-                      value={String(value)}
-                      checked={role === value}
-                      onChange={() => setRole(String(value))}
-                    />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-          )}
-          {social && (
-            <>
-              <div className="social-buttons">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setMessage(
-                      "GitHub sign-in is part of this preview. Account connection will be available when authentication is connected.",
-                    )
-                  }
-                >
-                  <GithubIcon /> GitHub
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setMessage(
-                      "Google sign-in is part of this preview. Account connection will be available when authentication is connected.",
-                    )
-                  }
-                >
-                  <span className="google-icon">G</span> Google
-                </button>
-              </div>
-              <div className="form-divider">
-                <span />
-                or continue with email
-                <span />
-              </div>
-            </>
-          )}
-          <form method="post" onSubmit={handleSubmit}>
-            {mode === "signup" && (
-              <div className="form-field">
-                <label htmlFor="name">Full name</label>
-                <input
-                  id="name"
-                  name="name"
-                  placeholder="Alex Morgan"
-                  autoComplete="name"
-                  required
-                  maxLength={100}
-                />
-              </div>
-            )}
-            {mode !== "reset-password" && (
-              <div className="form-field">
-                <label htmlFor="email">Email address</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                  required
-                />
-              </div>
-            )}
-            {hasPassword && (
-              <div className="form-field">
-                <div className="field-label">
-                  <label htmlFor="password">
-                    {mode === "reset-password" ? "New password" : "Password"}
-                  </label>
-                  {mode === "login" && (
-                    <Link href="/forgot-password">Forgot password?</Link>
-                  )}
-                </div>
-                <div className="password-input">
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder={
-                      mode === "login"
-                        ? "Enter your password"
-                        : "Create a strong password"
-                    }
-                    autoComplete={
-                      mode === "login" ? "current-password" : "new-password"
-                    }
-                    minLength={mode === "login" ? undefined : 8}
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    aria-describedby={
-                      mode !== "login" ? "password-help" : undefined
-                    }
-                  />
-                  <button
-                    type="button"
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                    aria-pressed={showPassword}
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    <Eye visible={showPassword} />
-                  </button>
-                </div>
-                {mode !== "login" && (
-                  <span id="password-help" className="input-help">
-                    At least 8 characters. Make it uniquely yours.
-                  </span>
-                )}
-              </div>
-            )}
-            {mode === "reset-password" && (
-              <div className="form-field">
-                <label htmlFor="confirm-password">Confirm new password</label>
-                <input
-                  id="confirm-password"
-                  name="confirm-password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your new password again"
-                  autoComplete="new-password"
-                  minLength={8}
-                  required
-                  aria-describedby={error ? "form-error" : undefined}
-                />
-              </div>
-            )}
-            {error && (
-              <p id="form-error" className="form-error" role="alert">
-                {error}
-              </p>
-            )}
+          <div className="social-buttons">
             <button
-              type="submit"
-              disabled={!hydrated}
-              className="button button-red full-width"
+              disabled={pending || !hydrated}
+              onClick={() => social("github")}
             >
-              {mode === "login"
-                ? "Log in to TalentFound"
-                : mode === "signup"
-                  ? "Create your account"
-                  : mode === "forgot-password"
-                    ? "Send reset link"
-                    : "Reset password"}
-              <Arrow />
+              <Code2 size={20} /> GitHub
             </button>
-          </form>
-          {social && (
-            <p className="auth-switch">
-              {mode === "login"
-                ? "New around here?"
-                : "Already part of TalentFound?"}{" "}
-              <Link href={mode === "login" ? "/signup" : "/login"}>
-                {mode === "login" ? "Create an account" : "Log in"}
-                <span> ↗</span>
-              </Link>
-            </p>
-          )}
+            <button
+              disabled={pending || !hydrated}
+              onClick={() => social("google")}
+            >
+              <span className="google-icon">G</span> Google
+            </button>
+          </div>
+          <div className="form-divider">
+            <span />
+            or continue with email
+            <span />
+          </div>
         </>
       )}
-      {message && (
-        <div className="form-message" role="status">
-          {message}
-        </div>
+      <form method="post" onSubmit={submit}>
+        {mode === "signup" && (
+          <div className="form-field">
+            <label htmlFor="name">Full name</label>
+            <input
+              id="name"
+              name="name"
+              required
+              maxLength={100}
+              autoComplete="name"
+              placeholder="Your name"
+            />
+          </div>
+        )}
+        {mode !== "reset-password" && (
+          <div className="form-field">
+            <label htmlFor="email">Email address</label>
+            <input
+              id="email"
+              name="email"
+              required
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+            />
+          </div>
+        )}
+        {(socialMode || mode === "reset-password") && (
+          <div className="form-field">
+            <div className="field-label">
+              <label htmlFor="password">
+                {mode === "reset-password" ? "New password" : "Password"}
+              </label>
+              {mode === "login" && (
+                <Link href="/forgot-password">Forgot password?</Link>
+              )}
+            </div>
+            <div className="password-input">
+              <input
+                id="password"
+                name="password"
+                type={visible ? "text" : "password"}
+                required
+                minLength={mode === "login" ? undefined : 8}
+                autoComplete={
+                  mode === "login" ? "current-password" : "new-password"
+                }
+              />
+              <button
+                type="button"
+                aria-label={visible ? "Hide password" : "Show password"}
+                onClick={() => setVisible(!visible)}
+              >
+                {visible ? <EyeOff size={19} /> : <Eye size={19} />}
+              </button>
+            </div>
+          </div>
+        )}
+        {mode === "reset-password" && (
+          <div className="form-field">
+            <label htmlFor="confirm-password">Confirm new password</label>
+            <input
+              id="confirm-password"
+              name="confirm-password"
+              type={visible ? "text" : "password"}
+              required
+              minLength={8}
+              autoComplete="new-password"
+            />
+          </div>
+        )}
+        {(error || params.has("error")) && (
+          <p className="form-error" role="alert">
+            {error ||
+              "This sign-in link is invalid or expired. Please try again."}
+          </p>
+        )}
+        {message && (
+          <p className="form-message" role="status">
+            {message}
+          </p>
+        )}
+        <button
+          disabled={pending || !hydrated}
+          className="button button-red full-width"
+        >
+          {pending
+            ? "Working…"
+            : {
+                login: "Log in to TalentFound",
+                signup: "Create your account",
+                "forgot-password": "Send reset link",
+                "reset-password": "Update password",
+                "verify-email": "Resend verification email",
+              }[mode]}
+          <Arrow />
+        </button>
+      </form>
+      {socialMode && (
+        <p className="auth-switch">
+          {mode === "login"
+            ? "New around here?"
+            : "Already part of TalentFound?"}{" "}
+          <Link
+            href={`${mode === "login" ? "/signup" : "/login"}?next=${encodeURIComponent(next)}`}
+          >
+            {mode === "login" ? "Create an account" : "Log in"} ↗
+          </Link>
+        </p>
       )}
-      <div className="preview-notice">
-        <span /> UI preview · Live authentication coming later.
-      </div>
+      {mode === "verify-email" && (
+        <p className="auth-switch">
+          Already verified? <Link href={next}>Continue to TalentFound ↗</Link>
+        </p>
+      )}
     </div>
+  );
+}
+
+function subscribeStorage(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+function readEmail() {
+  try {
+    return sessionStorage.getItem("talentfound:signup-email") || "";
+  } catch {
+    return "";
+  }
+}
+export function AuthForm(props: { mode: AuthMode; initialRole?: string }) {
+  return (
+    <Suspense fallback={<div className="auth-form-wrap">Loading sign-in…</div>}>
+      <AuthFormContent {...props} />
+    </Suspense>
   );
 }
