@@ -1,20 +1,24 @@
 import type { Metadata } from "next";
+import { siteUrl, siteDescription, canIndex } from "@/lib/seo/metadata";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./buttons.css";
 import "./brand.css";
+import { LiveUpdates } from "@/components/platform/live-updates";
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl()),
+  applicationName: "TalentFound",
+  robots: { index: canIndex(), follow: true },
   title: {
-    default: "TalentFound. Good work. Great company.",
+    default: "TalentFound — Discover Developers & Showcase Your Work",
     template: "%s | TalentFound",
   },
-  description:
-    "A home for your work. A starting point for what’s next. Showcase your projects and connect with teams, founders, and your next opportunity.",
+  description: siteDescription,
   icons: { icon: "/icon.svg" },
 };
 export default function RootLayout({
@@ -34,8 +38,10 @@ export default function RootLayout({
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
-        {children}
-        {modal}
+        <LiveUpdates>
+          {children}
+          {modal}
+        </LiveUpdates>
       </body>
     </html>
   );

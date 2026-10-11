@@ -215,7 +215,7 @@ export function MessagesPanel({
                 className={conversationId === c.id ? "active" : ""}
               >
                 <div className="pf-row-main">
-                  <Avatar name={c.name} />
+                  <Avatar name={c.name} path={c.avatar_path} />
                   <div style={{ flex: 1 }}>
                     {c.name}
                     {c.unread > 0 && (
@@ -248,7 +248,7 @@ export function MessagesPanel({
                 >
                   <ArrowLeft size={18} />
                 </Link>
-                <Avatar name={current.name} />
+                <Avatar name={current.name} path={current.avatar_path} />
                 <div>
                   <h2 style={{ fontSize: 15 }}>{current.name}</h2>
                   <span className="pf-note">

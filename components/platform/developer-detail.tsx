@@ -517,7 +517,10 @@ export async function DeveloperDetail({
                       <article className="dp-review" key={r.id}>
                         <header className="dp-review-header">
                           <div className="dp-review-author">
-                            <Avatar name={r.reviewer.name} />
+                            <Avatar
+                              name={r.reviewer.name}
+                              path={r.reviewer.avatar_path}
+                            />
                             <div>
                               <h3>{r.reviewer.name}</h3>
                               <time dateTime={r.created_at}>

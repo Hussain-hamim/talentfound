@@ -538,7 +538,10 @@ export function ShortlistsPanel({
               <article key={c.id} className="pf-panel">
                 <div className="pf-panel-top">
                   <div className="pf-row-main">
-                    <Avatar name={person?.name || "Developer"} />
+                    <Avatar
+                      name={person?.name || "Developer"}
+                      path={person?.avatar_path}
+                    />
                     <div>
                       <h3>{person?.name || "Developer"}</h3>
                       <p className="pf-note">Saved {date(c.created_at)}</p>

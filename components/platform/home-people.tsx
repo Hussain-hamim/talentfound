@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { searchDevelopers } from "@/lib/platform/data";
 import { getSession } from "@/lib/platform/session";
-import { demoHandles } from "@/lib/platform/demo-profiles";
 import { DeveloperShowcaseCard } from "./developer-showcase-card";
 import "@/app/dashboard/dashboard.css";
 import "@/app/home-showcase.css";
@@ -11,11 +10,6 @@ export async function HomePeople() {
     searchDevelopers({ sort: "newest" }),
     getSession(),
   ]);
-  const ordered = [...people].sort((a, b) => {
-    const left = demoHandles.indexOf(a.handle),
-      right = demoHandles.indexOf(b.handle);
-    return (left < 0 ? 99 : left) - (right < 0 ? 99 : right);
-  });
   return (
     <section
       id="developers"
@@ -37,7 +31,7 @@ export async function HomePeople() {
         </Link>
       </div>
       <div className="developer-grid">
-        {ordered.slice(0, 6).map((person) => (
+        {people.slice(0, 6).map((person) => (
           <DeveloperShowcaseCard
             key={person.id}
             person={person}

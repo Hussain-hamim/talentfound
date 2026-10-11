@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { adminClient } from "@/lib/supabase/admin";
 import { requireMember } from "./session";
@@ -73,7 +74,7 @@ export async function searchDevelopers(
     filters,
   };
 }
-export async function getDeveloper(handle: string) {
+export const getDeveloper = cache(async (handle: string) => {
   const db = await createClient();
   const { data: profile, error } = await db
     .from("developer_profiles")
@@ -107,7 +108,7 @@ export async function getDeveloper(handle: string) {
     reviews: reviews.data || [],
     avatarUrl: avatarUrl(member.data!.avatar_path),
   };
-}
+});
 export async function mediaUrl(path: string | null) {
   if (!path) return null;
   const db = await createClient();

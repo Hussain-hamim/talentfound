@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Arrow } from "@/components/brand";
+import { NotificationBell } from "./notifications";
 export function AccountLinks() {
   const [signedIn, setSignedIn] = useState(false);
   useEffect(() => {
@@ -20,9 +21,12 @@ export function AccountLinks() {
     };
   }, []);
   return signedIn ? (
-    <Link className="button button-red button-small" href="/dashboard">
-      Your workspace <Arrow diagonal />
-    </Link>
+    <>
+      <NotificationBell />
+      <Link className="button button-red button-small" href="/dashboard">
+        Your workspace <Arrow diagonal />
+      </Link>
+    </>
   ) : (
     <>
       <Link href="/login" className="login-link">

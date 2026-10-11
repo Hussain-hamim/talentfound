@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Brand } from "@/components/brand";
 import { getSession } from "@/lib/platform/session";
 import "@/app/dashboard/dashboard.css";
+import { NotificationBell } from "./notifications";
 export async function PublicShell({ children }: { children: ReactNode }) {
   const s = await getSession();
   return (
@@ -10,6 +11,7 @@ export async function PublicShell({ children }: { children: ReactNode }) {
       <header className="pf-public-header">
         <Brand />
         <nav>
+          <NotificationBell />
           <Link href="/developers">Explore talent</Link>
           {s.user ? (
             <Link className="pf-button small" href="/dashboard">

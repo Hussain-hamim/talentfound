@@ -13,6 +13,7 @@ import type { WorkspaceData } from "@/lib/platform/types";
 import type { Save } from "./workspace";
 import { Field, Heading, Status, Avatar } from "./ui";
 import { supabaseConfig } from "@/lib/supabase/config";
+import { PhotoCropDialog } from "./photo-crop-dialog";
 export async function uploadImage(
   file: File,
   uid: string,
@@ -49,10 +50,13 @@ function ProfilePhoto({
   pending: boolean;
 }) {
   const [file, setFile] = useState<File | null>(null);
+  const [cropFile, setCropFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const input = useRef<HTMLInputElement>(null);
+  const uploadedPath = useRef<string | null>(null);
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);
@@ -61,31 +65,39 @@ function ProfilePhoto({
   function choose(event: ChangeEvent<HTMLInputElement>) {
     const selected = event.currentTarget.files?.[0];
     setError("");
+    setMessage("");
     setFile(null);
     setPreview(null);
+    uploadedPath.current = null;
     if (!selected) return;
     try {
       validateImage(selected);
-      setFile(selected);
-      setPreview(URL.createObjectURL(selected));
+      setCropFile(selected);
     } catch (e) {
       event.currentTarget.value = "";
       setError(e instanceof Error ? e.message : "Could not read this image.");
     }
   }
-  async function upload(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!file || busy || pending) return;
+  async function upload(selected: File) {
+    if (busy || pending) return;
     setError("");
+    setMessage("");
     setBusy(true);
     try {
-      const path = await uploadImage(file, data.member.id, "avatars");
+      const path =
+        uploadedPath.current ||
+        (await uploadImage(selected, data.member.id, "avatars"));
+      uploadedPath.current = path;
       if (
         await save("avatar", { path }, "Your profile photo has been updated.")
       ) {
         setFile(null);
         setPreview(null);
+        uploadedPath.current = null;
+        setMessage("Photo saved. It’s now visible on your profile.");
         if (input.current) input.current.value = "";
+      } else {
+        setError("Your photo couldn’t be saved to your profile. Please retry.");
       }
     } catch (e) {
       setError(
@@ -101,12 +113,7 @@ function ProfilePhoto({
   return (
     <section className="pf-panel pf-profile-photo" aria-label="Profile photo">
       <h2>A face to the name</h2>
-      <form
-        method="post"
-        className="pf-photo-form"
-        onSubmit={upload}
-        aria-busy={busy}
-      >
+      <div className="pf-photo-form" aria-busy={busy}>
         <div
           className="pf-photo-preview"
           role="img"
@@ -128,22 +135,40 @@ function ProfilePhoto({
             />
           </Field>
           <div className="pf-photo-actions">
-            <button
-              type="submit"
-              className="pf-button"
-              disabled={!file || busy || pending}
-            >
-              {busy ? "Uploading…" : "Upload photo"}
-            </button>
-            <span className="pf-note">
-              {file
-                ? "Preview only. Upload to save your new photo."
-                : "Your photo appears on your profile and developer cards."}
+            {file && error && (
+              <button
+                type="button"
+                className="pf-button"
+                disabled={busy || pending}
+                onClick={() => void upload(file)}
+              >
+                Try again
+              </button>
+            )}
+            <span className="pf-note" role="status">
+              {busy
+                ? "Uploading and saving your photo…"
+                : "Choose a photo and adjust the crop. It uploads automatically when you’re done."}
             </span>
           </div>
         </div>
-      </form>
-      <Status error={error} />
+      </div>
+      <Status error={error} message={message} />
+      {cropFile && (
+        <PhotoCropDialog
+          file={cropFile}
+          onCancel={() => {
+            setCropFile(null);
+            if (input.current) input.current.value = "";
+          }}
+          onSave={(cropped) => {
+            setCropFile(null);
+            setFile(cropped);
+            setPreview(URL.createObjectURL(cropped));
+            void upload(cropped);
+          }}
+        />
+      )}
     </section>
   );
 }

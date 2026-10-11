@@ -654,6 +654,77 @@ export type Database = {
           },
         ];
       };
+      notifications: {
+        Row: {
+          actor_id: string;
+          body: string;
+          conversation_id: string | null;
+          created_at: string;
+          developer_id: string | null;
+          id: string;
+          kind: string;
+          read_at: string | null;
+          recipient_id: string;
+          source_key: string;
+          title: string;
+        };
+        Insert: {
+          actor_id: string;
+          body?: string;
+          conversation_id?: string | null;
+          created_at?: string;
+          developer_id?: string | null;
+          id?: string;
+          kind: string;
+          read_at?: string | null;
+          recipient_id: string;
+          source_key: string;
+          title: string;
+        };
+        Update: {
+          actor_id?: string;
+          body?: string;
+          conversation_id?: string | null;
+          created_at?: string;
+          developer_id?: string | null;
+          id?: string;
+          kind?: string;
+          read_at?: string | null;
+          recipient_id?: string;
+          source_key?: string;
+          title?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "notifications_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "members";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "notifications_conversation_id_fkey";
+            columns: ["conversation_id"];
+            isOneToOne: false;
+            referencedRelation: "conversations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "notifications_developer_id_fkey";
+            columns: ["developer_id"];
+            isOneToOne: false;
+            referencedRelation: "developer_profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "notifications_recipient_id_fkey";
+            columns: ["recipient_id"];
+            isOneToOne: false;
+            referencedRelation: "members";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       opportunities: {
         Row: {
           budget: string;
@@ -813,6 +884,35 @@ export type Database = {
           withdrawable_cents?: number;
         };
         Relationships: [];
+      };
+      realtime_signals: {
+        Row: {
+          owner_id: string | null;
+          revision: number;
+          scope: string;
+          updated_at: string;
+        };
+        Insert: {
+          owner_id?: string | null;
+          revision?: number;
+          scope: string;
+          updated_at?: string;
+        };
+        Update: {
+          owner_id?: string | null;
+          revision?: number;
+          scope?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "realtime_signals_owner_id_fkey";
+            columns: ["owner_id"];
+            isOneToOne: false;
+            referencedRelation: "members";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       recruiter_profiles: {
         Row: {

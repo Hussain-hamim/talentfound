@@ -23,6 +23,7 @@ import {
   Check,
   Plus,
   LogOut,
+  Bell,
 } from "lucide-react";
 import { Brand } from "@/components/brand";
 import type { Analytics, WorkspaceData } from "@/lib/platform/types";
@@ -38,6 +39,8 @@ import {
   InvitationsPanel,
 } from "./workspace-work";
 import { MessagesPanel } from "./messages";
+import { NotificationBell, NotificationsPanel } from "./notifications";
+import { useLiveUpdates } from "./live-updates";
 export type Save = (
   action: string,
   input: unknown,
@@ -68,42 +71,30 @@ export function Workspace({
     const snapshot = await load<WorkspaceData>("view=workspace");
     if (version === refreshVersion.current) setData(snapshot);
   }, []);
+  const { revision } = useLiveUpdates();
   useEffect(() => {
-    const db = createClient();
-    const sync = () => {
-      if (document.visibilityState === "visible")
-        void refresh().catch(() => {});
-    };
-    const channel = db
-      .channel(`workspace:${initialData.member.id}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
-        sync,
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "invitations" },
-        sync,
-      )
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") sync();
-      });
-    const timer = setInterval(sync, 30000);
-    window.addEventListener("focus", sync);
-    return () => {
-      clearInterval(timer);
-      window.removeEventListener("focus", sync);
-      void db.removeChannel(channel);
-    };
-  }, [initialData.member.id, refresh]);
+    void refresh().catch(() => {});
+  }, [revision, refresh]);
   const save: Save = async (action, input, success = "Changes saved.") => {
     setPending(true);
     setError("");
     setMessage("");
     try {
-      await mutate(action, input);
-      await refresh();
+      const result = await mutate<{ avatar_path?: string } | null>(
+        action,
+        input,
+      );
+      if (action === "avatar" && result?.avatar_path) {
+        const avatarPath = result.avatar_path;
+        // Render the confirmed database value without waiting for unrelated workspace queries.
+        ++refreshVersion.current;
+        setData((current) => ({
+          ...current,
+          member: { ...current.member, avatar_path: avatarPath },
+        }));
+      } else {
+        await refresh();
+      }
       setMessage(success);
       return true;
     } catch (e) {
@@ -143,6 +134,7 @@ export function Workspace({
     },
     { id: "invitations", label: "Invitations", icon: Mail },
     { id: "messages", label: "Messages", icon: MessageCircle },
+    { id: "notifications", label: "Notifications", icon: Bell },
     ...(!recruiter
       ? [
           {
@@ -210,6 +202,7 @@ export function Workspace({
               : "A little progress. A new possibility."}
           </span>
           <div className="workspace-account">
+            <NotificationBell />
             <Avatar
               name={data.member.name}
               src={
@@ -239,6 +232,7 @@ export function Workspace({
         <main id="main-content" className="workspace-main">
           <Status error={error} message={message} />
           {section === "overview" && <Overview data={data} />}
+          {section === "notifications" && <NotificationsPanel />}
           {section === "profile" && (
             <ProfileEditor
               key={role}
@@ -492,7 +486,7 @@ function Overview({ data }: { data: WorkspaceData }) {
                   className="pf-row"
                 >
                   <div className="pf-row-main">
-                    <Avatar name={c.name} />
+                    <Avatar name={c.name} path={c.avatar_path} />
                     <div>
                       <h3>{c.name}</h3>
                       <small>{c.last_message?.slice(0, 65)}</small>
@@ -544,15 +538,29 @@ function AnalyticsPanel({ initial }: { initial: Analytics }) {
   const [data, setData] = useState(initial);
   const [days, setDays] = useState(30);
   const [error, setError] = useState("");
+  const { revision } = useLiveUpdates();
+  useEffect(() => {
+    let active = true;
+    void load<Analytics>(`view=analytics&days=${days}`)
+      .then((snapshot) => {
+        if (active) {
+          setData(snapshot);
+          setError("");
+        }
+      })
+      .catch((e) => {
+        if (active)
+          setError(
+            e instanceof Error ? e.message : "Could not load analytics.",
+          );
+      });
+    return () => {
+      active = false;
+    };
+  }, [days, revision]);
   const max = Math.max(1, ...data.daily.map((d) => d.views));
-  async function change(n: number) {
+  function change(n: number) {
     setDays(n);
-    try {
-      setData(await load<Analytics>(`view=analytics&days=${n}`));
-      setError("");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not load analytics.");
-    }
   }
   return (
     <>
@@ -640,7 +648,7 @@ function AnalyticsPanel({ initial }: { initial: Analytics }) {
             data.visitors.map((v) => (
               <div className="pf-row" key={v.id}>
                 <div className="pf-row-main">
-                  <Avatar name={v.name} />
+                  <Avatar name={v.name} path={v.avatar_path} />
                   <div>
                     <h3>{v.name}</h3>
                     <small>{date(v.viewed_at)}</small>

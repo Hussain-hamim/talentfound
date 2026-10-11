@@ -41,6 +41,7 @@ export async function ContactPage({
       <Compose
         recipient={person.profile.id}
         name={person.member.name}
+        avatarPath={person.member.avatar_path}
         handle={handle}
         invite={invite}
         demo={isDemoProfile(person.profile.handle)}

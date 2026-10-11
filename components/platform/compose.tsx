@@ -10,6 +10,7 @@ const draftKey = "talentfound:pending-contact:v1";
 function ComposeEditor({
   recipient,
   name,
+  avatarPath,
   handle,
   signedIn,
   invite = false,
@@ -19,6 +20,7 @@ function ComposeEditor({
 }: {
   recipient: string;
   name: string;
+  avatarPath?: string | null;
   handle: string;
   signedIn: boolean;
   invite?: boolean;
@@ -137,7 +139,7 @@ function ComposeEditor({
       />
       <form method="post" className="pf-panel pf-form" onSubmit={submit}>
         <div className="pf-row-main">
-          <Avatar name={name} />
+          <Avatar name={name} path={avatarPath} />
           <div>
             <h3>{name}</h3>
             <p className="pf-note">
@@ -273,6 +275,7 @@ const hydrationSubscribe = () => () => {};
 export function Compose(props: {
   recipient: string;
   name: string;
+  avatarPath?: string | null;
   handle: string;
   signedIn: boolean;
   invite?: boolean;
@@ -290,6 +293,7 @@ export function Compose(props: {
 function LoadedCompose(props: {
   recipient: string;
   name: string;
+  avatarPath?: string | null;
   handle: string;
   signedIn: boolean;
   invite?: boolean;

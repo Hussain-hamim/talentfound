@@ -1,20 +1,14 @@
 import type { MetadataRoute } from "next";
-import { appUrl } from "@/lib/supabase/config";
+import { canIndex, siteUrl } from "@/lib/seo/metadata";
 export default function robots(): MetadataRoute.Robots {
   return {
+    // Let crawlers read noindex on account and demo pages. Auth still protects private data.
     rules: {
       userAgent: "*",
-      allow: ["/", "/developers"],
-      disallow: [
-        "/dashboard/",
-        "/api/",
-        "/auth/",
-        "/onboarding",
-        "/messages",
-        "/login",
-        "/signup",
-      ],
+      allow: "/",
+      disallow: canIndex() ? ["/api/", "/auth/"] : ["/"],
     },
-    sitemap: `${appUrl()}/sitemap.xml`,
+    sitemap: `${siteUrl()}/sitemap.xml`,
+    host: siteUrl(),
   };
 }

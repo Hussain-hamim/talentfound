@@ -27,6 +27,7 @@ export default async function Page({
       "opportunities",
       "invitations",
       "messages",
+      "notifications",
       "analytics",
       "settings",
     ].includes(section) ||

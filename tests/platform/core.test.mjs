@@ -9,7 +9,54 @@ import {
   filterSchema,
 } from "../../lib/platform/validation.ts";
 import { safeNext } from "../../lib/supabase/config.ts";
+import { squareCrop } from "../../lib/platform/image-crop.ts";
 import { renderNotification } from "../../supabase/functions/talentfound-notifications/template.ts";
+test("profile crops start centered for landscape and portrait photos", () => {
+  assert.deepEqual(squareCrop(1200, 800, 1, { x: 0.5, y: 0.5 }), {
+    x: 200,
+    y: 0,
+    size: 800,
+  });
+  assert.deepEqual(squareCrop(800, 1200, 1, { x: 0.5, y: 0.5 }), {
+    x: 0,
+    y: 200,
+    size: 800,
+  });
+});
+test("zoomed profile crops can reach each edge without empty space", () => {
+  assert.deepEqual(squareCrop(1200, 800, 2, { x: 0.75, y: 0.25 }), {
+    x: 700,
+    y: 0,
+    size: 400,
+  });
+  assert.deepEqual(squareCrop(1200, 800, 2, { x: -1, y: -1 }), {
+    x: 0,
+    y: 0,
+    size: 400,
+  });
+  assert.deepEqual(squareCrop(1200, 800, 2, { x: 2, y: 2 }), {
+    x: 800,
+    y: 400,
+    size: 400,
+  });
+  assert.deepEqual(squareCrop(800, 1200, 4, { x: 1, y: 1 }), {
+    x: 600,
+    y: 1000,
+    size: 200,
+  });
+});
+test("zooming out clamps a previous crop to the photo boundaries", () => {
+  assert.deepEqual(squareCrop(1000, 1000, 1, { x: 0.9, y: 0.1 }), {
+    x: 0,
+    y: 0,
+    size: 1000,
+  });
+  assert.deepEqual(squareCrop(160, 80, 0.5, { x: 1, y: 0 }), {
+    x: 80,
+    y: 0,
+    size: 80,
+  });
+});
 test("return paths reject external and backslash redirects", () => {
   for (const path of [
     "https://evil.example",

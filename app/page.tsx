@@ -1,3 +1,5 @@
+import { publicMetadata, siteUrl, siteDescription } from "@/lib/seo/metadata";
+import { StructuredData } from "@/components/seo/structured-data";
 import Link from "next/link";
 import { Arrow, Brand } from "@/components/brand";
 import { HomePeople } from "@/components/platform/home-people";
@@ -19,15 +21,47 @@ import "./developer-profiles.css";
 import "./hiring.css";
 import "./landing-layout.css";
 
+export const metadata = publicMetadata({
+  title: "Discover Developers & Showcase Your Work",
+  description: siteDescription,
+  path: "/",
+});
+
 export default function Home() {
   return (
     <div className="landing-v2">
+      <StructuredData
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": `${siteUrl()}/#organization`,
+              name: "TalentFound",
+              url: siteUrl(),
+              logo: `${siteUrl()}/icon.svg`,
+            },
+            {
+              "@type": "WebSite",
+              "@id": `${siteUrl()}/#website`,
+              name: "TalentFound",
+              url: siteUrl(),
+              description: siteDescription,
+              publisher: { "@id": `${siteUrl()}/#organization` },
+            },
+          ],
+        }}
+      />
       <ScrollReveal />
       <main id="main-content">
         <DevMatchHero />
         <HomePeople />
 
-        <section className="people-section people-section-redesign" id="for-founders" aria-labelledby="match-title">
+        <section
+          className="people-section people-section-redesign"
+          id="for-founders"
+          aria-labelledby="match-title"
+        >
           <ConnectionPlayground />
         </section>
 
@@ -35,14 +69,19 @@ export default function Home() {
         <CofounderChapter />
         <QuestionsChapter />
 
-        <section className="closing-section" aria-labelledby="closing-title" data-reveal>
+        <section
+          className="closing-section"
+          aria-labelledby="closing-title"
+          data-reveal
+        >
           <h2 id="closing-title">
             Let’s make
             <br />
             <span>something click.</span>
           </h2>
           <p className="closing-description">
-            Bring your work. Find your people.<br />
+            Bring your work. Find your people.
+            <br />
             See what you can build together.
           </p>
           <Link className="brand-button" href="/signup">
@@ -56,8 +95,8 @@ export default function Home() {
             <Brand />
             <p className="footer-tagline">Good work. Great company.</p>
             <p className="footer-description">
-              A home for independent minds to share their work, find their people,
-              and build what comes next.
+              A home for independent minds to share their work, find their
+              people, and build what comes next.
             </p>
             <Link className="brand-button footer-invitation" href="/signup">
               Find your people <Arrow diagonal />
@@ -75,7 +114,9 @@ export default function Home() {
               <h2>For teams</h2>
               <Link href="/developers">Hire developers</Link>
               <a href="#developers">Meet the builders</a>
-              <Link href="/developers?engagement=Co-founder">Find a co-founder</Link>
+              <Link href="/developers?engagement=Co-founder">
+                Find a co-founder
+              </Link>
               <Link href="/signup?role=founder">Bring your idea</Link>
             </div>
             <div className="footer-link-group">

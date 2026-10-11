@@ -36,9 +36,61 @@ export async function GET(request: NextRequest) {
   try {
     const s = await getSession();
     if (!s.user) return fail(new Error("Please log in."), 401);
+    const view = request.nextUrl.searchParams.get("view");
+    if (view === "notificationCount") {
+      const result = await s.db
+        .from("notifications")
+        .select("id", { count: "exact", head: true })
+        .is("read_at", null);
+      check(result);
+      return NextResponse.json({ data: { unread: result.count || 0 } });
+    }
     if (!s.developer && !s.recruiter)
       return fail(new Error("Please complete onboarding."), 403);
-    const view = request.nextUrl.searchParams.get("view");
+    if (view === "notifications") {
+      const limit = z.coerce
+        .number()
+        .int()
+        .min(1)
+        .max(300)
+        .parse(request.nextUrl.searchParams.get("limit") || 30);
+      const rows =
+        check(
+          await s.db
+            .from("notifications")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .order("id", { ascending: false })
+            .limit(limit + 1),
+        ) || [];
+      const developerIds = [
+        ...new Set(
+          rows.flatMap((n) => (n.developer_id ? [n.developer_id] : [])),
+        ),
+      ];
+      const profiles = developerIds.length
+        ? check(
+            await s.db
+              .from("developer_profiles")
+              .select("id,handle")
+              .in("id", developerIds),
+          ) || []
+        : [];
+      const handles = new Map(profiles.map((p) => [p.id, p.handle]));
+      return NextResponse.json({
+        data: {
+          items: rows.slice(0, limit).map((n) => ({
+            ...n,
+            href: n.conversation_id
+              ? `/dashboard/messages/${n.conversation_id}`
+              : handles.has(n.developer_id || "")
+                ? `/developers/${handles.get(n.developer_id!)}#reviews`
+                : "/dashboard",
+          })),
+          more: rows.length > limit && limit < 300,
+        },
+      });
+    }
     if (view === "workspace")
       return NextResponse.json({ data: await workspaceData() });
     if (view === "analytics") {
@@ -97,6 +149,17 @@ export async function POST(request: NextRequest) {
       return fail(new Error("Please complete onboarding."), 403);
     let result: unknown = null;
     switch (action) {
+      case "readNotifications": {
+        const value = z.object({ id: id.optional() }).parse(input);
+        let query = s.db
+          .from("notifications")
+          .update({ read_at: new Date().toISOString() })
+          .eq("recipient_id", uid)
+          .is("read_at", null);
+        if (value.id) query = query.eq("id", value.id);
+        result = check(await query);
+        break;
+      }
       case "profile": {
         const { name, ...profile } = profileSchema.parse(input);
         if (!s.developer)
@@ -400,11 +463,18 @@ export async function POST(request: NextRequest) {
         const value = z.object({ path: z.string().max(500) }).parse(input);
         if (!value.path.startsWith(`${uid}/`))
           throw new Error("Choose an image you uploaded.");
+        const stored = await s.db.storage.from("avatars").info(value.path);
+        if (stored.error)
+          throw new Error(
+            "We couldn’t find your uploaded photo. Please try again.",
+          );
         result = check(
           await s.db
             .from("members")
             .update({ avatar_path: value.path })
-            .eq("id", uid),
+            .eq("id", uid)
+            .select("avatar_path")
+            .single(),
         );
         break;
       }
