@@ -2,19 +2,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Sprout } from "lucide-react";
 import type { ReactNode } from "react";
+const defaultAvatars = ["alex", "jamie", "nadia", "sam", "maya", "leo"];
+
+function defaultAvatar(name: string) {
+  // A stable selection keeps server rendering and every profile surface in sync.
+  let hash = 0;
+  for (const character of name.trim().toLowerCase()) {
+    hash = (Math.imul(hash, 31) + character.charCodeAt(0)) >>> 0;
+  }
+  return `/images/avatars/${defaultAvatars[hash % defaultAvatars.length]}.svg`;
+}
+
 export function Avatar({ name, src }: { name: string; src?: string | null }) {
   return (
     <span className="pf-avatar">
-      {src ? (
-        <Image src={src} alt="" width={82} height={82} unoptimized />
-      ) : (
-        name
-          .split(" ")
-          .map((s) => s[0])
-          .slice(0, 2)
-          .join("")
-          .toUpperCase()
-      )}
+      <Image
+        src={src || defaultAvatar(name)}
+        alt=""
+        width={82}
+        height={82}
+        unoptimized
+      />
     </span>
   );
 }

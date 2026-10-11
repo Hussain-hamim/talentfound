@@ -1,5 +1,11 @@
 "use client";
-import { useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { splitList } from "@/lib/platform/validation";
@@ -12,11 +18,7 @@ export async function uploadImage(
   uid: string,
   bucket: "avatars" | "project-media",
 ) {
-  if (
-    !["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
-    file.size > 5 * 1024 * 1024
-  )
-    throw new Error("Choose a JPEG, PNG, or WebP image under 5 MB.");
+  validateImage(file);
   const extension = {
     "image/jpeg": "jpg",
     "image/png": "png",
@@ -28,6 +30,122 @@ export async function uploadImage(
     .upload(path, file, { contentType: file.type, upsert: false });
   if (error) throw error;
   return path;
+}
+function validateImage(file: File) {
+  if (
+    !["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
+    !file.size ||
+    file.size > 5 * 1024 * 1024
+  )
+    throw new Error("Choose a JPEG, PNG, or WebP image up to 5 MB.");
+}
+function ProfilePhoto({
+  data,
+  save,
+  pending,
+}: {
+  data: WorkspaceData;
+  save: Save;
+  pending: boolean;
+}) {
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const input = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+  function choose(event: ChangeEvent<HTMLInputElement>) {
+    const selected = event.currentTarget.files?.[0];
+    setError("");
+    setFile(null);
+    setPreview(null);
+    if (!selected) return;
+    try {
+      validateImage(selected);
+      setFile(selected);
+      setPreview(URL.createObjectURL(selected));
+    } catch (e) {
+      event.currentTarget.value = "";
+      setError(e instanceof Error ? e.message : "Could not read this image.");
+    }
+  }
+  async function upload(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!file || busy || pending) return;
+    setError("");
+    setBusy(true);
+    try {
+      const path = await uploadImage(file, data.member.id, "avatars");
+      if (
+        await save("avatar", { path }, "Your profile photo has been updated.")
+      ) {
+        setFile(null);
+        setPreview(null);
+        if (input.current) input.current.value = "";
+      }
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Could not upload. Please try again.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+  const savedPhoto = data.member.avatar_path
+    ? `${supabaseConfig().url}/storage/v1/object/public/avatars/${data.member.avatar_path}`
+    : null;
+  return (
+    <section className="pf-panel pf-profile-photo" aria-label="Profile photo">
+      <h2>A face to the name</h2>
+      <form
+        method="post"
+        className="pf-photo-form"
+        onSubmit={upload}
+        aria-busy={busy}
+      >
+        <div
+          className="pf-photo-preview"
+          role="img"
+          aria-label={
+            preview ? "Selected profile photo preview" : "Current profile photo"
+          }
+        >
+          <Avatar name={data.member.name} src={preview || savedPhoto} />
+        </div>
+        <div className="pf-photo-controls">
+          <Field label="Profile photo" help="JPEG, PNG, or WebP · up to 5 MB">
+            <input
+              ref={input}
+              name="avatar"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={choose}
+              disabled={busy || pending}
+            />
+          </Field>
+          <div className="pf-photo-actions">
+            <button
+              type="submit"
+              className="pf-button"
+              disabled={!file || busy || pending}
+            >
+              {busy ? "Uploading…" : "Upload photo"}
+            </button>
+            <span className="pf-note">
+              {file
+                ? "Preview only. Upload to save your new photo."
+                : "Your photo appears on your profile and developer cards."}
+            </span>
+          </div>
+        </div>
+      </form>
+      <Status error={error} />
+    </section>
+  );
 }
 export function ProfileEditor({
   data,
@@ -92,6 +210,7 @@ export function ProfileEditor({
             : "Your profile is public. Give people a clear sense of what you bring."
         }
       />
+      <ProfilePhoto data={data} save={save} pending={pending} />
       <form method="post" className="pf-form" onSubmit={submit}>
         <section className="pf-panel">
           <h2>The introduction</h2>
@@ -328,22 +447,6 @@ export function SettingsPanel({
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
-  async function upload(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError("");
-    setBusy(true);
-    try {
-      const file = new FormData(e.currentTarget).get("avatar");
-      if (!(file instanceof File) || !file.size)
-        throw new Error("Choose an image first.");
-      const path = await uploadImage(file, data.member.id, "avatars");
-      await save("avatar", { path }, "Your new avatar is ready.");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not upload.");
-    } finally {
-      setBusy(false);
-    }
-  }
   async function account(
     e: FormEvent<HTMLFormElement>,
     kind: "email" | "password",
@@ -380,35 +483,7 @@ export function SettingsPanel({
       />
       <Status error={error} message={message} />
       <div className="pf-stack">
-        <section className="pf-panel">
-          <h2>A face to the name</h2>
-          <div className="pf-row">
-            <Avatar
-              name={data.member.name}
-              src={
-                data.member.avatar_path
-                  ? `${supabaseConfig().url}/storage/v1/object/public/avatars/${data.member.avatar_path}`
-                  : null
-              }
-            />
-            <form method="post" className="pf-inline-form" onSubmit={upload}>
-              <Field
-                label="Profile photo"
-                help="JPEG, PNG, or WebP · up to 5 MB"
-              >
-                <input
-                  name="avatar"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  required
-                />
-              </Field>
-              <button className="pf-button" disabled={busy || pending}>
-                Upload photo
-              </button>
-            </form>
-          </div>
-        </section>
+        <ProfilePhoto data={data} save={save} pending={pending || busy} />
         <form
           method="post"
           className="pf-panel"

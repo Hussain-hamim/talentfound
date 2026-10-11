@@ -28,6 +28,7 @@ import { Brand } from "@/components/brand";
 import type { Analytics, WorkspaceData } from "@/lib/platform/types";
 import { load, mutate } from "@/lib/platform/api";
 import { createClient } from "@/lib/supabase/client";
+import { supabaseConfig } from "@/lib/supabase/config";
 import { Avatar, Empty, Heading, Status, date } from "./ui";
 import { ProfileEditor, SettingsPanel } from "./workspace-profile";
 import {
@@ -209,7 +210,14 @@ export function Workspace({
               : "A little progress. A new possibility."}
           </span>
           <div className="workspace-account">
-            <Avatar name={data.member.name} />
+            <Avatar
+              name={data.member.name}
+              src={
+                data.member.avatar_path
+                  ? `${supabaseConfig().url}/storage/v1/object/public/avatars/${data.member.avatar_path}`
+                  : null
+              }
+            />
             <span>{data.member.name.split(" ")[0]}</span>
             <button
               className="pf-button small"
@@ -288,7 +296,7 @@ function Overview({ data }: { data: WorkspaceData }) {
     {
       label: "Put a face to your name",
       done: !!data.member.avatar_path,
-      href: "/dashboard/settings",
+      href: "/dashboard/profile",
     },
     {
       label: "Share your availability",
