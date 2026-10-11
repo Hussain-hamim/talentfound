@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
   try {
     const s = await getSession();
     if (!s.user) return fail(new Error("Please log in."), 401);
-    if (!s.user.email_confirmed_at || (!s.developer && !s.recruiter))
+    if (!s.developer && !s.recruiter)
       return fail(new Error("Please complete onboarding."), 403);
     const view = request.nextUrl.searchParams.get("view");
     if (view === "workspace")
@@ -84,8 +84,6 @@ export async function POST(request: NextRequest) {
     const s = await getSession();
     const uid = s.user?.id;
     if (!uid || !s.user) return fail(new Error("Please log in."), 401);
-    if (!s.user.email_confirmed_at)
-      return fail(new Error("Please verify your email."), 403);
     if (action === "onboard")
       return NextResponse.json({
         data: check(
@@ -94,7 +92,7 @@ export async function POST(request: NextRequest) {
           }),
         ),
       });
-    // Reviews are available to any verified member; onboarding establishes their public identity.
+    // Reviews are available to any signed-in member; onboarding establishes their public identity.
     if (!s.member || (!s.developer && !s.recruiter))
       return fail(new Error("Please complete onboarding."), 403);
     let result: unknown = null;

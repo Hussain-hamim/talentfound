@@ -10,7 +10,7 @@ Verified against project `zgpqyctyxozsvbjayhaf`, using disposable QA accounts; n
 - Platform unit tests: 6 pass (redirect safety, draft expiry/validation, onboarding, message/review validation, safe email rendering, and reconnect recovery spanning multiple pages).
 - Existing prototype/ranking regression tests: 23 pass.
 - Live database suite: 10 pass, covering public/private boundaries, profile ownership, candidate notes, unpublished portfolios, media path ownership, sender impersonation, conversation isolation, duplicate messages, read positions, invitations, review ownership, blocks, analytics privacy, and dual workspaces.
-- Live auth suite: passes. Unconfirmed login is rejected; generated signup/recovery links work; verification token reuse fails; password recovery, refresh, and logout work. No emails are sent by this test.
+- Live auth suite now checks immediate signup/session creation and onboarding, followed by password recovery, refresh, and logout. Run after disabling Confirm email in Supabase; the test checks that setting before creating an account.
 - Live storage suite: passes. Draft images cannot be signed by guests; owner uploads and deletion work; uploads to another owner's prefix fail; published images can be read publicly.
 - Notification SQL suite: passes. Five-minute delay, grouped messages, stable retry identifiers, read-before-send suppression, mute/block suppression, and fifteen-minute cooldown. All changes roll back; no provider is called.
 - Authenticated Supabase Realtime: live message event received by a separate authenticated client; missed-message recovery reads persisted messages after reconnect. Messages also appeared in the browser conversation.
@@ -34,7 +34,7 @@ These depend on services/credentials outside the repository:
 
 - Google OAuth consent and returning-user flow with the intended TalentFound application configuration.
 - GitHub OAuth after configuring client credentials in Supabase.
-- Actual signup, resend, email change, and password-reset mailbox delivery after verified SMTP setup.
+- Email change and password-reset mailbox delivery after verified SMTP setup.
 - Actual Resend delivery, links on the production HTTPS domain, and provider-level transient-error/idempotency behavior. Queue behavior and template escaping are tested separately.
 - Cross-browser/mobile provider flows on the deployed HTTPS origin and application-specific accessibility review with assistive technology.
 

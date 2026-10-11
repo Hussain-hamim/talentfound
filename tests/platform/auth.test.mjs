@@ -9,7 +9,7 @@ const ok = (r) => {
   return r.data;
 };
 test(
-  "verification, recovery, session refresh, and logout with disposable accounts",
+  "immediate signup, onboarding, recovery, session refresh, and logout with disposable accounts",
   { skip: !enabled, timeout: 120000 },
   async () => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -28,38 +28,42 @@ test(
       password = randomUUID() + "Aa!";
     let uid;
     try {
-      // Generate a signup link without sending to an invented email address.
-      const signup = ok(
-        await admin.auth.admin.generateLink({
-          type: "signup",
-          email,
-          password,
+      // Fail before signup if the hosted setting would send a confirmation email.
+      const settingsResponse = await fetch(`${url}/auth/v1/settings`, {
+        headers: { apikey: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY },
+      });
+      assert.ok(settingsResponse.ok);
+      const settings = await settingsResponse.json();
+      assert.equal(
+        settings.mailer_autoconfirm,
+        true,
+        "Disable Confirm email in Supabase before running this test.",
+      );
+      const signup = ok(await db.auth.signUp({ email, password }));
+      uid = signup.user?.id;
+      assert.ok(uid);
+      assert.ok(signup.session, "Signup must immediately establish a session");
+      assert.ok(signup.user.email_confirmed_at);
+      const oldToken = signup.session.access_token;
+      ok(
+        await db.rpc("complete_onboarding", {
+          payload: {
+            role: "developer",
+            name: "Auth QA",
+            headline: "Temporary QA account",
+            location: "Test location",
+            timezone: "UTC",
+            skills: ["TypeScript"],
+          },
         }),
       );
-      uid = signup.user.id;
-      assert.ok(!signup.user.email_confirmed_at);
-      const blocked = await db.auth.signInWithPassword({ email, password });
-      assert.equal(blocked.error?.code, "email_not_confirmed");
-      const verified = ok(
-        await db.auth.verifyOtp({
-          token_hash: signup.properties.hashed_token,
-          type: "signup",
-        }),
+      const profile = ok(
+        await db.from("developer_profiles").select("id").eq("id", uid).single(),
       );
-      assert.ok(verified.user.email_confirmed_at);
-      const oldToken = verified.session.access_token;
+      assert.equal(profile.id, uid);
       const refreshed = ok(await db.auth.refreshSession());
       assert.ok(refreshed.session.refresh_token);
       assert.ok(refreshed.session.access_token);
-      assert.ok(
-        (
-          await db.auth.verifyOtp({
-            token_hash: signup.properties.hashed_token,
-            type: "signup",
-          })
-        ).error,
-        "verification links must be single-use",
-      );
       const recovery = ok(
         await admin.auth.admin.generateLink({ type: "recovery", email }),
       );

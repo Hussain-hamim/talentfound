@@ -18,6 +18,7 @@ test("return paths reject external and backslash redirects", () => {
     "/\n/evil",
     "/login?next=/login",
     "/auth/callback",
+    "/verify-email?next=/verify-email",
   ])
     assert.equal(safeNext(path), "/dashboard");
   assert.equal(

@@ -5,5 +5,16 @@ project_id = "talentfound"
 [functions.talentfound-notifications]
 verify_jwt = false
 
+[auth]
+site_url = "https://talent-found-os.vercel.app"
+# Preserve local development and the existing application's redirects.
+additional_redirect_urls = [
+  "https://exitboard.vercel.app/",
+  "http://localhost:3000/auth/callback",
+  "https://exitboard.vercel.app/auth/callback",
+  "http://127.0.0.1:3000/auth/callback",
+  "https://talent-found-os.vercel.app/auth/callback",
+]
+
 [auth.email]
-enable_confirmations = true
+enable_confirmations = false

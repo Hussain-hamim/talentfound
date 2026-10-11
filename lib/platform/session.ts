@@ -36,7 +36,6 @@ export const getSession = cache(async () => {
 export async function requireMember(next = "/dashboard") {
   const session = await getSession();
   if (!session.user) redirect(`/login?next=${encodeURIComponent(next)}`);
-  if (!session.user.email_confirmed_at) redirect("/verify-email");
   if (!session.member || (!session.developer && !session.recruiter))
     redirect(`/onboarding?next=${encodeURIComponent(next)}`);
   return { ...session, user: session.user, member: session.member };

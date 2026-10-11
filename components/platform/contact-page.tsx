@@ -17,7 +17,6 @@ export async function ContactPage({
     const next = encodeURIComponent(
       `/developers/${handle}/${invite ? "invite" : "message"}`,
     );
-    if (!s.user.email_confirmed_at) redirect(`/verify-email?next=${next}`);
     if (!s.member || (!s.developer && !s.recruiter))
       redirect(`/onboarding?next=${next}`);
   }
@@ -45,12 +44,7 @@ export async function ContactPage({
         handle={handle}
         invite={invite}
         demo={isDemoProfile(person.profile.handle)}
-        signedIn={
-          !!s.user &&
-          !!s.user.email_confirmed_at &&
-          !!s.member &&
-          (!!s.developer || !!s.recruiter)
-        }
+        signedIn={!!s.user && !!s.member && (!!s.developer || !!s.recruiter)}
         opportunities={result?.data || []}
       />
     </PublicShell>

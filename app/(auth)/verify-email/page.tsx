@@ -1,6 +1,12 @@
-import type { Metadata } from "next";
-import { AuthForm } from "@/components/auth-form";
-export const metadata: Metadata = { title: "Verify your email" };
-export default function VerifyEmailPage() {
-  return <AuthForm mode="verify-email" />;
+import { redirect } from "next/navigation";
+import { safeNext } from "@/lib/supabase/config";
+
+// Keep old bookmarks working without a separate verification step.
+export default async function VerifyEmailPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const { next } = await searchParams;
+  redirect(`/login?next=${encodeURIComponent(safeNext(next))}`);
 }

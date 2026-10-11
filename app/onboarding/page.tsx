@@ -19,7 +19,6 @@ export default async function Page({
     redirect(
       `/login?next=${encodeURIComponent(`/onboarding?role=${params.role || "developer"}&next=${encodeURIComponent(next)}`)}`,
     );
-  if (!s.user.email_confirmed_at) redirect("/verify-email");
   const role = params.role || "developer";
   if (
     (role === "developer" && s.developer) ||

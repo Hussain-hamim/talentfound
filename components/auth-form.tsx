@@ -7,12 +7,20 @@ import {
   type FormEvent,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Code2, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { Arrow, Brand } from "./brand";
 import { createClient } from "@/lib/supabase/client";
-import { safeNext } from "@/lib/supabase/config";
+import { safeNext, supabaseConfig } from "@/lib/supabase/config";
+type SocialProvider = "google" | "github";
+function authErrorMessage(code: string | null) {
+  if (code === "oauth_cancelled")
+    return "Sign-in was cancelled. You can try again or continue with email.";
+  if (code === "sign_in_failed")
+    return "We couldn’t complete sign-in. Please try again in the same browser.";
+  return "This sign-in link is invalid or expired. Please try again.";
+}
 export type AuthMode =
-  "login" | "signup" | "forgot-password" | "reset-password" | "verify-email";
+  "login" | "signup" | "forgot-password" | "reset-password";
 const copy = {
   login: [
     "GOOD TO SEE YOU AGAIN",
@@ -34,11 +42,6 @@ const copy = {
     "Set a new password.",
     "At least eight characters. Make it uniquely yours.",
   ],
-  "verify-email": [
-    "ONE MORE THING",
-    "Check your inbox.",
-    "Verify your email to finish setting up your TalentFound account.",
-  ],
 };
 function AuthFormContent({
   mode,
@@ -56,16 +59,13 @@ function AuthFormContent({
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(false);
+  const [pendingSocial, setPendingSocial] = useState<SocialProvider | null>(
+    null,
+  );
   const params = useSearchParams();
   const next = safeNext(params.get("next"));
-  const storedEmail = useSyncExternalStore(
-    subscribeStorage,
-    readEmail,
-    () => "",
-  );
   const [visible, setVisible] = useState(false);
-  const [emailInput, setEmail] = useState<string | null>(null);
-  const email = emailInput ?? storedEmail;
+  const [email, setEmail] = useState("");
   const [role, setRole] = useState(
     initialRole === "developer" ? "developer" : "recruiter",
   );
@@ -75,10 +75,28 @@ function AuthFormContent({
       ? `/onboarding?role=${role}&next=${encodeURIComponent(next)}`
       : next;
   }
-  async function social(provider: "google" | "github") {
+  async function social(provider: SocialProvider) {
     setPending(true);
+    setPendingSocial(provider);
     setError("");
+    setMessage("");
     try {
+      // A disabled provider otherwise redirects visitors to a raw Auth API error.
+      const { url, key } = supabaseConfig();
+      const response = await fetch(`${url}/auth/v1/settings`, {
+        headers: { apikey: key },
+        cache: "no-store",
+        signal: AbortSignal.timeout(8000),
+      });
+      if (!response.ok)
+        throw new Error(
+          "Sign-in is temporarily unavailable. Please try again.",
+        );
+      const settings = await response.json();
+      if (settings.external?.[provider] !== true)
+        throw new Error(
+          `${provider === "github" ? "GitHub" : "Google"} sign-in isn’t available yet. Please continue with email.`,
+        );
       const { error } = await createClient().auth.signInWithOAuth({
         provider,
         options: {
@@ -91,6 +109,7 @@ function AuthFormContent({
         e instanceof Error ? e.message : "Sign-in failed. Please try again.",
       );
       setPending(false);
+      setPendingSocial(null);
     }
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -108,18 +127,15 @@ function AuthFormContent({
           password,
           options: {
             data: { full_name: String(form.get("name") || "") },
-            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(destination())}`,
           },
         });
         if (error) throw error;
-        try {
-          sessionStorage.setItem("talentfound:signup-email", email);
-        } catch {}
-        router.push(
-          data.session
-            ? destination()
-            : `/verify-email?next=${encodeURIComponent(destination())}`,
-        );
+        if (!data.session)
+          throw new Error(
+            "Your account was created, but automatic sign-in is unavailable. Please try logging in. If this continues, contact support.",
+          );
+        router.push(destination());
+        router.refresh();
       } else if (mode === "login") {
         const { error } = await db.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -146,18 +162,6 @@ function AuthFormContent({
         setMessage("Your password has been updated.");
         router.push("/dashboard");
         router.refresh();
-      } else {
-        const { error } = await db.auth.resend({
-          type: "signup",
-          email,
-          options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
-          },
-        });
-        if (error) throw error;
-        setMessage(
-          "A new verification email has been requested. Please check your inbox.",
-        );
       }
     } catch (e) {
       setError(
@@ -212,16 +216,34 @@ function AuthFormContent({
         <>
           <div className="social-buttons">
             <button
+              type="button"
               disabled={pending || !hydrated}
+              aria-label="Continue with GitHub"
+              aria-busy={pendingSocial === "github"}
               onClick={() => social("github")}
             >
-              <Code2 size={20} /> GitHub
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M12 .75a11.25 11.25 0 0 0-3.558 21.923c.562.104.768-.244.768-.542 0-.267-.01-.975-.015-1.914-3.13.68-3.79-1.51-3.79-1.51-.512-1.3-1.25-1.646-1.25-1.646-1.022-.699.077-.685.077-.685 1.13.08 1.725 1.16 1.725 1.16 1.005 1.723 2.637 1.225 3.28.937.103-.728.394-1.225.715-1.507-2.498-.284-5.124-1.25-5.124-5.566 0-1.23.44-2.234 1.16-3.021-.117-.285-.503-1.43.11-2.98 0 0 .945-.302 3.095 1.154a10.79 10.79 0 0 1 5.634 0c2.148-1.456 3.09-1.154 3.09-1.154.615 1.55.229 2.695.113 2.98.722.787 1.158 1.791 1.158 3.021 0 4.327-2.63 5.279-5.136 5.558.404.349.764 1.04.764 2.096 0 1.513-.014 2.734-.014 3.105 0 .3.203.65.774.54A11.252 11.252 0 0 0 12 .75Z" />
+              </svg>
+              {pendingSocial === "github" ? "Connecting…" : "GitHub"}
             </button>
             <button
+              type="button"
               disabled={pending || !hydrated}
+              aria-label="Continue with Google"
+              aria-busy={pendingSocial === "google"}
               onClick={() => social("google")}
             >
-              <span className="google-icon">G</span> Google
+              <span className="google-icon" aria-hidden="true">
+                G
+              </span>
+              {pendingSocial === "google" ? "Connecting…" : "Google"}
             </button>
           </div>
           <div className="form-divider">
@@ -306,8 +328,7 @@ function AuthFormContent({
         )}
         {(error || params.has("error")) && (
           <p className="form-error" role="alert">
-            {error ||
-              "This sign-in link is invalid or expired. Please try again."}
+            {error || authErrorMessage(params.get("error"))}
           </p>
         )}
         {message && (
@@ -319,14 +340,13 @@ function AuthFormContent({
           disabled={pending || !hydrated}
           className="button button-red full-width"
         >
-          {pending
+          {pending && !pendingSocial
             ? "Working…"
             : {
                 login: "Log in to TalentFound",
                 signup: "Create your account",
                 "forgot-password": "Send reset link",
                 "reset-password": "Update password",
-                "verify-email": "Resend verification email",
               }[mode]}
           <Arrow />
         </button>
@@ -343,11 +363,6 @@ function AuthFormContent({
           </Link>
         </p>
       )}
-      {mode === "verify-email" && (
-        <p className="auth-switch">
-          Already verified? <Link href={next}>Continue to TalentFound ↗</Link>
-        </p>
-      )}
     </div>
   );
 }
@@ -355,13 +370,6 @@ function AuthFormContent({
 function subscribeStorage(callback: () => void) {
   window.addEventListener("storage", callback);
   return () => window.removeEventListener("storage", callback);
-}
-function readEmail() {
-  try {
-    return sessionStorage.getItem("talentfound:signup-email") || "";
-  } catch {
-    return "";
-  }
 }
 export function AuthForm(props: { mode: AuthMode; initialRole?: string }) {
   return (

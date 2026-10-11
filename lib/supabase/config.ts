@@ -37,7 +37,7 @@ export function safeNext(
   try {
     const url = new URL(value, "https://talentfound.invalid");
     return url.origin === "https://talentfound.invalid" &&
-      !/^\/(?:login|signup|auth)(?:\/|$)/.test(url.pathname)
+      !/^\/(?:login|signup|auth|verify-email)(?:\/|$)/.test(url.pathname)
       ? url.pathname + url.search
       : fallback;
   } catch {
